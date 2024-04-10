@@ -44,10 +44,10 @@ To stop the application, run `Ctrl + C` in running terminal
 ## Basic working with GitHub everyday
 Before starting a new task, follow these steps:
 
-1. Pull the latest code from the master branch:
+1. Pull the latest code from the main branch:
 
    ```bash
-   git checkout master
+   git checkout main
    git pull
    ```
 
