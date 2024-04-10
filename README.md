@@ -35,7 +35,8 @@ Quizy is a Kahoot-like platform for creating and participating in interactive qu
 3. Access the application:
    - Open the frontend web at `http://localhost`
    - Open API docs at `http://localhost:8000/docs`
-   - Open PostgreSQL explorer at `http://localhost:5050`
+   - Open PostgreSQL explorer at `http://localhost:5050` (EMAIL: `pgadmin4@pgadmin.org` and PASSWORD: `admin`)
+   - Database detail: POSTGRES_USER: `postgres`, POSTGRES_PASSWORD: `postgres`, POSTGRES_DB: `mydatabase`
 
 ## Stopping the Application
 
@@ -61,7 +62,7 @@ Before starting a new task, follow these steps:
 
    ```bash
    git add .
-   git commit -m "Your change notes"
+   git commit -m "frontend: Your change notes"
    ```
 
 4. Push your changes to the remote repository:
@@ -71,10 +72,18 @@ Before starting a new task, follow these steps:
    ```
 
 5. Create a pull request:
+   - Look at the terminal, you can find a link like "https://github.com/swinburne-projects/quizy/pull/new/YOUR_BRANCH_NAME", just click on that
+   
+   Or
 
    - Go to the [GitHub PR page](https://github.com/swinburne-projects/quizy/pulls)
    - Click on 'New pull request'
    - Choose your branch from the dropdown menu
+
+   Continue
+
+   - Click `Reviewers` on the right aside, choose `thanhhoa214` for review
+   - Add snapshot for UI about the change, and detail description about the change
    - Click on 'Create pull request'
 
 6. Let the team know about your PR, paste it to the group chat for review & merge
