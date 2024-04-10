@@ -5,7 +5,6 @@ from models.user import User
 # This file will use to generate fake data for testing
 # generate data for user table using SQLModel and Faker
 
-
 # create a Faker instance
 fake = Faker()
 
@@ -17,9 +16,9 @@ engine = create_engine(DATABASE_URL)
 with Session(engine) as session:
     for _ in range(100):  # generate 100 fake users
         fake_user = User(
-            name=fake.name(),
+            username=fake.name(),
             email=fake.email(),
-            password=fake.password(),
+            hashed_password=fake.password(),
             # add more fields if your User model has more
         )
         session.add(fake_user)
