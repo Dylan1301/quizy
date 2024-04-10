@@ -1,5 +1,3 @@
-import "whatwg-fetch";
-
 import { Fetcher } from "openapi-typescript-fetch";
 
 import { paths } from "../api/quizy.generated";
