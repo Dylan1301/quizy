@@ -30,7 +30,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: start-dev
+      target: start-prod
     volumes:
       - ./frontend:/app
     ports:
