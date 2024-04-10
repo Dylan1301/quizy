@@ -35,7 +35,8 @@ Quizy is a Kahoot-like platform for creating and participating in interactive qu
 3. Access the application:
    - Open the frontend web at `http://localhost`
    - Open API docs at `http://localhost:8000/docs`
-   - Open PostgreSQL explorer at `http://localhost:5050`
+   - Open PostgreSQL explorer at `http://localhost:5050` (EMAIL: `pgadmin4@pgadmin.org` and PASSWORD: `admin`)
+   - Database detail: POSTGRES_USER: `postgres`, POSTGRES_PASSWORD: `postgres`, POSTGRES_DB: `mydatabase`
 
 ## Stopping the Application
 
