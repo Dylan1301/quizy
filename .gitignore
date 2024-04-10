@@ -7,7 +7,6 @@ ENV/
 
 # IDEs
 .idea/
-.vscode/
 
 # OS
 .DS_Store
