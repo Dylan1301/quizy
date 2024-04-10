@@ -71,10 +71,18 @@ Before starting a new task, follow these steps:
    ```
 
 5. Create a pull request:
+   - Look at the terminal, you can find a link like "https://github.com/swinburne-projects/quizy/pull/new/YOUR_BRANCH_NAME", just click on that
+   
+   Or
 
    - Go to the [GitHub PR page](https://github.com/swinburne-projects/quizy/pulls)
    - Click on 'New pull request'
    - Choose your branch from the dropdown menu
+
+   Continue
+
+   - Click `Reviewers` on the right aside, choose `thanhhoa214` for review
+   - Add snapshot for UI about the change, and detail description about the change
    - Click on 'Create pull request'
 
 6. Let the team know about your PR, paste it to the group chat for review & merge
