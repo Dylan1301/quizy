@@ -18,28 +18,14 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
+import fetcher from "../utils/fetcher";
+import { FetchReturnType } from "openapi-typescript-fetch";
 
-// Using Chakra UI component table, list all users in this API http://localhost:8000/users
-// Use the useEffect hook to fetch the data from the API
-// Use the useState hook to store the data
-// Use the Chakra UI Table component to display the data
-// Use the Chakra UI Button component to delete a user
-// Use the Chakra UI Button component to edit a user
-// Use the Chakra UI Button component to add a user
-// Use the Chakra UI Modal component to add a user
-// Use the Chakra UI Modal component to edit a user
-// Use the Chakra UI Modal component to delete a user
-// Use the Chakra UI Input component to add a user
-
-interface User {
-  email: string;
-  hashed_password: string;
-  id: number;
-  username: string;
-}
+const usersGet = fetcher.path("/users/").method("get").create();
+type UsersGetResponse = FetchReturnType<typeof usersGet>;
 
 export default function UserPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UsersGetResponse>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     name: "",
@@ -48,9 +34,7 @@ export default function UserPage() {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:8000/users`)
-      .then((r) => r.json())
-      .then(setUsers);
+    usersGet({}).then((r) => setUsers(r.data));
   }, []);
 
   const handleAddUser = () => {

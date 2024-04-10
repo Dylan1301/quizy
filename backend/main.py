@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, create_engine, select
@@ -29,8 +30,21 @@ def create_db_and_tables():
         SQLModel.metadata.create_all(engine)
 
 
-@app.post("/users/")
+@app.post(
+    "/users/",
+    summary="Create a new user",
+    description="This endpoint creates a new user with the given details.",
+)
 async def create_user(user: User):
+    """
+    Create a new user in the system.
+
+    Args:
+        user (User): The user to be created.
+
+    Returns:
+        User: The created user.
+    """
     with Session(engine) as session:
         session.add(user)
         session.commit()
@@ -38,7 +52,7 @@ async def create_user(user: User):
         return user
 
 
-@app.get("/users/")
+@app.get("/users/", response_model=List[User])
 async def read_users():
     with Session(engine) as session:
         statement = select(User)
