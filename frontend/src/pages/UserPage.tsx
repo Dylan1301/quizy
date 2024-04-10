@@ -54,6 +54,7 @@ export default function UserPage() {
 
   return (
     <>
+      <h1 className="font-bold text-4xl">This is demo User page</h1>
       <Button onClick={() => setIsOpen(true)}>Add User</Button>
       <Table>
         <Thead>

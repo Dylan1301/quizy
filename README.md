@@ -62,7 +62,7 @@ Before starting a new task, follow these steps:
 
    ```bash
    git add .
-   git commit -m "Your change notes"
+   git commit -m "frontend: Your change notes"
    ```
 
 4. Push your changes to the remote repository:
