@@ -18,7 +18,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
-import fetcher from "../utils/fetcher";
+import fetcher from "../../utils/fetcher";
 import { FetchReturnType } from "openapi-typescript-fetch";
 
 const usersGet = fetcher.path("/users/").method("get").create();

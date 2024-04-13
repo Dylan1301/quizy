@@ -1,11 +1,11 @@
 import "./App.css";
 import HomePage from "./pages/HomePage";
-import UserPage from "./pages/UserPage";
+import UserPage from "./pages/tutor/UserPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TutorLayout from "./layout/TutorLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
+import DashboardPage from "./pages/tutor/DashboardPage";
 
 function App() {
   const router = createBrowserRouter([
