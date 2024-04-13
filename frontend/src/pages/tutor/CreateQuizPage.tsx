@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
   FormLabel,
   Input,
@@ -10,14 +9,9 @@ import {
   Heading,
   Text,
   useToast,
-  Card,
-  CardHeader,
-  CardBody,
   VStack,
-  Tooltip,
   Radio,
   RadioGroup,
-  FormErrorMessage,
   ListItem,
   OrderedList,
   Circle,
@@ -26,7 +20,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Plus, Trash } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 const quizDetailFormSchema = z.object({
   title: z.string().min(2).max(50),
@@ -59,7 +52,6 @@ export default function CreateQuizPage() {
     },
   });
   const toast = useToast();
-  const navigate = useNavigate();
 
   const questionsField = useFieldArray({
     control: quizForm.control,
