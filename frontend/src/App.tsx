@@ -6,6 +6,8 @@ import SignUpPage from "./pages/SignUpPage";
 import TutorLayout from "./layout/TutorLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import DashboardPage from "./pages/tutor/DashboardPage";
+import CreateQuizPage from "./pages/tutor/CreateQuizPage";
+import CreateRoomPage from "./pages/tutor/CreateRoomPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +23,14 @@ function App() {
         {
           path: "/dashboard",
           element: <DashboardPage />,
+        },
+        {
+          path: "/quiz/create",
+          element: <CreateQuizPage />,
+        },
+        {
+          path: "/room/create",
+          element: <CreateRoomPage />,
         },
         {
           path: "/users",
