@@ -1,8 +1,10 @@
 from typing import List
 from fastapi import FastAPI
+from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, create_engine, select
 from models.user import User
+from api.main import api_router
 
 app = FastAPI()
 
@@ -22,6 +24,7 @@ app.add_middleware(
 
 # Use the hostname "db" to connect to the PostgreSQL Docker container
 DATABASE_URL = "postgresql://postgres:postgres@db/mydatabase"
+# DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mydatabase"
 engine = create_engine(DATABASE_URL)
 
 
@@ -92,3 +95,11 @@ async def delete_user(user_id: int):
 @app.on_event("startup")
 async def startup_event():
     create_db_and_tables()
+
+@app.get("/startup")
+async def startup_event1():
+    create_db_and_tables()
+    return "ok"
+
+
+app.include_router(api_router)
