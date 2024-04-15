@@ -16,7 +16,6 @@ Quizy is a Kahoot-like platform for creating and participating in interactive qu
 ## Prerequisites
 
 - Docker
-- Docker Compose
 
 ## Installation & Usage
 
