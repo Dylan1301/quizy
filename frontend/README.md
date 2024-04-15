@@ -1,5 +1,9 @@
 # Quizy Frontend
 
+## Prerequisites
+
+- NodeJS https://nodejs.org/en/download/current
+
 ## Installation (only do once)
 
 Follow these steps to install the project:
