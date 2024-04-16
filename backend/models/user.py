@@ -1,7 +1,8 @@
 import email
 from typing import Optional, Union
-from sqlmodel import SQLModel
-from sqlmodel import Field, SQLModel
+from sqlalchemy import table
+from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text
+from datetime import datetime
 
 
 class User(SQLModel, table=True):
@@ -11,10 +12,9 @@ class User(SQLModel, table=True):
     hashed_password: str = Field(...)
 
 
-
 class TeacherBase(SQLModel):
-    email: str= Field(unique=True, index=True)
-    name: str= Field(...)
+    email: str = Field(unique=True, index=True)
+    name: str = Field(...)
     google_id: Union[str, None] = None
 
 
@@ -26,7 +26,7 @@ class TeacherCreate(TeacherBase):
 class Teacher(TeacherBase, table=True):
     id: Union[int, None] = Field(default=None, primary_key=True)
     hashed_password: str
-    token: Union[str, None] =  Field(default=None)
+    token: Union[str, None] = Field(default=None)
 
 
 # Class for return Teacher information when request by API
@@ -45,15 +45,6 @@ class TeacherPassword(SQLModel):
     new_password: str
 
 
-# Student class
-
-class StudentBase(SQLModel):
-    room_id: str = Field(...)
-    name: str
-
-
-# Research more abt this
-
 # JSON payload containing access token
 class Token(SQLModel):
     access_token: str
@@ -69,4 +60,25 @@ class NewPassword(SQLModel):
     token: str
     new_password: str
 
+# Student class
 
+
+class StudentBase(SQLModel):
+    room_id: str
+    name: str
+
+
+class Student(StudentBase, table=True):
+    id: int = Field(default=None, primary_key=True)
+    created_at: Union[datetime, None] = Field(default=None,
+                                              sa_column=Column(TIMESTAMP(timezone=True),
+                                                               nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+                                              )
+
+
+class StudentRegister(StudentBase):
+    pass
+
+
+class StudentPublic(StudentBase):
+    id: int

@@ -1,13 +1,14 @@
 from ctypes import Union
 import secrets
 from xml.dom import ValidationErr
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Cookie
 from fastapi.security import OAuth2PasswordBearer
+from requests import get
 from sqlmodel import Session
-from models.user import TeacherPublic, Teacher, TokenPayload
+from models.user import Student, TeacherPublic, Teacher, TokenPayload
 from core.db import engine
 from collections.abc import Generator
-from typing import Annotated
+from typing import Annotated, Union
 from core.security import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from jose import JWTError, jwt
 
