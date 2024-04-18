@@ -19,21 +19,23 @@ import {
   useColorModeValue,
   Divider,
 } from "@chakra-ui/react";
-import { Sun, Moon, Chrome } from "lucide-react";
+import { Sun, Moon, Goal } from "lucide-react";
 import { Outlet, Link as RouterLink } from "react-router-dom";
+import { useReadTeacherMeInfoGet } from "../api/user/user";
 
 export default function TutorLayout() {
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.800");
   const navColor = useColorModeValue("gray.100", "gray.800");
   const color = useColorModeValue("black", "white");
+  const { data } = useReadTeacherMeInfoGet();
 
   return (
     <Flex direction="column" minH="100vh" width="100%" bg={bg} color={color}>
-      <Flex p="4" boxShadow="sm" bg={navColor}>
+      <Flex p="4" boxShadow="sm" gap="6" bg={navColor}>
         <HStack>
-          <Chrome size="28" />
-          <Text fontWeight="bold">Quizy</Text>
+          <Goal size="28" />
+          <Text fontWeight="bold">quizy</Text>
         </HStack>
         <Spacer />
         <HStack spacing="4">
@@ -50,7 +52,7 @@ export default function TutorLayout() {
               rightIcon={<Avatar size="xs" />}
               variant="ghost"
             >
-              User
+              {data?.data.name}
             </MenuButton>
             <MenuList>
               <MenuGroup title="Profile">
@@ -58,7 +60,14 @@ export default function TutorLayout() {
                 <MenuItem>Settings</MenuItem>
               </MenuGroup>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem
+                color="red"
+                as="a"
+                href="/signin"
+                onClick={() => localStorage.removeItem("token")}
+              >
+                Sign out
+              </MenuItem>
             </MenuList>
           </Menu>
         </HStack>
@@ -71,12 +80,6 @@ export default function TutorLayout() {
             </Link>
             <Link as={RouterLink} to="/users">
               Users
-            </Link>
-            <Link as={RouterLink} to="/signin">
-              Sign In
-            </Link>
-            <Link as={RouterLink} to="/signup">
-              Sign Up
             </Link>
           </Stack>
         </Box>

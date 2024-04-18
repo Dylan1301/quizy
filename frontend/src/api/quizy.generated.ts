@@ -4,35 +4,112 @@
  */
 
 export interface paths {
-  "/users/": {
-    get: operations["read_users_users__get"];
-    /** This endpoint creates a new user with the given details. */
-    post: operations["create_user_users__post"];
+  "/me/info": {
+    get: operations["read_teacher_me_info_get"];
   };
-  "/users/{user_id}": {
-    get: operations["read_user_users__user_id__get"];
-    put: operations["update_user_users__user_id__put"];
-    delete: operations["delete_user_users__user_id__delete"];
+  "/signup": {
+    post: operations["register_teacher_signup_post"];
+  };
+  "/me/password": {
+    patch: operations["change_teacher_password_me_password_patch"];
+  };
+  "/login/token": {
+    post: operations["login_for_access_token_login_token_post"];
+  };
+  "/login": {
+    post: operations["login_login_post"];
+  };
+  "/join/room/{room_id}": {
+    post: operations["student_join_room_join_room__room_id__post"];
   };
 }
 
 export interface components {
   schemas: {
+    /** Body_login_for_access_token_login_token_post */
+    Body_login_for_access_token_login_token_post: {
+      /** Grant Type */
+      grant_type?: Partial<string> & Partial<unknown>;
+      /** Username */
+      username: string;
+      /** Password */
+      password: string;
+      /**
+       * Scope
+       * @default
+       */
+      scope?: string;
+      /** Client Id */
+      client_id?: Partial<string> & Partial<unknown>;
+      /** Client Secret */
+      client_secret?: Partial<string> & Partial<unknown>;
+    };
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
-    /** User */
-    User: {
+    /** StudentPublic */
+    StudentPublic: {
+      /** Room Id */
+      room_id: string;
+      /** Name */
+      name: string;
       /** Id */
-      id?: number;
-      /** Username */
-      username: string;
+      id: number;
+    };
+    /** StudentRegister */
+    StudentRegister: {
+      /** Room Id */
+      room_id: string;
+      /** Name */
+      name: string;
+    };
+    /** TeacherCreate */
+    TeacherCreate: {
       /** Email */
       email: string;
-      /** Hashed Password */
-      hashed_password: string;
+      /** Name */
+      name: string;
+      /** Google Id */
+      google_id?: Partial<string> & Partial<unknown>;
+      /** Password */
+      password: string;
+    };
+    /** TeacherLogin */
+    TeacherLogin: {
+      /** Email */
+      email: string;
+      /** Password */
+      password: string;
+    };
+    /** TeacherPassword */
+    TeacherPassword: {
+      /** Current Password */
+      current_password: string;
+      /** New Password */
+      new_password: string;
+    };
+    /** TeacherPublic */
+    TeacherPublic: {
+      /** Email */
+      email: string;
+      /** Name */
+      name: string;
+      /** Google Id */
+      google_id?: Partial<string> & Partial<unknown>;
+      /** Id */
+      id: number;
+    };
+    /** Token */
+    Token: {
+      /** Access Token */
+      access_token: string;
+      /**
+       * Token Type
+       * @default bearer
+       */
+      token_type?: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -47,18 +124,38 @@ export interface components {
 }
 
 export interface operations {
-  read_users_users__get: {
+  read_teacher_me_info_get: {
     responses: {
       /** Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["User"][];
+          "application/json": components["schemas"]["TeacherPublic"];
         };
       };
     };
   };
-  /** This endpoint creates a new user with the given details. */
-  create_user_users__post: {
+  register_teacher_signup_post: {
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TeacherPublic"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TeacherCreate"];
+      };
+    };
+  };
+  change_teacher_password_me_password_patch: {
     responses: {
       /** Successful Response */
       200: {
@@ -75,42 +172,16 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["User"];
+        "application/json": components["schemas"]["TeacherPassword"];
       };
     };
   };
-  read_user_users__user_id__get: {
-    parameters: {
-      path: {
-        user_id: number;
-      };
-    };
+  login_for_access_token_login_token_post: {
     responses: {
       /** Successful Response */
       200: {
         content: {
-          "application/json": unknown;
-        };
-      };
-      /** Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  update_user_users__user_id__put: {
-    parameters: {
-      path: {
-        user_id: number;
-      };
-    };
-    responses: {
-      /** Successful Response */
-      200: {
-        content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["Token"];
         };
       };
       /** Validation Error */
@@ -122,21 +193,16 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["User"];
+        "application/x-www-form-urlencoded": components["schemas"]["Body_login_for_access_token_login_token_post"];
       };
     };
   };
-  delete_user_users__user_id__delete: {
-    parameters: {
-      path: {
-        user_id: number;
-      };
-    };
+  login_login_post: {
     responses: {
       /** Successful Response */
       200: {
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["Token"];
         };
       };
       /** Validation Error */
@@ -144,6 +210,37 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["HTTPValidationError"];
         };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TeacherLogin"];
+      };
+    };
+  };
+  student_join_room_join_room__room_id__post: {
+    parameters: {
+      path: {
+        room_id: string;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["StudentPublic"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["StudentRegister"];
       };
     };
   };
