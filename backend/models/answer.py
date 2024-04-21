@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class AnswerBase(SQLModel):
     content: str
     is_correct: bool
-    question_id: Optional[int]
+    # question_id: Optional[int]
 
 
 class AnswerCreate(AnswerBase):

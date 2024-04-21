@@ -3,7 +3,7 @@ from typing import Optional, Union, List, TYPE_CHECKING
 from sqlalchemy import Boolean, table
 from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text, FetchedValue, Relationship
 from datetime import datetime
-from models.answer import Answer
+from models.answer import Answer, AnswerCreate
 if TYPE_CHECKING:     
     from models.quiz import Quiz
     from models.user import Student
@@ -11,12 +11,10 @@ if TYPE_CHECKING:
 
 class QuestionBase(SQLModel):
     tilte: str
-    quiz_id: Optional[int]
+    # quiz_id: Optional[int]
     explaination: str
     type: Optional[str]
     time_limit: Optional[int]
-
-
 
 class QuestionCreate(QuestionBase):
     pass
@@ -54,6 +52,8 @@ class QuestionsPublic(SQLModel):
 class QuestionAnswer(QuestionPublic):
     answers: List[Answer]
 
+class QuestionAnswerCreate(QuestionCreate):
+    answers: List[AnswerCreate]
 
 # Question Response Class
 
