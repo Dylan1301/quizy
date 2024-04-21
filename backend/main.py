@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, create_engine, select
-from models.user import User
+from core.db.db import create_db_and_tables
+
 from api.main import api_router
 
 app = FastAPI()
@@ -23,3 +24,13 @@ app.add_middleware(
 )
 
 app.include_router(api_router)
+
+@app.on_event("startup")
+async def startup_event():
+    create_db_and_tables()
+
+@app.get("/startup")
+async def startup_event_2():
+    create_db_and_tables()
+    return "DB created"
+

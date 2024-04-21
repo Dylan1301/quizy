@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from requests import get
 from sqlmodel import Session
 from models.user import Student, TeacherPublic, Teacher, TokenPayload
-from core.db import engine
+from core.db.db import engine
 from collections.abc import Generator
 from typing import Annotated, Union
 from core.security import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
