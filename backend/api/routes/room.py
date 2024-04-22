@@ -2,7 +2,7 @@ from typing import Union
 from fastapi import APIRouter, HTTPException
 from api.deps import SessionDep
 from models.user import Student, StudentBase, StudentPublic, StudentRegister
-from core.db import create_student, get_student
+from core.db.db import create_student, get_student
 
 
 router = APIRouter()

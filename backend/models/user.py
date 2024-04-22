@@ -1,8 +1,14 @@
 import email
-from typing import Optional, Union
+from typing import Optional, Union, List, TYPE_CHECKING
 from sqlalchemy import table
-from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text
+from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text, Relationship
 from datetime import datetime
+
+
+if TYPE_CHECKING:
+    from models.room import Room
+    from models.quiz import Quiz
+    from models.question import QuestionResponse
 
 
 class User(SQLModel, table=True):
@@ -27,6 +33,7 @@ class Teacher(TeacherBase, table=True):
     id: Union[int, None] = Field(default=None, primary_key=True)
     hashed_password: str
     token: Union[str, None] = Field(default=None)
+    quizzes: List["Quiz"] = Relationship(back_populates="teacher")
 
 
 # Class for return Teacher information when request by API
@@ -79,6 +86,10 @@ class Student(StudentBase, table=True):
                                               sa_column=Column(TIMESTAMP(timezone=True),
                                                                nullable=False, server_default=text("CURRENT_TIMESTAMP"))
                                               )
+    question_reponses: List["QuestionResponse"] = Relationship(back_populates="student")
+    room_id: Optional[int] = Field(default=None, foreign_key="room.id")
+    room: Optional["Room"] = Relationship(back_populates="students")
+    
 
 
 class StudentRegister(StudentBase):

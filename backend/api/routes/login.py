@@ -5,7 +5,7 @@ from datetime import timedelta
 from api.deps import SessionDep, CurrentUserDep
 from core.security import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 from jose import JWTError, jwt
-from core.db import authenticate_teacher
+from core.db.db import authenticate_teacher
 from models.user import TeacherLogin, Token
 
 router = APIRouter()
