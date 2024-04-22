@@ -3,7 +3,7 @@ from sqlmodel import create_engine, Session, select
 from api.deps import CurrentUserDep, SessionDep
 from models.answer import AnswerCreate, Answer
 from models.question import QuestionAnswer, QuestionAnswerCreate, QuestionCreate, QuestionsPublic
-from models.quiz import Quiz, QuizCreate, QuizQuestionsCreate, QuizQuestions, QuizzesPublic
+from models.quiz import Quiz, QuizCreate, QuizQuestionsCreate, QuizQuestions, QuizzesPublic, QuizUpdate
 from models.question import Question, QuestionAnswer
 from core.security import get_password_hash, verify_password
 from typing import Union, List
@@ -46,6 +46,7 @@ def get_quiz(*, session: Session, quiz_id: Union[int, None], teacher_id: Union[i
     return result
 
 
+# Move to questions file
 def get_question_answer(*, session: Session, question_in: Question) -> QuestionAnswer:
     statement = (select(Question)
                  .where(Question.id == question_in.id))
@@ -90,6 +91,7 @@ def create_question_answers(*, session: Session, quiz_id: Union[int, None], ques
     return ques_out
 
 
+# Move to naswers file
 def create_answer(*, session: Session, question_id: Union[int, None], answer_in: AnswerCreate):
     db_obj = Answer.model_validate(answer_in, update={
         "question_id": question_id

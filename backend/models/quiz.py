@@ -6,13 +6,10 @@ from datetime import datetime
 from models.question import QuestionAnswer, QuestionsPublic, Question, QuestionAnswerCreate
 
 
-
 if TYPE_CHECKING:
     from models.user import Teacher
     from models.question import Question, QuestionsPublic
     from models.room import Room
-# Brainstorm Quiz model cần trả về những thông tin gì?
-#
 
 
 class QuizBase(SQLModel):
@@ -22,6 +19,7 @@ class QuizBase(SQLModel):
 
 class QuizCreate(QuizBase):
     pass
+
 
 class Quiz(QuizBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -42,18 +40,25 @@ class Quiz(QuizBase, table=True):
     questions: List["Question"] = Relationship(back_populates="quiz")
     rooms: List["Room"] = Relationship(back_populates="quiz")
 
+
+class QuizUpdate(QuizBase):
+    id: int
+
+
 class QuizPublic(QuizBase):
     id: int
     teacher_id: int
     created_at: datetime
     updated_at: datetime
-    
+
 
 class QuizzesPublic(SQLModel):
     data: List[Quiz]
 
+
 class QuizQuestions(QuizPublic):
-    questions: List[QuestionAnswer] 
+    questions: List[QuestionAnswer]
+
 
 class QuizQuestionsCreate(QuizCreate):
     questions: List[QuestionAnswerCreate]

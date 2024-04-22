@@ -10,7 +10,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 ALGORITHM = "HS256"
 SECRET_KEY: str = secrets.token_urlsafe(32)
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 3600
 
 def create_access_token(subject: Union[str, Any], expires_delta: timedelta) -> str:
     expire = datetime.utcnow() + expires_delta
