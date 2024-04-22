@@ -5,11 +5,34 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './answer';
+export * from './answerCreate';
+export * from './answerCreatedAt';
+export * from './answerId';
+export * from './answerQuestionId';
+export * from './answerUpdatedAt';
 export * from './bodyLoginForAccessTokenLoginTokenPost';
 export * from './bodyLoginForAccessTokenLoginTokenPostClientId';
 export * from './bodyLoginForAccessTokenLoginTokenPostClientSecret';
 export * from './bodyLoginForAccessTokenLoginTokenPostGrantType';
+export * from './getAllQuizQuizzesGetParams';
 export * from './hTTPValidationError';
+export * from './questionAnswer';
+export * from './questionAnswerCreate';
+export * from './questionAnswerCreateTimeLimit';
+export * from './questionAnswerCreateType';
+export * from './questionAnswerTimeLimit';
+export * from './questionAnswerType';
+export * from './quiz';
+export * from './quizCreate';
+export * from './quizCreatedAt';
+export * from './quizId';
+export * from './quizPublic';
+export * from './quizQuestions';
+export * from './quizQuestionsCreate';
+export * from './quizTeacherId';
+export * from './quizUpdatedAt';
+export * from './quizzesPublic';
 export * from './studentPublic';
 export * from './studentRegister';
 export * from './teacherCreate';

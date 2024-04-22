@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Plus, Trash } from "lucide-react";
+import { createQuizQuestionsApiQuizVer2Post } from "../../api/quiz/quiz";
 
 const quizDetailFormSchema = z.object({
   title: z.string().min(2).max(50),
@@ -28,6 +29,7 @@ const quizDetailFormSchema = z.object({
     z.object({
       title: z.string().max(200),
       explanation: z.string().max(300),
+      timeLimit: z.number().max(60),
       correctAnswerId: z.string().nullable(),
     })
   ),
@@ -75,32 +77,29 @@ export default function CreateQuizPage() {
 
   async function onSubmit(values: z.infer<typeof quizDetailFormSchema>) {
     setLoading(true);
-    console.log(values);
-    toast({ description: JSON.stringify(values) });
 
-    // const request: CreateQuizRequest = {
-    //   quiz: { title: values.title, description: values.description },
-    //   questions: questionsField.fields.map((q) => ({
-    //     question: { title: q.title, explanation: q.explanation, type: q.type },
-    //     answers: values.answers
-    //       .filter((a) => a.questionKey === q.key)
-    //       .map((a) => ({
-    //         text: a.text,
-    //         isCorrect: a.isCorrect,
-    //       })),
-    //   })),
-    // };
+    const { data: quiz } = await createQuizQuestionsApiQuizVer2Post({
+      tilte: values.title,
+      description: values.description,
+      questions: values.questions.map((q) => ({
+        explaination: q.explanation,
+        tilte: q.title,
+        time_limit: q.timeLimit,
+        type: "multiple_choice",
+        answers: values.answers
+          .filter((a) => a.questionKey === q.title)
+          .map((a) => ({
+            content: a.text,
+            is_correct: a.isCorrect,
+          })),
+      })),
+    });
 
-    // const { data: quiz } = await axios.post<
-    //   CreateQuizRequest,
-    //   AxiosResponse<CreateQuizResponse>
-    // >("/quiz/api", request);
-
-    // setLoading(false);
-    // toast({
-    //   title: `Created quiz "${quiz.title}"`,
-    //   description: `Quiz with ${quiz.title} created successfully`,
-    // });
+    setLoading(false);
+    toast({
+      title: `Created quiz "${quiz.tilte}"`,
+      description: `Quiz with ${quiz.tilte} created successfully`,
+    });
   }
   return (
     <Box p={4}>
@@ -110,10 +109,10 @@ export default function CreateQuizPage() {
           <Button
             isLoading={loading}
             loadingText="Saving"
-            colorScheme="teal"
+            colorScheme="blue"
             type="submit"
           >
-            Save Quiz
+            Create
           </Button>
         </HStack>
 
@@ -185,7 +184,25 @@ export default function CreateQuizPage() {
                           flexGrow={1}
                         />
                       </FormControl>
-
+                      <FormControl w="20rem">
+                        <Text
+                          as={"label"}
+                          fontSize="sm"
+                          fontWeight={500}
+                          htmlFor={`questions.${index}.timeLimit`}
+                        >
+                          Time limit
+                        </Text>
+                        <Input
+                          type="number"
+                          placeholder="Time in secs"
+                          {...quizForm.register(
+                            `questions.${index}.timeLimit`,
+                            { valueAsNumber: true }
+                          )}
+                          id={`questions.${index}.timeLimit`}
+                        />
+                      </FormControl>
                       <Button
                         size={"icon"}
                         type="button"
@@ -200,6 +217,7 @@ export default function CreateQuizPage() {
                         <Trash />
                       </Button>
                     </HStack>
+
                     {/* Dynamic Form Array for Answers */}
                     <RadioGroup>
                       <HStack gap={1} px={10}>
@@ -258,6 +276,7 @@ export default function CreateQuizPage() {
                     title: "",
                     explanation: "",
                     correctAnswerId: null,
+                    timeLimit: 30,
                   })
                 }
                 className="mt-6 w-fit gap-1"

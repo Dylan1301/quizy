@@ -29,6 +29,8 @@ import QuizStatisticPage from "./pages/student/QuizStatisticPage";
 import TutorQuestionPage from "./pages/tutor/TutorQuestionPage";
 import TutorQuestionStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 import TutorQuizStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
+import QuizzesPage from "./pages/tutor/QuizzesPage";
+import RoomsPage from "./pages/tutor/RoomsPage";
 
 axios.defaults.baseURL = API_URL;
 axios.interceptors.request.use(function (config) {
@@ -52,26 +54,16 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardPage />,
       },
-      {
-        path: "/quiz/create",
-        element: <CreateQuizPage />,
-      },
-      {
-        path: "/room/create",
-        element: <CreateRoomPage />,
-      },
-      {
-        path: "/room/:roomId/:questionId",
-        element: <TutorQuestionPage />,
-      },
+      { path: "/quizzes", element: <QuizzesPage /> },
+      { path: "/rooms", element: <RoomsPage /> },
+      { path: "/quiz/create", element: <CreateQuizPage /> },
+      { path: "/room/create", element: <CreateRoomPage /> },
+      { path: "/room/:roomId/:questionId", element: <TutorQuestionPage /> },
       {
         path: "/room/:roomId/question/statistic",
         element: <TutorQuestionStatisticPage />,
       },
-      {
-        path: "/quiz/:quizId/statistic",
-        element: <TutorQuizStatisticPage />,
-      },
+      { path: "/quiz/:quizId/statistic", element: <TutorQuizStatisticPage /> },
     ],
   },
   // Student paths
@@ -79,14 +71,14 @@ const router = createBrowserRouter([
   {
     path: "/:roomId",
     children: [
-      { path: "/waiting", element: <WaitingRoomPage /> },
-      { path: "/question/:questionId", element: <QuestionPage /> },
+      { path: "waiting", element: <WaitingRoomPage /> },
+      { path: "question/:questionId", element: <QuestionPage /> },
       {
-        path: "/question/:questionId/statistic",
+        path: "question/:questionId/statistic",
         element: <QuestionStatisticPage />,
       },
       {
-        path: "/statistic",
+        path: "statistic",
         element: <QuizStatisticPage />,
       },
     ],

@@ -22,10 +22,47 @@ export interface paths {
   "/join/room/{room_id}": {
     post: operations["student_join_room_join_room__room_id__post"];
   };
+  "/quizzes": {
+    get: operations["get_all_quiz_quizzes_get"];
+  };
+  "/quiz": {
+    post: operations["create_quiz_id_quiz_post"];
+  };
+  "/quiz/{quiz_id}": {
+    get: operations["get_quiz_questions_quiz__quiz_id__get"];
+  };
+  "/quiz_ver2": {
+    post: operations["create_quiz_questions_api_quiz_ver2_post"];
+  };
+  "/startup": {
+    get: operations["startup_event_2_startup_get"];
+  };
 }
 
 export interface components {
   schemas: {
+    /** Answer */
+    Answer: {
+      /** Content */
+      content: string;
+      /** Is Correct */
+      is_correct: boolean;
+      /** Id */
+      id?: Partial<number> & Partial<unknown>;
+      /** Question Id */
+      question_id?: Partial<number> & Partial<unknown>;
+      /** Created At */
+      created_at?: Partial<string> & Partial<unknown>;
+      /** Updated At */
+      updated_at?: Partial<string> & Partial<unknown>;
+    };
+    /** AnswerCreate */
+    AnswerCreate: {
+      /** Content */
+      content: string;
+      /** Is Correct */
+      is_correct: boolean;
+    };
     /** Body_login_for_access_token_login_token_post */
     Body_login_for_access_token_login_token_post: {
       /** Grant Type */
@@ -48,6 +85,124 @@ export interface components {
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
+    };
+    /** QuestionAnswer */
+    QuestionAnswer: {
+      /** Tilte */
+      tilte: string;
+      /** Explaination */
+      explaination: string;
+      /** Type */
+      type: Partial<string> & Partial<unknown>;
+      /** Time Limit */
+      time_limit: Partial<number> & Partial<unknown>;
+      /** Id */
+      id: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Answers */
+      answers: components["schemas"]["Answer"][];
+    };
+    /** QuestionAnswerCreate */
+    QuestionAnswerCreate: {
+      /** Tilte */
+      tilte: string;
+      /** Explaination */
+      explaination: string;
+      /** Type */
+      type: Partial<string> & Partial<unknown>;
+      /** Time Limit */
+      time_limit: Partial<number> & Partial<unknown>;
+      /** Answers */
+      answers: components["schemas"]["AnswerCreate"][];
+    };
+    /** Quiz */
+    Quiz: {
+      /** Tilte */
+      tilte: string;
+      /** Description */
+      description: string;
+      /** Id */
+      id?: Partial<number> & Partial<unknown>;
+      /** Teacher Id */
+      teacher_id?: Partial<number> & Partial<unknown>;
+      /** Created At */
+      created_at?: Partial<string> & Partial<unknown>;
+      /** Updated At */
+      updated_at?: Partial<string> & Partial<unknown>;
+    };
+    /** QuizCreate */
+    QuizCreate: {
+      /** Tilte */
+      tilte: string;
+      /** Description */
+      description: string;
+    };
+    /** QuizPublic */
+    QuizPublic: {
+      /** Tilte */
+      tilte: string;
+      /** Description */
+      description: string;
+      /** Id */
+      id: number;
+      /** Teacher Id */
+      teacher_id: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /** QuizQuestions */
+    QuizQuestions: {
+      /** Tilte */
+      tilte: string;
+      /** Description */
+      description: string;
+      /** Id */
+      id: number;
+      /** Teacher Id */
+      teacher_id: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Questions */
+      questions: components["schemas"]["QuestionAnswer"][];
+    };
+    /** QuizQuestionsCreate */
+    QuizQuestionsCreate: {
+      /** Tilte */
+      tilte: string;
+      /** Description */
+      description: string;
+      /** Questions */
+      questions: components["schemas"]["QuestionAnswerCreate"][];
+    };
+    /** QuizzesPublic */
+    QuizzesPublic: {
+      /** Data */
+      data: components["schemas"]["Quiz"][];
     };
     /** StudentPublic */
     StudentPublic: {
@@ -241,6 +396,101 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["StudentRegister"];
+      };
+    };
+  };
+  get_all_quiz_quizzes_get: {
+    parameters: {
+      query: {
+        skip?: number;
+        limit?: number;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["QuizzesPublic"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_quiz_id_quiz_post: {
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["QuizPublic"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuizCreate"];
+      };
+    };
+  };
+  get_quiz_questions_quiz__quiz_id__get: {
+    parameters: {
+      path: {
+        quiz_id: number;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["QuizQuestions"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_quiz_questions_api_quiz_ver2_post: {
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["QuizQuestions"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuizQuestionsCreate"];
+      };
+    };
+  };
+  startup_event_2_startup_get: {
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
       };
     };
   };

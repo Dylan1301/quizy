@@ -79,8 +79,11 @@ export default function TutorLayout() {
                 <PlusCircle size={20} className="mr-2" /> Create a quiz
               </Button>
             </Link>
-            <Link as={RouterLink} to="/users">
-              Users
+            <Link as={RouterLink} to="/quizzes">
+              Quizzes
+            </Link>
+            <Link as={RouterLink} to="/rooms">
+              Rooms
             </Link>
           </Stack>
         </Box>
