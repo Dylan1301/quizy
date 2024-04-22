@@ -1,24 +1,33 @@
-version: '3.8'
+version: '3.7'
+name: quizy
 services:
   db:
-    image: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - .env
-  backend:
-    build: ./backend
-    ports:
-      - "8000:80"
-    volumes:
-      - ./backend:/app
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+  pgadmin:
+    image: dpage/pgadmin4
     environment:
-      - BASE_PATH=/api
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
     depends_on:
       - db
-    env_file:
-      - .env
+  backend:
+    build:
+      context: ./backend
+      target: start-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
   frontend:
     build:
       context: ./frontend
@@ -27,7 +36,7 @@ services:
       - ./frontend:/app
     ports:
       - "80:80"
-    env_file:
-      - .env
+    depends_on:
+      - backend
 volumes:
   postgres_data:
