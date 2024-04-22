@@ -11,6 +11,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost",  # Whitelist localhost port 80
+    "http://localhost:5173",  # Whitelist localhost port 80
     "http://yourdomain.com:80",  # Whitelist your domain with port 80
     # Add more origins if needed
 ]

@@ -14,16 +14,15 @@ Quizy is a Kahoot-like platform for creating and participating in interactive qu
 - Compatible across devices and browsers
 
 ## Prerequisites
-
-- Docker
-- Docker Compose
+- Git https://git-scm.com/downloads
+- Docker https://www.docker.com/get-started/
 
 ## Installation & Usage
 
 1. Clone the repository:
 
    ```bash
-   git clone git@github.com:swinburne-projects/quizy.git
+   git clone https://github.com/swinburne-projects/quizy
    ```
 
 2. Start the stack (FE, BE, DB):

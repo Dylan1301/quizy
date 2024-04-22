@@ -47,6 +47,11 @@ class TeacherUpdateInfo(SQLModel):
     email: Union[str, None] = None
 
 
+class TeacherLogin(SQLModel):
+    email: str
+    password: str
+
+
 class TeacherPassword(SQLModel):
     current_password: str
     new_password: str
