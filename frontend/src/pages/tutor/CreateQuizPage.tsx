@@ -81,13 +81,13 @@ export default function CreateQuizPage() {
     const { data: quiz } = await createQuizQuestionsApiQuizVer2Post({
       tilte: values.title,
       description: values.description,
-      questions: values.questions.map((q) => ({
+      questions: questionsField.fields.map((q) => ({
         explaination: q.explanation,
         tilte: q.title,
         time_limit: q.timeLimit,
         type: "multiple_choice",
         answers: values.answers
-          .filter((a) => a.questionKey === q.title)
+          .filter((a) => a.questionKey === q.key)
           .map((a) => ({
             content: a.text,
             is_correct: a.isCorrect,
