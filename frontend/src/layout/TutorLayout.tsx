@@ -4,7 +4,6 @@ import {
   Spacer,
   Text,
   Button,
-  Avatar,
   Menu,
   MenuButton,
   MenuList,
@@ -19,7 +18,7 @@ import {
   useColorModeValue,
   Divider,
 } from "@chakra-ui/react";
-import { Sun, Moon, Goal } from "lucide-react";
+import { Sun, Moon, Goal, PlusCircle, UserCircle2 } from "lucide-react";
 import { Outlet, Link as RouterLink } from "react-router-dom";
 import { useReadTeacherMeInfoGet } from "../api/user/user";
 
@@ -32,25 +31,25 @@ export default function TutorLayout() {
 
   return (
     <Flex direction="column" minH="100vh" width="100%" bg={bg} color={color}>
-      <Flex p="4" boxShadow="sm" gap="6" bg={navColor}>
-        <HStack>
-          <Goal size="28" />
+      <Flex py="1" px="2" boxShadow="sm" gap="6" bg={navColor}>
+        <Button variant="ghost" as={RouterLink} to="/" display="flex" gap={1}>
+          <Goal />
           <Text fontWeight="bold">quizy</Text>
-        </HStack>
+        </Button>
         <Spacer />
-        <HStack spacing="4">
+        <HStack>
           <IconButton
-            variant="ghost"
             onClick={toggleColorMode}
+            size="sm"
             aria-label={"dark-mode-toggler"}
           >
-            {colorMode === "light" ? <Moon /> : <Sun />}
+            {colorMode === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </IconButton>
           <Menu>
             <MenuButton
               as={Button}
-              rightIcon={<Avatar size="xs" />}
-              variant="ghost"
+              rightIcon={<UserCircle2 size={16} />}
+              size="sm"
             >
               {data?.data.name}
             </MenuButton>
@@ -75,8 +74,10 @@ export default function TutorLayout() {
       <Flex height="100vh">
         <Box w="25%" maxWidth="15rem" p="4">
           <Stack spacing="4">
-            <Link as={RouterLink} to="/">
-              Home
+            <Link as={RouterLink} to="/quiz/create" w="100%">
+              <Button colorScheme="blue" w="100%">
+                <PlusCircle size={20} className="mr-2" /> Create a quiz
+              </Button>
             </Link>
             <Link as={RouterLink} to="/users">
               Users

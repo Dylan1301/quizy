@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import fetcher from "../utils/fetcher";
+import { Link as RouterLink } from "react-router-dom";
 
 const loginApi = fetcher.path("/login").method("post").create();
 
@@ -75,12 +76,12 @@ export default function SignInPage() {
 
   return (
     <Flex alignItems="center" className="h-screen">
-      <Card className="max-w-sm mx-auto">
+      <Card className="w-full max-w-sm mx-auto">
         <CardHeader pb={0}>
           <Heading size="md">Sign In</Heading>
-          <Text pt="2" fontSize="sm">
-            Sign in to your account. Don't have an account?
-            <Link href="/signup" color="blue.500" ml={1}>
+          <Text fontSize="sm" color="gray">
+            Don't have an account?
+            <Link as={RouterLink} to="/signup" color="blue.500" ml={1}>
               <strong>Create now</strong>
             </Link>
           </Text>
