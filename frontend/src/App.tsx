@@ -1,6 +1,5 @@
 import "./App.css";
 import HomePage from "./pages/HomePage";
-import UserPage from "./pages/tutor/UserPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import TutorLayout from "./layout/TutorLayout";
@@ -22,6 +21,14 @@ import {
 } from "@chakra-ui/react";
 import { SWRConfig } from "swr";
 import { useRef } from "react";
+import EnterRoomPage from "./pages/student/EnterRoomPage";
+import WaitingRoomPage from "./pages/student/WaitingRoomPage";
+import QuestionPage from "./pages/student/QuestionPage";
+import QuestionStatisticPage from "./pages/student/QuestionStatisticPage";
+import QuizStatisticPage from "./pages/student/QuizStatisticPage";
+import TutorQuestionPage from "./pages/tutor/TutorQuestionPage";
+import TutorQuestionStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
+import TutorQuizStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 
 axios.defaults.baseURL = API_URL;
 axios.interceptors.request.use(function (config) {
@@ -54,8 +61,33 @@ const router = createBrowserRouter([
         element: <CreateRoomPage />,
       },
       {
-        path: "/users",
-        element: <UserPage />,
+        path: "/room/:roomId/:questionId",
+        element: <TutorQuestionPage />,
+      },
+      {
+        path: "/room/:roomId/question/statistic",
+        element: <TutorQuestionStatisticPage />,
+      },
+      {
+        path: "/quiz/:quizId/statistic",
+        element: <TutorQuizStatisticPage />,
+      },
+    ],
+  },
+  // Student paths
+  { path: "/enter", element: <EnterRoomPage /> },
+  {
+    path: "/:roomId",
+    children: [
+      { path: "/waiting", element: <WaitingRoomPage /> },
+      { path: "/question/:questionId", element: <QuestionPage /> },
+      {
+        path: "/question/:questionId/statistic",
+        element: <QuestionStatisticPage />,
+      },
+      {
+        path: "/statistic",
+        element: <QuizStatisticPage />,
       },
     ],
   },
