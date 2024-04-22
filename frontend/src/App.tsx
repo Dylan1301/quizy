@@ -31,6 +31,7 @@ import TutorQuestionStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 import TutorQuizStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 import QuizzesPage from "./pages/tutor/QuizzesPage";
 import RoomsPage from "./pages/tutor/RoomsPage";
+import TutorQuizDetailPage from "./pages/tutor/TutorQuizDetailPage";
 
 axios.defaults.baseURL = API_URL;
 axios.interceptors.request.use(function (config) {
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
         path: "/room/:roomId/question/statistic",
         element: <TutorQuestionStatisticPage />,
       },
+      { path: "/quiz/:quizId", element: <TutorQuizDetailPage /> },
       { path: "/quiz/:quizId/statistic", element: <TutorQuizStatisticPage /> },
     ],
   },

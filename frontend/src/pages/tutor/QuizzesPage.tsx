@@ -18,7 +18,7 @@ export default function QuizzesPage() {
           justifyContent="space-between"
         >
           <Text>{quiz.tilte}</Text>
-          <Button as={RouterLink} to={`/quiz/${quiz.id}/statistic`}>
+          <Button as={RouterLink} to={`/quiz/${quiz.id}`}>
             View
           </Button>
         </Flex>
