@@ -16,7 +16,7 @@ def get_quizzes(*, session: Session, teacher_id: Union[int, None], skip: int = 0
                  .limit(limit))
     items = session.exec(statement).all()
 
-    return QuizzesPublic.model_validate(items)
+    return QuizzesPublic(data=items)
 
 
 def create_quiz(*, session: Session, quiz_in: QuizCreate, teacher_id: Union[int, None]) -> Quiz:

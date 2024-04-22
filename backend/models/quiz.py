@@ -53,7 +53,7 @@ class QuizPublic(QuizBase):
 
 
 class QuizzesPublic(SQLModel):
-    data: List[Quiz]
+    data: list[QuizPublic]
 
 
 class QuizQuestions(QuizPublic):
