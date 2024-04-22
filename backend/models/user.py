@@ -3,7 +3,8 @@ from typing import Optional, Union, List, TYPE_CHECKING
 from sqlalchemy import table
 from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text, Relationship
 from datetime import datetime
-
+from models.quiz import Quiz
+from models.room import Room
 
 if TYPE_CHECKING:
     from models.room import Room
@@ -33,7 +34,7 @@ class Teacher(TeacherBase, table=True):
     id: Union[int, None] = Field(default=None, primary_key=True)
     hashed_password: str
     token: Union[str, None] = Field(default=None)
-    quizzes: List["Quiz"] = Relationship(back_populates="teacher")
+    quizzes: List[Quiz] = Relationship(back_populates="teacher")
 
 
 # Class for return Teacher information when request by API
@@ -88,7 +89,7 @@ class Student(StudentBase, table=True):
                                               )
     question_reponses: List["QuestionResponse"] = Relationship(back_populates="student")
     room_id: Optional[int] = Field(default=None, foreign_key="room.id")
-    room: Optional["Room"] = Relationship(back_populates="students")
+    room: Optional[Room] = Relationship(back_populates="students")
     
 
 
