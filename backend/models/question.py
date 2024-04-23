@@ -85,7 +85,7 @@ class QuestionResponse(QuestionReponseBase, table=True):
                                               sa_column=Column(TIMESTAMP(timezone=True),
                                                                nullable=False, server_default=text("CURRENT_TIMESTAMP"))
                                               )
-    total_time_taken: Optional[int]
+    total_time_taken: Optional[int]= Field(...)
     student: Optional["Student"] = Relationship(back_populates="question_reponses")
 
 class QuestionReponsePublic(QuestionReponseBase):

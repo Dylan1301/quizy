@@ -77,7 +77,7 @@ class NewPassword(SQLModel):
 
 
 class StudentBase(SQLModel):
-    room_id: str
+    room_id: int
     name: str
 
 
