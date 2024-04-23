@@ -70,7 +70,12 @@ export default function SignUpPage() {
   const signInWithGoogle = async () => {
     setIsSigningGoogle(true);
     try {
-      await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
+      const { user } = await signInWithPopup(
+        firebaseAuth,
+        new GoogleAuthProvider()
+      );
+      console.log(user);
+      
       setIsSigningGoogle(false);
       // navigate("/home");
     } catch (error) {

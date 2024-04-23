@@ -88,7 +88,7 @@ export default function TutorLayout() {
           </Stack>
         </Box>
         <Divider orientation="vertical" />
-        <Box w="75%" p="4">
+        <Box w="75%" flexGrow={1} p="4">
           <Outlet />
         </Box>
       </Flex>

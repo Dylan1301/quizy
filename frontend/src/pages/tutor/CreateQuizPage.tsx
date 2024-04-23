@@ -97,8 +97,8 @@ export default function CreateQuizPage() {
 
     setLoading(false);
     toast({
-      title: `Created quiz "${quiz.tilte}"`,
-      description: `Quiz with ${quiz.tilte} created successfully`,
+      title: `Your quiz has been created!`,
+      description: `Quiz "${quiz.tilte}" created successfully.`,
     });
   }
   return (
@@ -245,7 +245,9 @@ export default function CreateQuizPage() {
                         )}
 
                         {/* Add Answer Button */}
-                        {answersField.fields.length < 4 && (
+                        {answersField.fields.filter(
+                          (a) => a.questionKey === question.key
+                        ).length < 4 && (
                           <Button
                             onClick={() =>
                               answersField.append({
