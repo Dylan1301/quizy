@@ -2,7 +2,9 @@ from sqlmodel import Session, select
 from typing import Union, List
 from models.question import QuestionAnswer, QuestionAnswerCreate, QuestionCreate, Question, QuestionResponse, QuestionResponseCreate
 from .answer import create_answer
-def get_question_answer(*, session: Session, question_id: Union[int,None]) -> QuestionAnswer:
+
+
+def get_question_answer(*, session: Session, question_id: Union[int, None]) -> QuestionAnswer:
     statement = (select(Question)
                  .where(Question.id == question_id))
     item = session.exec(statement).one()
@@ -32,9 +34,7 @@ def create_question_answers(*, session: Session, quiz_id: Union[int, None], ques
     return ques_out
 
 
-
-
-def create_question_response(*, session:Session, question_response_in: QuestionResponseCreate, total_time: int) -> Union[QuestionResponse, None]:
+def create_question_response(*, session: Session, question_response_in: QuestionResponseCreate, total_time: int) -> Union[QuestionResponse, None]:
     db_object = QuestionResponse.model_validate(question_response_in, update={
         "total_time_taken": total_time
     })
@@ -42,4 +42,3 @@ def create_question_response(*, session:Session, question_response_in: QuestionR
     session.commit()
     session.refresh(db_object)
     return db_object
-

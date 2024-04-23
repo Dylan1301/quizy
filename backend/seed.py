@@ -76,7 +76,7 @@ def list_to_csv(json_list, csv_filename):
     print("Successful written data to file {}".format(csv_filename))
 
 
-def create_quiz_seed(enigne, quiz_per_teacher= 3, ques_per_quiz=5, answer_per_ques=4):
+def create_quiz_seed(enigne, quiz_per_teacher=3, ques_per_quiz=5, answer_per_ques=4):
     """
     Create Quiz - Question - Answers for teacher in database
 
@@ -104,7 +104,7 @@ def create_quiz_seed(enigne, quiz_per_teacher= 3, ques_per_quiz=5, answer_per_qu
                     session=session, teacher_id=teacher_id, quiz_in=quiz_create)
 
 
-def create_room_seed(session, quiz_id, room_per_quiz= random.randint(1,2)):
+def create_room_seed(session, quiz_id, room_per_quiz=random.randint(1, 2)):
     room_list = []
     for i in range(room_per_quiz):
         room_in = RoomCreate(
@@ -114,19 +114,23 @@ def create_room_seed(session, quiz_id, room_per_quiz= random.randint(1,2)):
         )
         room_list.append(create_room(session=session, room_in=room_in))
     return room_list
-    
 
-def create_student_seed(session, room_id,student_per_room=random.randint(5,10)) -> List[Student]:
+
+def create_student_seed(session, room_id, student_per_room=random.randint(5, 10)) -> List[Student]:
     student_list = []
     for i in range(student_per_room):
         student_in = StudentRegister(room_id=room_id, name=fake.name())
 
-        student_list.append(create_student(session=session, student_in=student_in))
+        student_list.append(create_student(
+            session=session, student_in=student_in))
     return student_list
 
+
 def create_question_response_seed(session, student_id, room_id, question_id, answer_id):
-    question_response_in = QuestionResponseCreate(student_id=student_id, room_id=room_id, question_id=question_id, answer_id=answer_id)
-    create_question_response(session=session, question_response_in=question_response_in, total_time=random.randint(1,1000))
+    question_response_in = QuestionResponseCreate(
+        student_id=student_id, room_id=room_id, question_id=question_id, answer_id=answer_id)
+    create_question_response(
+        session=session, question_response_in=question_response_in, total_time=random.randint(1, 1000))
 
 
 def create_room_student_quesres(engine):
@@ -134,14 +138,18 @@ def create_room_student_quesres(engine):
         statement = (select(Quiz))
         quiz_list = session.exec(statement).all()
         for quiz in quiz_list:
-            room_list = create_room_seed(session=session , quiz_id= quiz.id)
-            question_list = [get_question_answer(session=session, question_id=x.id) for x in quiz.questions]
+            room_list = create_room_seed(session=session, quiz_id=quiz.id)
+            question_list = [get_question_answer(
+                session=session, question_id=x.id) for x in quiz.questions]
             for room in room_list:
-                student_list = create_student_seed(session=session, room_id=room.id)
+                student_list = create_student_seed(
+                    session=session, room_id=room.id)
                 for stu in student_list:
                     for ques in question_list:
                         ans_id = random.choice(ques.answers).id
-                        create_question_response_seed(session, student_id=stu.id, room_id=room.id, question_id=ques.id, answer_id=ans_id)
+                        create_question_response_seed(
+                            session, student_id=stu.id, room_id=room.id, question_id=ques.id, answer_id=ans_id)
+
 
 create_teacher_seed(engine, loop_times=20)
 create_quiz_seed(engine, quiz_per_teacher=3)
