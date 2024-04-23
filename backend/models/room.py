@@ -1,5 +1,5 @@
 import email
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 from sqlalchemy import Boolean, table
 from sqlmodel import Field, Relationship, SQLModel, Column, TIMESTAMP, text, FetchedValue
 from datetime import datetime
@@ -40,6 +40,9 @@ class Room(RoomBase, table=True):
     students: List["Student"] = Relationship(back_populates="room")
     quiz: Optional["Quiz"] = Relationship(back_populates="rooms")
 
+class RoomList(SQLModel):
+    data: list[Room]
+        
 
 class RoomPublic(RoomBase):
     id: int
