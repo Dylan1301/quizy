@@ -1,6 +1,7 @@
 from sqlmodel import create_engine, Session, select, SQLModel
 from typing import Union, List
 from models.room import RoomCreate, Room, RoomPublic, RoomList
+from core.db.quiz import get_quiz_owner_id
 
 def create_room(*, session: Session, room_in: RoomCreate) -> Room:
     db_obj = Room.model_validate(room_in)
@@ -51,6 +52,7 @@ def publish_room(*, session: Session, teacher_id: Union[int, None], room_id: int
     room.is_published = True
     session.add(room)
     session.commit()
+
 
 def start_room(*, session: Session, teacher_id: Union[int, None], room_id: int):
     statement = (select(Room)

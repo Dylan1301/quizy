@@ -39,7 +39,7 @@ class Room(RoomBase, table=True):
                                             sa_column=Column(TIMESTAMP(timezone=True)))
     is_published: bool
     students: List["Student"] = Relationship(back_populates="room")
-    quiz: Optional["Quiz"] = Relationship(back_populates="rooms")
+    quiz: "Quiz" = Relationship(back_populates="rooms")
 
 class RoomList(SQLModel):
     data: list[Room]
