@@ -1,23 +1,36 @@
-import { Button, Link, Stack } from "@chakra-ui/react";
+import { Button, Flex, HStack, Heading, Link } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-
+import { PinInput, PinInputField } from "@chakra-ui/react";
+import { useState } from "react";
 export default function HomePage() {
-  // return links to sign in and sign up pages, dashboard, and users route as Button with gap between them
-
+  const [input, setInput] = useState<string>();
+ 
+  const handleJoinRoom = async () => {
+    console.log(input);
+    // api call to submit => response
+    // if response is success, navigate to waiting room
+    // else show error message
+    // const { data } = await joinRoom(input);
+  };
+ 
   return (
-    <Stack spacing="4">
+    <Flex direction="column" align="center" justify="center" h="100vh" gap={10}>
+      <Heading size="2xl">Quizzy</Heading>
+      <Heading size="lg">Enter the Room ID to join</Heading>
+      <HStack>
+        <PinInput value={input} onChange={setInput} size="lg">
+          <PinInputField />
+          <PinInputField />
+          <PinInputField />
+          <PinInputField />
+        </PinInput>
+      </HStack>
+      <Button w="12rem" colorScheme="gray" onClick={handleJoinRoom}>
+        Join
+      </Button>
       <Link as={RouterLink} to="/signin">
-        <Button>Sign In</Button>
+        Sign-in as Instructor
       </Link>
-      <Link as={RouterLink} to="/signup">
-        <Button>Sign Up</Button>
-      </Link>
-      <Link as={RouterLink} to="/dashboard">
-        <Button>Dashboard</Button>
-      </Link>
-      <Link as={RouterLink} to="/users">
-        <Button>Users</Button>
-      </Link>
-    </Stack>
+    </Flex>
   );
 }
