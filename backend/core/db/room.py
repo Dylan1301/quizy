@@ -10,19 +10,19 @@ def create_room(*, session: Session, room_in: RoomCreate) -> Room:
     session.refresh(db_obj)
     return db_obj
 
-def get_room_list(*, session: Session, teacher_id: Union[int, None]) -> RoomList:
+def get_room_list(*, session: Session, quiz_id: Union[int, None]) -> RoomList:
+    # Not valid since no teacher_id found available in Room Model
     statement = (select(Room)
-                 .where(Room.teacher_id == teacher_id))
+                 .where(Room.quiz_id == quiz_id))
     room_list = session.exec(statement).all()
 
     return RoomList(data=room_list)
 
-def get_room_detail(*, session: Session, teacher_id: Union[int, None], room_id: int) -> Room:
+def get_room_detail(*, session: Session, room_id: int) -> Union[Room, None]:
     statement = (select(Room)
-                 .where(Room.teacher_id == teacher_id)
                  .where(Room.id == room_id)
                  )
-    room = session.exec(statement).one()
+    room = session.exec(statement).first()
     return room
 
 def edit_room(*, session: Session, teacher_id: Union[int, None], room_id: int, room_edit: Room):
