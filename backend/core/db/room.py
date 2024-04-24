@@ -1,11 +1,9 @@
-from typing import Union
-from sqlalchemy import delete, true, update
-from sqlmodel import Session, create_engine, select
+from sqlmodel import create_engine, Session, select, SQLModel
+from typing import Union, List
+from models.room import RoomCreate, Room, RoomPublic, RoomList
 
-from models.room import Room, RoomCreate, RoomList
-
-def create_room(*, session: Session, teacher_id: Union[int, None], room_create_model: RoomCreate) -> Room:
-    db_obj = Room.model_validate(room_create_model, update={"teacher_id": teacher_id})
+def create_room(*, session: Session, room_in: RoomCreate) -> Room:
+    db_obj = Room.model_validate(room_in)
     session.add(db_obj)
     session.commit()
     session.refresh(db_obj)
@@ -61,3 +59,25 @@ def start_room(*, session: Session, teacher_id: Union[int, None], room_id: int):
     )
     room = session.exec(statement).one()
     pass
+
+def get_room_student(*, session:Session, room_id: int) -> Union[Room, None]:
+    staetment = (select(Room)
+                 .where(Room.id == room_id)
+                 .where(Room.is_published)
+                 )
+    room_out = session.exec(staetment).first()
+    return room_out
+
+
+def get_room(*, session:Session, room_id: int, quiz_id: int) -> Union[Room, None]:
+    staetment = (select(Room)
+                 .where(Room.id == room_id)
+                 .where(Room.quiz_id == quiz_id)
+                 )
+    room_out = session.exec(staetment).first()
+
+    return room_out
+
+
+
+

@@ -13,6 +13,7 @@ class RoomBase(SQLModel):
     name: str
     is_published: bool
 
+
 class RoomCreate(RoomBase):
     pass
 
