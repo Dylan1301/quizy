@@ -77,7 +77,7 @@ class NewPassword(SQLModel):
 
 
 class StudentBase(SQLModel):
-    room_id: str
+    room_id: int
     name: str
 
 
@@ -87,10 +87,10 @@ class Student(StudentBase, table=True):
                                               sa_column=Column(TIMESTAMP(timezone=True),
                                                                nullable=False, server_default=text("CURRENT_TIMESTAMP"))
                                               )
-    question_reponses: List["QuestionResponse"] = Relationship(back_populates="student")
+    question_reponses: List["QuestionResponse"] = Relationship(
+        back_populates="student")
     room_id: Optional[int] = Field(default=None, foreign_key="room.id")
     room: Optional[Room] = Relationship(back_populates="students")
-    
 
 
 class StudentRegister(StudentBase):

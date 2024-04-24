@@ -4,10 +4,11 @@ from sqlalchemy import Boolean, table
 from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text, FetchedValue, Relationship
 from datetime import datetime
 from models.answer import Answer, AnswerCreate
-if TYPE_CHECKING:     
+if TYPE_CHECKING:
     from models.quiz import Quiz
     from models.user import Student
     from models.answer import Answer
+
 
 class QuestionBase(SQLModel):
     tilte: str
@@ -15,6 +16,7 @@ class QuestionBase(SQLModel):
     explaination: str
     type: Optional[str]
     time_limit: Optional[int]
+
 
 class QuestionCreate(QuestionBase):
     pass
@@ -40,17 +42,20 @@ class Question(QuestionBase, table=True):
     quiz: Optional["Quiz"] = Relationship(back_populates="questions")
     answers: List["Answer"] = Relationship(back_populates="question")
 
+
 class QuestionPublic(QuestionBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    
+
 
 class QuestionsPublic(SQLModel):
     data: List[QuestionPublic]
 
+
 class QuestionAnswer(QuestionPublic):
     answers: List[Answer]
+
 
 class QuestionAnswerCreate(QuestionCreate):
     answers: List[AnswerCreate]
@@ -85,8 +90,10 @@ class QuestionResponse(QuestionReponseBase, table=True):
                                               sa_column=Column(TIMESTAMP(timezone=True),
                                                                nullable=False, server_default=text("CURRENT_TIMESTAMP"))
                                               )
-    total_time_taken: Optional[int]
-    student: Optional["Student"] = Relationship(back_populates="question_reponses")
+    total_time_taken: Optional[int] = Field(...)
+    student: Optional["Student"] = Relationship(
+        back_populates="question_reponses")
+
 
 class QuestionReponsePublic(QuestionReponseBase):
     id: int
