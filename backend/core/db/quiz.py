@@ -1,6 +1,6 @@
 
+from sqlalchemy import Boolean
 from sqlmodel import create_engine, Session, select
-
 from models.quiz import Quiz, QuizCreate, QuizQuestionsCreate, QuizQuestions, QuizzesPublic, QuizUpdate
 from .question import get_question_answer, create_question, create_question_answers
 from typing import Union, List
@@ -55,3 +55,14 @@ def create_quiz_questions(*, session: Session, teacher_id: Union[int, None], qui
         "questions": ques_list
     })
     return quiz_out
+
+def get_quiz_owner_id(*, session:Session, quiz_id: Union[int, None], teacher_id: Union[int, None]) -> bool:
+    statement = (select(Quiz.teacher_id)
+                 .where(Quiz.id == quiz_id))
+    result = session.exec(statement).first()
+    
+    if not result:
+        return False
+    
+    return result == teacher_id
+
