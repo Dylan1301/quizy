@@ -10,3 +10,4 @@ def create_answer(*, session: Session, question_id: Union[int, None], answer_in:
     session.commit()
     session.refresh(db_obj)
     return db_obj
+
