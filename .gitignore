@@ -10,3 +10,6 @@ ENV/
 
 # OS
 .DS_Store
+
+# Seed Data File
+*.csv
