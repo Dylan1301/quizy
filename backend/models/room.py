@@ -11,7 +11,8 @@ if TYPE_CHECKING:
 class RoomBase(SQLModel):
     quiz_id: int
     name: str
-    is_published: bool
+    is_randomized: bool
+    is_published: bool = False
 
 
 class RoomCreate(RoomBase):
@@ -35,18 +36,26 @@ class Room(RoomBase, table=True):
                                                                server_onupdate=FetchedValue(),
                                                                )
                                               )
-    ended_at: Union[datetime, None] = Field(default=None,
-                                            sa_column=Column(TIMESTAMP(timezone=True)))
+    ended_at: Optional[datetime] = Field(default=None,
+                                         sa_column=Column(TIMESTAMP(timezone=True)))
     is_published: bool
+    is_randomized: bool
     students: List["Student"] = Relationship(back_populates="room")
     quiz: "Quiz" = Relationship(back_populates="rooms")
 
+
 class RoomList(SQLModel):
     data: list[Room]
-        
+
+
+class RoomUpdate(SQLModel):
+    name: Optional[str]
+    is_randomized: Optional[bool]
+    is_published: Optional[bool]
+
 
 class RoomPublic(RoomBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    ended_at: datetime
+    ended_at: Optional[datetime]

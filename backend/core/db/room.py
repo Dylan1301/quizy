@@ -1,7 +1,8 @@
 from sqlmodel import create_engine, Session, select, SQLModel
 from typing import Union, List
-from models.room import RoomCreate, Room, RoomPublic, RoomList
+from models.room import RoomCreate, Room, RoomPublic, RoomList, RoomUpdate
 from core.db.quiz import get_quiz_owner_id
+import datetime
 
 def create_room(*, session: Session, room_in: RoomCreate) -> Room:
     db_obj = Room.model_validate(room_in)
@@ -25,42 +26,52 @@ def get_room_detail(*, session: Session, room_id: int) -> Union[Room, None]:
     room = session.exec(statement).first()
     return room
 
-def edit_room(*, session: Session, teacher_id: Union[int, None], room_id: int, room_edit: Room):
-    db_obj = Room.model_validate(room_edit, update={"teacher_id": teacher_id})
+def edit_room(*, session: Session, room_id: int, room_edit: RoomUpdate):
+    db_obj = Room.model_validate(room_edit, update={"id": room_id})
     statement = (select(Room)
-                 .where(Room.teacher_id == teacher_id)
                  .where(Room.id == room_id))
-    room: Room = session.exec(statement).one()
-    room.name = db_obj.name
+    room = session.exec(statement).one()
+
+    room_edit_data = room_edit.model_dump(exclude_unset=True)
+    room.sqlmodel_update(room_edit_data)
     session.add(room)
     session.commit()
+    session.refresh(room)
+    return room
     
-def delete_room(*, session: Session, teacher_id: Union[int, None], room_id: int):
+def delete_room(*, session: Session, room_id: int):
     statement = (select(Room)
-                 .where(Room.teacher_id == teacher_id)
                  .where(Room.id == room_id)
     )
-    session.delete(statement)
+
+    room = session.exec(statement).first()
+    session.delete(room)
     session.commit()
 
-def publish_room(*, session: Session, teacher_id: Union[int, None], room_id: int):
+def publish_room(*, session: Session, room_id: int):
     statement = (select(Room)
-                 .where(Room.teacher_id == teacher_id)
                  .where(Room.id == room_id)
     )
     room = session.exec(statement).one()
     room.is_published = True
     session.add(room)
     session.commit()
+    session.refresh(room)
+    return room
 
 
-def start_room(*, session: Session, teacher_id: Union[int, None], room_id: int):
+def end_room(*, session: Session, room_id: int) -> Union[Room, None]:
     statement = (select(Room)
-                 .where(Room.teacher_id == teacher_id)
-                 .where(Room.id == room_id)
+                .where(Room.id == room_id)
     )
     room = session.exec(statement).one()
-    pass
+    room.is_published = False
+    room.ended_at = datetime.datetime.now(datetime.timezone.utc)
+    session.add(room)
+    session.commit()
+    session.refresh(room)
+    return room
+
 
 def get_room_student(*, session:Session, room_id: int) -> Union[Room, None]:
     staetment = (select(Room)
@@ -81,5 +92,17 @@ def get_room(*, session:Session, room_id: int, quiz_id: int) -> Union[Room, None
     return room_out
 
 
+def get_room_by_id(*, session:Session, room_id: int) -> Union[Room, None]:
+    staetment = (select(Room)
+                .where(Room.id == room_id)
+                )
+    room_out = session.exec(staetment).first()
 
+    return room_out
+
+def verify_room_owner(*, session: Session, room_id, teacher_id):
+    room_obj = get_room_by_id(session=session, room_id=room_id)
+    if room_obj: 
+        return get_quiz_owner_id(session=session, quiz_id=room_obj.quiz_id, teacher_id=teacher_id)
+    return False
 
