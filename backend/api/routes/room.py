@@ -16,13 +16,6 @@ router = APIRouter()
 # student join the room
 
 
-@router.post("/join/room/{room_id}", response_model=StudentPublic)
-def student_join_room(session: SessionDep, room_id: str, student_in: StudentRegister):
-    # Add room verify
-    student = create_student(session=session, student_in=student_in)
-    return student
-
-
 @router.post("/room", response_model=Room)
 def room_create(session: SessionDep, teacher: CurrentUserDep, room_create_model: RoomCreate):
     """
@@ -138,11 +131,3 @@ def room_end(session: SessionDep, teacher: CurrentUserDep, room_id: int):
     room_out = end_room(session=session, room_id=room_id)
     return room_out
 
-
-# Delete due to publish and start have the same meaning
-
-# @router.post("/room/start/{room_id}", response_model=RoomPublic)
-# def room_start(session: SessionDep, teacher: CurrentUserDep, room_id: int):
-#     response = start_room(
-#         session=session, room_id=room_id)
-#     return response

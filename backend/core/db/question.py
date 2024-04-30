@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from typing import Union, List
-from backend.models.quiz import QuizQuestions
+from models.quiz import QuizQuestions
 from models.question import QuestionAnswer, QuestionAnswerCreate, QuestionCreate, Question, QuestionPublic, QuestionResponse, QuestionResponseCreate, QuestionsPublic
 from .answer import create_answer
 
@@ -52,7 +52,7 @@ def create_question_response(*, session: Session, question_response_in: Question
     return db_object
 
 
-def get_questions_by_list(*, session: Session, question_orders: List[int]) -> List[QuestionAnswer]:
+# def get_questions_by_list(*, session: Session, question_orders: List[int]) -> List[QuestionAnswer]:
     
 
     

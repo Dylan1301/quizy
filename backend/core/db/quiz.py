@@ -66,3 +66,5 @@ def get_quiz_owner_id(*, session:Session, quiz_id: Union[int, None], teacher_id:
     
     return result == teacher_id
 
+
+

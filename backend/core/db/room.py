@@ -1,6 +1,7 @@
 from sqlmodel import create_engine, Session, select, SQLModel
 from typing import Union, List
 from models.room import RoomCreate, Room, RoomPublic, RoomList, RoomUpdate
+from models.user import Student
 from core.db.quiz import get_quiz_owner_id
 import datetime
 
@@ -100,9 +101,19 @@ def get_room_by_id(*, session:Session, room_id: int) -> Union[Room, None]:
 
     return room_out
 
-def verify_room_owner(*, session: Session, room_id, teacher_id):
+def verify_room_owner(*, session: Session, room_id: int, teacher_id: int):
     room_obj = get_room_by_id(session=session, room_id=room_id)
     if room_obj: 
         return get_quiz_owner_id(session=session, quiz_id=room_obj.quiz_id, teacher_id=teacher_id)
     return False
 
+def verify_student_in_room(*, session: Session, room_id: int, student_id: int):
+    statement = (select(Student.id)
+                .where(Student.id == student_id)
+                .where(Student.room_id == room_id)
+    )
+    student = session.exec(statement).first()
+    if student:
+        return True
+    
+    return False
