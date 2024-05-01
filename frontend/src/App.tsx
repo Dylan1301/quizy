@@ -32,6 +32,7 @@ import TutorQuizStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 import QuizzesPage from "./pages/tutor/QuizzesPage";
 import RoomsPage from "./pages/tutor/RoomsPage";
 import TutorQuizDetailPage from "./pages/tutor/TutorQuizDetailPage";
+import TeacherLobby from "./pages/tutor/TeacherLobby";
 
 axios.defaults.baseURL = API_URL;
 axios.interceptors.request.use(function (config) {
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
       },
       { path: "/quiz/:quizId", element: <TutorQuizDetailPage /> },
       { path: "/quiz/:quizId/statistic", element: <TutorQuizStatisticPage /> },
+      { path: "/rooms/lobby", element: <TeacherLobby />},
     ],
   },
   // Student paths
@@ -75,10 +77,7 @@ const router = createBrowserRouter([
     children: [
       { path: "waiting", element: <WaitingRoomPage /> },
       { path: "question/:questionId", element: <QuestionPage /> },
-      {
-        path: "question/:questionId/statistic",
-        element: <QuestionStatisticPage />,
-      },
+      { path: "question/:questionId/statistic", element: <QuestionStatisticPage />, },
       {
         path: "statistic",
         element: <QuizStatisticPage />,

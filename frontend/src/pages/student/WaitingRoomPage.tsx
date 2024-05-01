@@ -1,3 +1,13 @@
+import { Heading } from "@chakra-ui/react";
+
 export default function WaitingRoomPage() {
-  return <div>WaitingRoomPage</div>;
+  return (
+    <>
+    <Heading>Waiting For Host To Start Quiz</Heading>
+    <p>Your Name: <br></br>
+      Quiz: <br></br>
+      Avatar: 
+    </p>
+    </>
+  );
 }
