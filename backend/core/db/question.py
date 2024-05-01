@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 from typing import Union, List
-from models.question import QuestionAnswer, QuestionAnswerCreate, QuestionCreate, Question, QuestionResponse, QuestionResponseCreate
+from models.quiz import QuizQuestions
+from models.question import QuestionAnswer, QuestionAnswerCreate, QuestionCreate, Question, QuestionPublic, QuestionResponse, QuestionResponseCreate, QuestionsPublic
 from .answer import create_answer
 
 
@@ -12,6 +13,13 @@ def get_question_answer(*, session: Session, question_id: Union[int, None]) -> Q
         "answers": item.answers
     })
     return result
+
+def get_questions(*, session: Session, question_id: Union[int, None]) -> QuestionsPublic:
+    statement = (select(Question)
+                 .where(Question.id == question_id))
+    items = session.exec(statement).all()
+    return QuestionsPublic(data=items)
+    
 
 
 def create_question(*, session: Session, question_in: QuestionCreate, quiz_id: Union[int, None]):
@@ -42,3 +50,9 @@ def create_question_response(*, session: Session, question_response_in: Question
     session.commit()
     session.refresh(db_object)
     return db_object
+
+
+# def get_questions_by_list(*, session: Session, question_orders: List[int]) -> List[QuestionAnswer]:
+    
+
+    

@@ -34,4 +34,3 @@ async def startup_event():
 async def startup_event_2():
     create_db_and_tables()
     return "DB created"
-

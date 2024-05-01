@@ -64,10 +64,10 @@ class QuestionAnswerCreate(QuestionCreate):
 
 
 class QuestionReponseBase(SQLModel):
-    student_id: Optional[int]
-    room_id: Optional[int]
-    question_id: Optional[int]
-    answer_id: Optional[int]
+    student_id: int
+    room_id: int
+    question_id: int
+    answer_id: int
 
 
 class QuestionResponseCreate(QuestionReponseBase):
