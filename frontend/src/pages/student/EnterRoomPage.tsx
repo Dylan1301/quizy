@@ -1,6 +1,7 @@
 import { SetStateAction, useState } from "react";
 import { Heading, Input, Button, Box, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 export default function EnterRoomPage() {
   const icons = [
@@ -43,6 +44,7 @@ export default function EnterRoomPage() {
 
   return (
     <>
+      <ChevronLeftIcon/>
       <Heading>Choose Your Name and Avatar</Heading>
       <Input placeholder="Enter your name" value={name} onChange={handleNameChange} />
       <Box mt={4}>

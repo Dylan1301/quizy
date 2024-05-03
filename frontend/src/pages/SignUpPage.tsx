@@ -24,6 +24,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 const signUpApi = fetcher.path("/signup").method("post").create();
 const loginApi = fetcher.path("/login").method("post").create();
@@ -85,26 +86,20 @@ export default function SignUpPage() {
   };
 
   return (
-    <Flex alignItems="center" className="h-screen">
-      <Card className="w-full max-w-sm mx-auto">
-        <CardHeader pb={0}>
-          <Heading size="md">Sign Up</Heading>
-          <Text fontSize="sm" color="gray">
-            Already have an account?
-            <Link as={RouterLink} to="/signin" color="blue.500" ml={1}>
-              <strong>Sign in</strong>
+    <Flex direction="column" align="center" justify="center">
+            <Link as={RouterLink} to="/signin" className="absolute top-4 left-4">
+              <ChevronLeftIcon width="45px" height="45px" mt={3}/>
             </Link>
-          </Text>
-        </CardHeader>
+          <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">QUIZZY</div>
+          <Heading fontWeight="bold" fontSize="36px" letterSpacing="-0.02em" textAlign="center" marginTop="125px">Sign-up as Instructor</Heading>
 
-        <CardBody>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack>
               <FormControl isInvalid={!!errors.name}>
-                <FormLabel htmlFor="name">First name</FormLabel>
-                <Input
+                <Input marginTop="50px" width="400px" borderWidth="4px" borderColor="black" _hover={{ borderColor: "black" }}
                   id="name"
-                  placeholder="Fill your name"
+                  textAlign="center"
+                  placeholder="Name"
                   {...register("name")}
                 />
                 <FormErrorMessage>
@@ -113,10 +108,10 @@ export default function SignUpPage() {
               </FormControl>
 
               <FormControl isInvalid={!!errors.email}>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Input
+                <Input marginTop="10px" width="400px" borderWidth="4px" borderColor="black" _hover={{ borderColor: "black" }}
                   id="email"
-                  placeholder="Enter your email"
+                  textAlign="center"
+                  placeholder="Email Address"
                   {...register("email")}
                 />
                 <FormErrorMessage>
@@ -125,11 +120,11 @@ export default function SignUpPage() {
               </FormControl>
 
               <FormControl isInvalid={!!errors.password}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Input
+                <Input marginTop="10px" width="400px" borderWidth="4px" borderColor="black" _hover={{ borderColor: "black" }}
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  textAlign="center"
+                  placeholder="Password"
                   {...register("password")}
                 />
                 <FormErrorMessage>
@@ -137,20 +132,26 @@ export default function SignUpPage() {
                 </FormErrorMessage>
               </FormControl>
 
-              <Button type="submit" colorScheme="blue" isLoading={isSubmitting}>
+              <Text fontSize="sm" color="gray" textAlign="center" marginTop="10px">
+              Already have an account?
+                <Link as={RouterLink} to="/signin" color="blue.500" ml={1}>
+                  <strong>Sign in</strong>
+                </Link>
+              </Text>
+            <Stack direction="row" justify="center" align="center" spacing="10px" mt="40px">
+              <Button type="submit" isLoading={isSubmitting}  width="180px" height="50px" overflow="hidden" backgroundColor="black" textColor="white" _hover={{ bg: "#474747" }}>
                 Sign up
               </Button>
-              <Button
+            </Stack>
+              {/* <Button
                 onClick={signInWithGoogle}
                 variant="outline"
                 isLoading={isSigningGoogle}
               >
                 <Chrome className="mr-2" /> Sign up with Google
-              </Button>
+              </Button> */}
             </Stack>
           </form>
-        </CardBody>
-      </Card>
     </Flex>
   );
 }

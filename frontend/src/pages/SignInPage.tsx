@@ -24,6 +24,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import fetcher from "../utils/fetcher";
 import { Link as RouterLink } from "react-router-dom";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 const loginApi = fetcher.path("/login").method("post").create();
 
@@ -75,25 +76,19 @@ export default function SignInPage() {
   };
 
   return (
-    <Flex alignItems="center" className="h-screen">
-      <Card className="w-full max-w-sm mx-auto">
-        <CardHeader pb={0}>
-          <Heading size="md">Sign In</Heading>
-          <Text fontSize="sm" color="gray">
-            Don't have an account?
-            <Link as={RouterLink} to="/signup" color="blue.500" ml={1}>
-              <strong>Create now</strong>
-            </Link>
-          </Text>
-        </CardHeader>
-        <CardBody>
+    <Flex direction="column" align="center" justify="center">
+      <Link as={RouterLink} to="/" className="absolute top-4 left-4">
+        <ChevronLeftIcon width="45px" height="45px" mt={3}/>
+      </Link>
+      <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">QUIZZY</div>
+          <Heading fontWeight="bold" fontSize="36px" letterSpacing="-0.02em" textAlign="center" marginTop="125px">Sign-in as Instructor</Heading>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing="4">
               <FormControl isInvalid={!!errors.email}>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Input
+                <Input marginTop="100px" width="400px" borderWidth="4px" borderColor="black" _hover={{ borderColor: "black" }}
                   id="email"
-                  placeholder="Enter your email"
+                  placeholder="Username"
+                  textAlign="center"
                   {...register("email")}
                 />
                 <FormErrorMessage>
@@ -102,11 +97,11 @@ export default function SignInPage() {
               </FormControl>
 
               <FormControl isInvalid={!!errors.password}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Input
+                <Input width="400px" borderWidth="4px" borderColor="black" _hover={{ borderColor: "black" }}
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Password"
+                  textAlign="center"
                   {...register("password")}
                 />
                 <FormErrorMessage>
@@ -114,20 +109,23 @@ export default function SignInPage() {
                 </FormErrorMessage>
               </FormControl>
 
-              <Button type="submit" colorScheme="blue" isLoading={isSubmitting}>
-                Sign in
-              </Button>
-              <Button
+              {/* <Button
                 onClick={signInWithGoogle}
                 variant="outline"
                 isLoading={isSigningGoogle}
               >
                 <Chrome className="mr-2" /> Sign in with Google
-              </Button>
+              </Button> */}
+              <Stack direction="row" justify="center" align="center" spacing="10px" mt="80px">
+                <Button type="submit" isLoading={isSubmitting} width="180px" height="50px" overflow="hidden" backgroundColor="black" textColor="white" _hover={{ bg: "#474747" }}>
+                  Sign-in
+                </Button>
+              </Stack>
+              <Link as={RouterLink} to="/signup" color="black" ml={1} textAlign="center" marginTop="40px">
+              <u>Sign-up</u>
+              </Link>
             </Stack>
           </form>
-        </CardBody>
-      </Card>
     </Flex>
   );
 }
