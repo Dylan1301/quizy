@@ -5,7 +5,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface StudentRegister {
-  name: string;
+export interface QuestionResponseCreate {
+  answer_id: number;
+  question_id: number;
   room_id: number;
+  student_id: number;
 }

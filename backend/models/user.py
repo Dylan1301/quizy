@@ -31,7 +31,7 @@ class TeacherCreate(TeacherBase):
 
 # Teacher model and table inside database
 class Teacher(TeacherBase, table=True):
-    id: Union[int, None] = Field(default=None, primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     hashed_password: str
     token: Union[str, None] = Field(default=None)
     quizzes: List[Quiz] = Relationship(back_populates="teacher")

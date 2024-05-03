@@ -5,7 +5,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface StudentRegister {
+export interface RoomCreate {
+  is_published?: boolean;
+  is_randomized: boolean;
   name: string;
-  room_id: number;
+  quiz_id: number;
 }

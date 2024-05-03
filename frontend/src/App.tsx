@@ -37,9 +37,7 @@ import TeacherLobby from "./pages/tutor/TeacherLobby";
 axios.defaults.baseURL = API_URL;
 axios.interceptors.request.use(function (config) {
   const token = localStorage.getItem("token");
-  if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`;
-  }
+  if (token) config.headers["Authorization"] = `Bearer ${token}`;
   return config;
 });
 const router = createBrowserRouter([
@@ -67,7 +65,7 @@ const router = createBrowserRouter([
       },
       { path: "/quiz/:quizId", element: <TutorQuizDetailPage /> },
       { path: "/quiz/:quizId/statistic", element: <TutorQuizStatisticPage /> },
-      { path: "/rooms/lobby", element: <TeacherLobby />},
+      { path: "/rooms/lobby", element: <TeacherLobby /> },
     ],
   },
   // Student paths
@@ -77,7 +75,10 @@ const router = createBrowserRouter([
     children: [
       { path: "waiting", element: <WaitingRoomPage /> },
       { path: "question/:questionId", element: <QuestionPage /> },
-      { path: "question/:questionId/statistic", element: <QuestionStatisticPage />, },
+      {
+        path: "question/:questionId/statistic",
+        element: <QuestionStatisticPage />,
+      },
       {
         path: "statistic",
         element: <QuizStatisticPage />,
@@ -94,9 +95,11 @@ function App() {
     <SWRConfig
       value={{
         errorRetryCount: 1,
-        onError: () => {
-          localStorage.removeItem("token");
-          onOpen();
+        onError: (error) => {
+          if (error.response?.status === 403) {
+            localStorage.removeItem("token");
+            onOpen();
+          }
         },
       }}
     >

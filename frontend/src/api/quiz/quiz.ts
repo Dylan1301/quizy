@@ -33,6 +33,8 @@ import type {
 
   
   /**
+ * Get all quiz related to the current teacher
+Return: list of quizzes that created by the current user
  * @summary Get All Quiz
  */
 export const getAllQuizQuizzesGet = (
@@ -73,6 +75,9 @@ export const useGetAllQuizQuizzesGet = <TError = AxiosError<HTTPValidationError>
   }
 }
 /**
+ * Create a quiz
+Param: quiz_in: QuizCreate Object contain information needed to create a quiz
+Return:  quiz with information
  * @summary Create Quiz Id
  */
 export const createQuizIdQuizPost = (
@@ -116,6 +121,9 @@ export const useCreateQuizIdQuizPost = <TError = AxiosError<HTTPValidationError>
   }
 }
 /**
+ * Get a quiz by it ID
+Param: quiz_id: id of quiz
+Return:  QuizQuestions object - contain quiz and related questions information.
  * @summary Get Quiz Questions
  */
 export const getQuizQuestionsQuizQuizIdGet = (
@@ -154,6 +162,51 @@ export const useGetQuizQuestionsQuizQuizIdGet = <TError = AxiosError<HTTPValidat
   }
 }
 /**
+ * @summary Update Quiz Questions
+ */
+export const updateQuizQuestionsQuizQuizIdPatch = (
+    quizId: unknown, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<QuizQuestions>> => {
+    return axios.default.patch(
+      `/quiz/${quizId}`,undefined,options
+    );
+  }
+
+
+
+export const getUpdateQuizQuestionsQuizQuizIdPatchMutationFetcher = (quizId: unknown, options?: AxiosRequestConfig) => {
+  return (_: string, __: { arg: Arguments }): Promise<AxiosResponse<QuizQuestions>> => {
+    return updateQuizQuestionsQuizQuizIdPatch(quizId, options);
+  }
+}
+export const getUpdateQuizQuestionsQuizQuizIdPatchMutationKey = (quizId: unknown,) => `/quiz/${quizId}` as const;
+
+export type UpdateQuizQuestionsQuizQuizIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuizQuestionsQuizQuizIdPatch>>>
+export type UpdateQuizQuestionsQuizQuizIdPatchMutationError = AxiosError<HTTPValidationError>
+
+/**
+ * @summary Update Quiz Questions
+ */
+export const useUpdateQuizQuestionsQuizQuizIdPatch = <TError = AxiosError<HTTPValidationError>>(
+  quizId: unknown, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof updateQuizQuestionsQuizQuizIdPatch>>, TError, string, Arguments, Awaited<ReturnType<typeof updateQuizQuestionsQuizQuizIdPatch>>> & { swrKey?: string }, axios?: AxiosRequestConfig }
+) => {
+
+  const {swr: swrOptions, axios: axiosOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getUpdateQuizQuestionsQuizQuizIdPatchMutationKey(quizId);
+  const swrFn = getUpdateQuizQuestionsQuizQuizIdPatchMutationFetcher(quizId,axiosOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+/**
+ * Create a quiz with list of questions and answers. This is an another version of quiz
+Param: quiz_in: QuizCreate Object contain information needed to create a quiz
+Return:  quiz with questions and answers
  * @summary Create Quiz Questions Api
  */
 export const createQuizQuestionsApiQuizVer2Post = (

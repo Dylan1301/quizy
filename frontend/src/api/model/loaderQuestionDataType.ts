@@ -4,8 +4,5 @@
  * FastAPI
  * OpenAPI spec version: 0.1.0
  */
-import type { QuizPublic } from './quizPublic';
 
-export interface QuizzesPublic {
-  data: QuizPublic[];
-}
+export type LoaderQuestionDataType = string | null;
