@@ -1,6 +1,4 @@
-import email
 from typing import Optional, Union, List, TYPE_CHECKING
-from sqlalchemy import table
 from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text, Relationship
 from datetime import datetime
 from models.quiz import Quiz

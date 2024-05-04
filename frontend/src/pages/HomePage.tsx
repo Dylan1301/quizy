@@ -32,12 +32,10 @@ export default function HomePage() {
           <PinInputField />
         </PinInput>
       </HStack>
-      <Button w="12rem" colorScheme="gray" onClick={handleJoinRoom}>
+      <Button w="12rem" colorScheme="blue" onClick={handleJoinRoom}>
         Join
       </Button>
-      {isRedirecting && (
-        <Text>Redirecting to Waiting Room...</Text>
-      )}
+      {isRedirecting && <Text>Redirecting to Waiting Room...</Text>}
       <Link as={RouterLink} to="/signin">
         Sign-in as Instructor
       </Link>

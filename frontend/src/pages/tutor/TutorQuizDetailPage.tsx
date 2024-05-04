@@ -42,7 +42,11 @@ export default function TutorQuizDetailPage() {
 
       <OrderedList listStyleType="none" className="flex">
         {roomsResponse?.data.data.map((room) => (
-          <ListItem as={RouterLink} key={room.id}>
+          <ListItem
+            as={RouterLink}
+            to={`quiz/${room.quiz_id}/room/${room.id}`}
+            key={room.id}
+          >
             <Card>
               <CardBody>
                 <Heading size="md">{room.name}</Heading>

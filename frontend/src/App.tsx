@@ -32,7 +32,7 @@ import TutorQuizStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 import QuizzesPage from "./pages/tutor/QuizzesPage";
 import RoomsPage from "./pages/tutor/RoomsPage";
 import TutorQuizDetailPage from "./pages/tutor/TutorQuizDetailPage";
-import TeacherLobby from "./pages/tutor/TeacherLobby";
+import TutorRoomDetailPage from "./pages/tutor/TutorRoomDetailPage";
 
 axios.defaults.baseURL = API_URL;
 axios.interceptors.request.use(function (config) {
@@ -55,17 +55,20 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       { path: "/quizzes", element: <QuizzesPage /> },
-      { path: "/rooms", element: <RoomsPage /> },
       { path: "/quiz/create", element: <CreateQuizPage /> },
-      { path: "/room/create", element: <CreateRoomPage /> },
-      { path: "/room/:roomId/:questionId", element: <TutorQuestionPage /> },
-      {
-        path: "/room/:roomId/question/statistic",
-        element: <TutorQuestionStatisticPage />,
-      },
       { path: "/quiz/:quizId", element: <TutorQuizDetailPage /> },
       { path: "/quiz/:quizId/statistic", element: <TutorQuizStatisticPage /> },
-      { path: "/rooms/lobby", element: <TeacherLobby /> },
+      { path: "/quiz/:quizId/rooms", element: <RoomsPage /> },
+      { path: "/quiz/:quizId/room/create", element: <CreateRoomPage /> },
+      { path: "/quiz/:quizId/room/:roomId", element: <TutorRoomDetailPage /> },
+      {
+        path: "/quiz/:quizId/room/:roomId/:questionId",
+        element: <TutorQuestionPage />,
+      },
+      {
+        path: "/quiz/:quizId/room/:roomId/question/statistic",
+        element: <TutorQuestionStatisticPage />,
+      },
     ],
   },
   // Student paths
