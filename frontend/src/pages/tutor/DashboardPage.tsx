@@ -5,8 +5,8 @@ export default function DashboardPage() {
   const { data } = useReadTeacherMeInfoGet();
 
   return (
-    <Box>
-      <Heading>Welcome back, {data?.data.name}</Heading>
-    </Box>
+      <Box>
+        <Heading>Welcome back, {data?.data.name}</Heading>
+      </Box>
   );
 }

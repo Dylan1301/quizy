@@ -38,6 +38,9 @@ export default function TutorQuizDetailPage() {
         <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
           View question list
         </Button>
+        <Button colorScheme="teal" as={RouterLink} to={`/quiz/${quizId}/room/create`} marginLeft="5px">
+          Create Room
+        </Button>
       </Box>
 
       <OrderedList listStyleType="none" className="flex">

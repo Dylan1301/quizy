@@ -1,5 +1,5 @@
 import { SetStateAction, useState } from "react";
-import { Heading, Input, Button, Box, Text } from "@chakra-ui/react";
+import { Heading, Input, Button, Box, Text, Flex } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 export default function EnterRoomPage() {
@@ -42,9 +42,9 @@ export default function EnterRoomPage() {
   };
 
   return (
-    <>
+    <Flex direction="column" align="center" justify="center" h="100vh" gap={10}>
       <Heading>Choose Your Name and Avatar</Heading>
-      <Input placeholder="Enter your name" value={name} onChange={handleNameChange} />
+      <Input placeholder="Enter your name" value={name} onChange={handleNameChange} width="30%" />
       <Box mt={4}>
         <Text>Select an avatar:</Text>
         <Box display="flex" mt={2}>
@@ -67,6 +67,6 @@ export default function EnterRoomPage() {
       <Button mt={4} onClick={handleSubmit} as={RouterLink} to="waiting">
         Submit
       </Button>
-    </>
+    </Flex>
   );
 }
