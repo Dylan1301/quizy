@@ -13,10 +13,10 @@ import type { RoomUpdatedAt } from './roomUpdatedAt';
 export interface Room {
   created_at?: RoomCreatedAt;
   ended_at?: RoomEndedAt;
-  id?: RoomId;
+  id: RoomId;
   is_published: boolean;
   is_randomized: boolean;
   name: string;
-  quiz_id?: RoomQuizId;
+  quiz_id: RoomQuizId;
   updated_at?: RoomUpdatedAt;
 }
