@@ -2,13 +2,13 @@ from typing import Union, Annotated
 
 from fastapi import APIRouter, HTTPException, Header
 from api.deps import SessionDep, CurrentUserDep
-from core.db.room import get_room_by_id, verify_room_owner, verify_student_in_room
+from core.db.room import end_room, get_room_by_id, get_room_stat, verify_room_owner, verify_student_in_room
 from core.db.question import create_question_response
 from core.db.db import create_student
 from core.db.quiz import get_quiz
 
 
-from models.question import QuestionReponsePublic, QuestionResponseCreate
+from models.question import QuestionReponseBase, QuestionReponsePublic, QuestionResponseCreate
 from models.user import StudentPublic, StudentRegister
 from core.loader import QuizLoader, LoaderQuizData, LoaderQuestionData
 from contextlib import asynccontextmanager
@@ -133,10 +133,22 @@ async def start_next_ques(session: SessionDep, teacher: CurrentUserDep, room_id:
 @router.post("/room/{room_id}/end_session")
 async def end_room_quiz(session: SessionDep, teacher: CurrentUserDep, room_id: int):
     """
-    Not Implemented yet
     End the current room session and return statistics of all user
     """
-    pass
+    if not verify_room_owner(session=session, room_id=room_id, teacher_id=teacher.id):
+        raise HTTPException(
+            status_code=400,
+            detail="You are not owner of this room or room not available",
+        )
+    room = end_room(session=session, room_id=room_id)
+    if not room:
+        raise HTTPException(
+            status_code=400, detail="Cannot end room"
+        )
+    # get room stat - all student score
+    room_stat = get_room_stat(session=session, room_id=room_id)
+    quiz_loader.set_room_stat(room_id=room_id, room_stat=room_stat)
+    return room_stat
 
 
 @router.post("/room/{room_id}/answer", response_model=QuestionReponsePublic)
@@ -202,7 +214,15 @@ def student_join_room(session: SessionDep, room_id: int, student_in: StudentRegi
 @router.post("/room/{room_id}/stats")
 def get_room_stats(session: SessionDep, student: StudentPublic, room_id: int):
     """
-    Not Implemented yet
     Get statistics for the whole group
     """
-    pass
+    
+    if not student.id:
+        raise HTTPException(status_code=400, detail="You have not joined the room")
+
+    if not verify_student_in_room(
+        session=session, room_id=room_id, student_id=student.id
+    ):
+        raise HTTPException(status_code=400, detail="You have not joined the room")
+    return quiz_loader.get_student_score(room_id, student.id)
+
