@@ -137,7 +137,12 @@ export default function SignUpPage() {
                 </FormErrorMessage>
               </FormControl>
 
-              <Button type="submit" colorScheme="blue" isLoading={isSubmitting}>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                isLoading={isSubmitting}
+                mt={4}
+              >
                 Sign up
               </Button>
               <Button
