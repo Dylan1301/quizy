@@ -1,6 +1,6 @@
 import { SetStateAction, useState } from "react";
 import { Heading, Input, Button, Box, Text, Flex } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function EnterRoomPage() {
   const icons = [
@@ -16,6 +16,7 @@ export default function EnterRoomPage() {
   
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("");
+  const navigate = useNavigate();
 
   const handleNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setName(event.target.value);
@@ -38,7 +39,8 @@ export default function EnterRoomPage() {
       return;
     }
 
-    // Proceed with form submission or further actions
+    // Navigate to waiting room and pass data
+    navigate("waiting", { state: { name, selectedIcon } });
   };
 
   return (
@@ -64,7 +66,7 @@ export default function EnterRoomPage() {
           ))}
         </Box>
       </Box>
-      <Button mt={4} onClick={handleSubmit} as={RouterLink} to="waiting">
+      <Button mt={4} onClick={handleSubmit}>
         Submit
       </Button>
     </Flex>
