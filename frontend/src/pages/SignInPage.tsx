@@ -3,21 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
   Input,
   Heading,
   Stack,
-  Text,
   Flex,
-  FormLabel,
   FormControl,
   FormErrorMessage,
   Link,
   useToast,
 } from "@chakra-ui/react";
-import { Chrome } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { firebaseAuth } from "../utils/constants";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -82,59 +77,97 @@ export default function SignInPage() {
   };
 
   return (
-    <Flex alignItems="center" className="h-screen">
-      <Card className="w-full max-w-sm mx-auto">
-        <CardHeader pb={0}>
-          <Heading size="md">Sign In</Heading>
-          <Text fontSize="sm" color="gray">
-            Don't have an account?
-            <Link as={RouterLink} to="/signup" color="blue.500" ml={1}>
-              <strong>Create now</strong>
-            </Link>
-          </Text>
-        </CardHeader>
-        <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing="4">
-              <FormControl isInvalid={!!errors.email}>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Input
-                  id="email"
-                  placeholder="Enter your email"
-                  {...register("email")}
-                />
-                <FormErrorMessage>
-                  {errors.email && errors.email.message}
-                </FormErrorMessage>
-              </FormControl>
+    <Flex direction="column" align="center" justify="center">
+      <Link as={RouterLink} to="/" className="absolute top-4 left-4">
+        <ChevronLeft width="45px" height="45px" className="mt-3" />
+      </Link>
+      <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">
+        QUIZZY
+      </div>
+      <Heading
+        fontWeight="bold"
+        fontSize="36px"
+        letterSpacing="-0.02em"
+        textAlign="center"
+        marginTop="125px"
+      >
+        Sign-in as Instructor
+      </Heading>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing="4">
+          <FormControl isInvalid={!!errors.email}>
+            <Input
+              marginTop="100px"
+              width="400px"
+              borderWidth="4px"
+              borderColor="black"
+              _hover={{ borderColor: "black" }}
+              id="email"
+              placeholder="Username"
+              textAlign="center"
+              {...register("email")}
+            />
+            <FormErrorMessage>
+              {errors.email && errors.email.message}
+            </FormErrorMessage>
+          </FormControl>
 
-              <FormControl isInvalid={!!errors.password}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  {...register("password")}
-                />
-                <FormErrorMessage>
-                  {errors.password && errors.password.message}
-                </FormErrorMessage>
-              </FormControl>
+          <FormControl isInvalid={!!errors.password}>
+            <Input
+              width="400px"
+              borderWidth="4px"
+              borderColor="black"
+              _hover={{ borderColor: "black" }}
+              id="password"
+              type="password"
+              placeholder="Password"
+              textAlign="center"
+              {...register("password")}
+            />
+            <FormErrorMessage>
+              {errors.password && errors.password.message}
+            </FormErrorMessage>
+          </FormControl>
 
-              <Button type="submit" colorScheme="blue" isLoading={isSubmitting}>
-                Sign in
-              </Button>
-              <Button
+          {/* <Button
                 onClick={signInWithGoogle}
                 variant="outline"
                 isLoading={isSigningGoogle}
               >
                 <Chrome className="mr-2" /> Sign in with Google
-              </Button>
-            </Stack>
-          </form>
-        </CardBody>
-      </Card>
+              </Button> */}
+          <Stack
+            direction="row"
+            justify="center"
+            align="center"
+            spacing="10px"
+            mt="80px"
+          >
+            <Button
+              type="submit"
+              isLoading={isSubmitting}
+              width="180px"
+              height="50px"
+              overflow="hidden"
+              backgroundColor="black"
+              textColor="white"
+              _hover={{ bg: "#474747" }}
+            >
+              Sign-in
+            </Button>
+          </Stack>
+          <Link
+            as={RouterLink}
+            to="/signup"
+            color="black"
+            ml={1}
+            textAlign="center"
+            marginTop="40px"
+          >
+            <u>Sign-up</u>
+          </Link>
+        </Stack>
+      </form>
     </Flex>
   );
 }

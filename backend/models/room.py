@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from sqlmodel import (
     Field,
     Relationship,
@@ -70,3 +70,7 @@ class RoomPublic(RoomBase):
     created_at: datetime
     updated_at: datetime
     ended_at: Optional[datetime]
+
+class RoomStat(SQLModel):
+    room_id: int
+    room_stat: Dict[Student, int]

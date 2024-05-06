@@ -12,6 +12,7 @@ class LoaderQuestionData(QuestionAnswer):
 
 class LoaderQuizData(QuizQuestions):
     questions: List[LoaderQuestionData]
+    room_stat: Dict[int, int] # dict for {student_id: score}
 
 
 class QuizLoader:
@@ -40,6 +41,16 @@ class QuizLoader:
     def get_room_data(self, room_id: int) -> Union[LoaderQuizData, None]:
         if self.check_room_id_availble(room_id):
             return self.data[room_id]
+        return None
+    
+    def set_room_stat(self, room_id: int, room_stat: Dict):
+        if self.check_room_id_availble(room_id):
+            self.data[room_id].room_stat = room_stat
+        return None
+    
+    def get_student_score(self, room_id: int, student_id: int):
+        if self.check_room_id_availble(room_id):
+            return self.data[room_id].room_stat[student_id]
         return None
 
     def randomnizng_question_list(self, room_id: int):
@@ -92,3 +103,4 @@ class QuizLoader:
                     return next_ques
 
         return None
+    
