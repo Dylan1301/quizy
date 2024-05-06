@@ -7,7 +7,6 @@ import {
 import { useParams } from "react-router-dom";
 import {
   Badge,
-  Box,
   Button,
   Card,
   CardBody,
@@ -15,16 +14,11 @@ import {
   Code,
   HStack,
   Heading,
-  ListItem,
-  OrderedList,
   Stack,
   Text,
   Modal,
   ModalOverlay,
   ModalContent,
-  AvatarGroup,
-  Avatar,
-  Tooltip,
 } from "@chakra-ui/react";
 import { ArrowRightCircle, BarChartBig, CheckCircle } from "lucide-react";
 import {
@@ -32,24 +26,13 @@ import {
   startRoomQuizRoomRoomIdStartQuizPost,
 } from "../../api/session/session";
 import { LoaderQuizData } from "../../api/model";
-import { COLORS, firebaseFirestore } from "../../utils/constants";
+import { firebaseFirestore } from "../../utils/constants";
 import CountDown from "../../components/CountDown";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { FirebaseRoomInfo } from "../../utils/types";
 import { nonNullable, toSixDigits } from "../../utils/functions";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip as ChartTooltip,
-  Legend,
-  ChartOptions,
-  ChartData,
-} from "chart.js";
-import "chart.js/auto";
-import { Bar } from "react-chartjs-2";
+import { QuestionStats } from "../../components/QuestionStats";
+import QuestionDetail from "../../components/QuestionDetail";
 
 const TutorRoomDetailPage: React.FC = () => {
   const roomId = parseInt(useParams().roomId || "");
@@ -197,7 +180,7 @@ function QuestionPresenation({
   roomFromFirebase?: FirebaseRoomInfo;
 }) {
   const [isTimeUp, setTimeUp] = useState(false);
-  const [willShowStats, setShowStats] = useState(true);
+  const [showStats, setShowStats] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const question = loadedQuizData.questions[currentQuestionIndex];
   const firebaseQuestion = roomFromFirebase?.questions[question.id];
@@ -221,6 +204,7 @@ function QuestionPresenation({
     if (currentQuestionIndex + 1 < loadedQuizData.questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setTimeUp(false);
+      setShowStats(false);
     }
   };
 
@@ -229,45 +213,16 @@ function QuestionPresenation({
       <CardBody>
         <Heading mb={8}>{question.tilte}</Heading>
 
-        {willShowStats ? (
-          <QuestionStatistic answerCounts={firebaseQuestion?.answers || {}} />
+        {showStats ? (
+          <QuestionStats
+            answerCounts={firebaseQuestion?.answers || {}}
+            answers={question.answers}
+          />
         ) : (
-          <>
-            <OrderedList ml={0} className="!list-none !grid grid-cols-2 gap-4">
-              {question.answers.map((answer, index) => (
-                <ListItem key={answer.id}>
-                  <Box
-                    bgColor={`${COLORS[index]}.600`}
-                    color={"white"}
-                    p={8}
-                    rounded={"lg"}
-                    fontSize={"xl"}
-                    fontWeight={"semibold"}
-                  >
-                    {answer.content}
-                  </Box>
-                </ListItem>
-              ))}
-            </OrderedList>
-            <Stack mt={8}>
-              <Heading size={"sm"}>Looks who replied</Heading>
-              <AvatarGroup size="md" max={12} mx={"auto"}>
-                {answeredStudents.length === 0 && (
-                  <Text color={"gray.500"}>No one answered yet</Text>
-                )}
-                {answeredStudents.map((stu) => (
-                  <Tooltip label={stu.name} key={stu.id}>
-                    <Avatar
-                      bg={"gray.200"}
-                      icon={
-                        <Text fontSize={"x-large"}>{stu.icon || "🍀"}</Text>
-                      }
-                    />
-                  </Tooltip>
-                ))}
-              </AvatarGroup>
-            </Stack>
-          </>
+          <QuestionDetail
+            question={question}
+            answeredStudents={answeredStudents}
+          />
         )}
       </CardBody>
       <CardFooter gap={4} justifyContent={"space-between"}>
@@ -276,7 +231,7 @@ function QuestionPresenation({
         </Text>
 
         <HStack>
-          {!willShowStats && question.time_limit && (
+          {!showStats && question.time_limit && (
             <CountDown
               key={question.id}
               timeInSeconds={question.time_limit}
@@ -285,7 +240,7 @@ function QuestionPresenation({
               timeUp={() => setTimeUp(true)}
             />
           )}
-          {!willShowStats && isTimeUp && (
+          {!showStats && isTimeUp && (
             <Button
               colorScheme="blue"
               gap={2}
@@ -294,7 +249,7 @@ function QuestionPresenation({
               <BarChartBig /> Show statistic
             </Button>
           )}
-          {willShowStats && (
+          {showStats && (
             <Button colorScheme="blue" gap={2} onClick={nextQuestion}>
               Next Question <ArrowRightCircle />
             </Button>
@@ -302,50 +257,6 @@ function QuestionPresenation({
         </HStack>
       </CardFooter>
     </Card>
-  );
-}
-
-ChartJS.register(BarElement, Title, ChartTooltip);
-const options: ChartOptions<"bar"> = {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-    title: { display: false },
-  },
-  scales: {
-    x: {
-      border: { display: false },
-      grid: { display: false },
-    },
-    y: {
-      beginAtZero: true,
-      border: { display: false },
-      grid: { display: false },
-    },
-  },
-};
-function QuestionStatistic({
-  answerCounts,
-}: {
-  answerCounts: FirebaseRoomInfo["questions"][number]["answers"];
-}) {
-  const data: ChartData<"bar"> = {
-    labels: Object.keys(answerCounts),
-    datasets: [
-      {
-        label: "Answer count",
-        data: Object.values(answerCounts).map((a) => a.count),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        borderRadius: Number.MAX_VALUE,
-        borderSkipped: false,
-      },
-    ],
-  };
-
-  return (
-    <Stack spacing={4} w={"50%"} mx={"auto"}>
-      <Bar options={options} data={data} />
-    </Stack>
   );
 }
 
