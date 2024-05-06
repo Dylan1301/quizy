@@ -1,15 +1,16 @@
+from ast import Raise
 from typing import Union, Annotated
 
 from fastapi import APIRouter, HTTPException, Header
 from api.deps import SessionDep, CurrentUserDep
-from core.db.room import get_room_by_id, verify_room_owner, verify_student_in_room
+from core.db.room import get_room_by_id, get_student_in_room, verify_room_owner, verify_student_in_room, get_room_student
 from core.db.question import create_question_response
 from core.db.db import create_student
 from core.db.quiz import get_quiz
 
 
 from models.question import QuestionReponsePublic, QuestionResponseCreate
-from models.user import StudentPublic, StudentRegister
+from models.user import StudentList, StudentPublic, StudentRegister
 from core.loader import QuizLoader, LoaderQuizData, LoaderQuestionData
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -199,7 +200,27 @@ def student_join_room(session: SessionDep, room_id: int, student_in: StudentRegi
     return student
 
 
-@router.post("/room/{room_id}/stats")
+@router.get("/room/{room_id}/students"
+            , response_model=StudentList
+            )
+def get_room_students(session: SessionDep, room_id: int):
+    """
+    Get all students for room if room is open
+    """
+    room_out = get_room_by_id(session=session, room_id=room_id)
+
+    if not room_out:
+        raise HTTPException(status_code=400, detail="Room is not available")
+
+    if not room_out.is_published:
+        raise HTTPException(status_code=400, detail="Room is not open")
+
+    student_list = get_student_in_room(session=session, room_id=room_id)
+
+    return student_list
+
+
+@router.get("/room/{room_id}/stats")
 def get_room_stats(session: SessionDep, student: StudentPublic, room_id: int):
     """
     Not Implemented yet

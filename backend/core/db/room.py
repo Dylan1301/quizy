@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, Session, select, SQLModel
 from typing import Union, List
 from models.room import RoomCreate, Room, RoomPublic, RoomList, RoomUpdate
-from models.user import Student
+from models.user import Student, StudentList
 from core.db.quiz import get_quiz_owner_id
 import datetime
 
@@ -117,3 +117,15 @@ def verify_student_in_room(*, session: Session, room_id: int, student_id: int):
         return True
     
     return False
+
+
+def get_student_in_room(*, session: Session, room_id: int) -> Union[StudentList, None]:
+    statement = (select(Student)
+                .where(Student.room_id == room_id))
+
+    
+
+    student = session.exec(statement).all()
+
+
+    return StudentList(data = student)
