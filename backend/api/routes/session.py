@@ -31,6 +31,21 @@ async def lifespan(app: APIRouter):
 router = APIRouter(lifespan=lifespan)
 
 
+@router.get("/room/{room_id}/info", response_model=LoaderQuizData)
+async def get_room_info(session: SessionDep, room_id: int):
+    """
+    Return QuizzesSession  - Quiz contain list of quiz in different
+    Params:
+        session: SQL session
+        student_in: Student information => To ensure student is already in the room
+    """
+    quiz = quiz_loader.get_room_data(room_id=room_id)
+    if not quiz:
+        raise HTTPException(status_code=400, detail="Room not shown yet")
+
+    return quiz
+
+
 @router.get(
     "/room/{room_id}/quiz"
     # , response_model=QuizSession

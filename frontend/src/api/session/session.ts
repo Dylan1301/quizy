@@ -36,6 +36,48 @@ import type {
 Params:
     session: SQL session
     student_in: Student information => To ensure student is already in the room
+ * @summary Get Room Info
+ */
+export const getRoomInfoRoomRoomIdInfoGet = (
+    roomId: number, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<LoaderQuizData>> => {
+    return axios.default.get(
+      `/room/${roomId}/info`,options
+    );
+  }
+
+
+
+export const getGetRoomInfoRoomRoomIdInfoGetKey = (roomId: number,) => [`/room/${roomId}/info`] as const;
+
+
+export type GetRoomInfoRoomRoomIdInfoGetQueryResult = NonNullable<Awaited<ReturnType<typeof getRoomInfoRoomRoomIdInfoGet>>>
+export type GetRoomInfoRoomRoomIdInfoGetQueryError = AxiosError<HTTPValidationError>
+
+/**
+ * @summary Get Room Info
+ */
+export const useGetRoomInfoRoomRoomIdInfoGet = <TError = AxiosError<HTTPValidationError>>(
+  roomId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRoomInfoRoomRoomIdInfoGet>>, TError> & { swrKey?: Key, enabled?: boolean }, axios?: AxiosRequestConfig }
+) => {
+  const {swr: swrOptions, axios: axiosOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(roomId)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRoomInfoRoomRoomIdInfoGetKey(roomId) : null);
+  const swrFn = () => getRoomInfoRoomRoomIdInfoGet(roomId, axiosOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+/**
+ * Return QuizzesSession  - Quiz contain list of quiz in different
+Params:
+    session: SQL session
+    student_in: Student information => To ensure student is already in the room
  * @summary Get Room Quiz
  */
 export const getRoomQuizRoomRoomIdQuizGet = (

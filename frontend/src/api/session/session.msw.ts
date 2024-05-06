@@ -18,12 +18,28 @@ import type {
   StudentPublic
 } from '.././model'
 
+export const getGetRoomInfoRoomRoomIdInfoGetResponseMock = (overrideResponse: any = {}): LoaderQuizData => ({created_at: `${faker.date.past().toISOString().split('.')[0]}Z`, description: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined}), questions: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({answers: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({content: faker.word.sample(), created_at: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), id: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), undefined]), is_correct: faker.datatype.boolean(), question_id: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), undefined]), updated_at: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), ...overrideResponse})), created_at: `${faker.date.past().toISOString().split('.')[0]}Z`, explaination: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined}), tilte: faker.word.sample(), time_limit: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), time_start: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), type: faker.helpers.arrayElement([faker.word.sample(),{}]), updated_at: `${faker.date.past().toISOString().split('.')[0]}Z`, ...overrideResponse})), teacher_id: faker.number.int({min: undefined, max: undefined}), tilte: faker.word.sample(), updated_at: `${faker.date.past().toISOString().split('.')[0]}Z`, ...overrideResponse})
+
 export const getStartRoomQuizRoomRoomIdStartQuizPostResponseMock = (overrideResponse: any = {}): LoaderQuizData => ({created_at: `${faker.date.past().toISOString().split('.')[0]}Z`, description: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined}), questions: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({answers: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({content: faker.word.sample(), created_at: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), id: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), undefined]), is_correct: faker.datatype.boolean(), question_id: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), undefined]), updated_at: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), ...overrideResponse})), created_at: `${faker.date.past().toISOString().split('.')[0]}Z`, explaination: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined}), tilte: faker.word.sample(), time_limit: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), time_start: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), type: faker.helpers.arrayElement([faker.word.sample(),{}]), updated_at: `${faker.date.past().toISOString().split('.')[0]}Z`, ...overrideResponse})), teacher_id: faker.number.int({min: undefined, max: undefined}), tilte: faker.word.sample(), updated_at: `${faker.date.past().toISOString().split('.')[0]}Z`, ...overrideResponse})
 
 export const getSubmitQuestionResponseRoomRoomIdAnswerPostResponseMock = (overrideResponse: any = {}): QuestionReponsePublic => ({answer_id: faker.number.int({min: undefined, max: undefined}), created_at: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.number.int({min: undefined, max: undefined}), question_id: faker.number.int({min: undefined, max: undefined}), room_id: faker.number.int({min: undefined, max: undefined}), student_id: faker.number.int({min: undefined, max: undefined}), total_time_taken: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getStudentJoinRoomRoomRoomIdJoinPostResponseMock = (overrideResponse: any = {}): StudentPublic => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample(), room_id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
+
+export const getGetRoomInfoRoomRoomIdInfoGetMockHandler = (overrideResponse?: LoaderQuizData) => {
+  return http.get('*/room/:roomId/info', async () => {
+    await delay(1000);
+    return new HttpResponse(JSON.stringify(overrideResponse ? overrideResponse : getGetRoomInfoRoomRoomIdInfoGetResponseMock()),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
 export const getGetRoomQuizRoomRoomIdQuizGetMockHandler = () => {
   return http.get('*/room/:roomId/quiz', async () => {
@@ -123,6 +139,7 @@ export const getGetRoomStatsRoomRoomIdStatsPostMockHandler = () => {
   })
 }
 export const getSessionMock = () => [
+  getGetRoomInfoRoomRoomIdInfoGetMockHandler(),
   getGetRoomQuizRoomRoomIdQuizGetMockHandler(),
   getStartRoomQuizRoomRoomIdStartQuizPostMockHandler(),
   getStartNextQuesRoomRoomIdNextQuestionPostMockHandler(),

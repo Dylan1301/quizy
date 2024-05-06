@@ -24,14 +24,19 @@ import Quizzes from "../components/Quizzes";
 
 export default function TutorLayout() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const bg = useColorModeValue("white", "gray.800");
-  const navColor = useColorModeValue("gray.100", "gray.800");
+  const navColor = useColorModeValue("gray.50", "gray.800");
   const color = useColorModeValue("black", "white");
   const { data } = useReadTeacherMeInfoGet();
 
   return (
-    <Flex direction="column" minH="100vh" width="100%" bg={bg} color={color}>
-      <Flex height="3rem" py="1" px="2" boxShadow="sm" gap="6" bg={navColor}>
+    <Flex
+      direction="column"
+      minH="100vh"
+      width="100%"
+      bg={navColor}
+      color={color}
+    >
+      <Flex height="3rem" py="1" px="2" boxShadow="sm" gap="6">
         <Button variant="ghost" as={RouterLink} to="/" display="flex" gap={1}>
           <Goal />
           <Text fontWeight="bold">quizy</Text>

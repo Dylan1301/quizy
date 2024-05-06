@@ -1,7 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 export const API_URL = "http://localhost:8000";
+export const COLORS = ["orange", "green", "blue", "purple", "yellow", "red"];
 
 const firebaseConfig = {
   apiKey: "AIzaSyAgreXLtAs0qsWBbXpR_nQNWYXatEJ9Ky8",
@@ -15,3 +17,4 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(app);
+export const firebaseFirestore = getFirestore(app);

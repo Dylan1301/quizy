@@ -81,6 +81,15 @@ export interface paths {
   "/quiz/{quiz_id}/questions": {
     get: operations["get_questions_api_quiz__quiz_id__questions_get"];
   };
+  "/room/{room_id}/info": {
+    /**
+     * Return QuizzesSession  - Quiz contain list of quiz in different
+     * Params:
+     *     session: SQL session
+     *     student_in: Student information => To ensure student is already in the room
+     */
+    get: operations["get_room_info_room__room_id__info_get"];
+  };
   "/room/{room_id}/quiz": {
     /**
      * Return QuizzesSession  - Quiz contain list of quiz in different
@@ -953,6 +962,33 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["QuestionsPublic"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /**
+   * Return QuizzesSession  - Quiz contain list of quiz in different
+   * Params:
+   *     session: SQL session
+   *     student_in: Student information => To ensure student is already in the room
+   */
+  get_room_info_room__room_id__info_get: {
+    parameters: {
+      path: {
+        room_id: number;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["LoaderQuizData"];
         };
       };
       /** Validation Error */

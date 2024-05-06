@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {
@@ -38,6 +38,11 @@ export default function SignInPage() {
   } = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/dashboard");
+  }, [navigate]);
 
   async function onSubmit(values: z.infer<typeof signInFormSchema>) {
     try {

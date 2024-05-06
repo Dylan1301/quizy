@@ -46,14 +46,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Share } from "lucide-react";
 import QRCode from "qrcode.react";
 import { Room } from "../../api/model";
+import { COLORS } from "../../utils/constants";
 
 const roomFormSchema = z.object({
   name: z.string().min(2).max(50),
   is_randomized: z.boolean().default(false),
   is_published: z.boolean().default(false),
 });
-
-const colors = ["red", "green", "blue", "purple", "orange", "yellow"];
 
 export default function TutorQuizDetailPage() {
   const quizId = parseInt(useParams().quizId || "");
@@ -213,15 +212,16 @@ function RoomDetail({
 }) {
   return (
     <ListItem>
-      <Card>
+      <Card
+        w={"15rem"}
+        aspectRatio={2}
+        border={"solid"}
+        borderWidth={1}
+        borderColor={`${COLORS[index]}.200`}
+        bg={`${COLORS[index]}.50`}
+      >
         <CardBody pb={0} minW={200}>
           <Stack alignItems={"flex-start"}>
-            <Box
-              w={"full"}
-              aspectRatio={2}
-              bgColor={`${colors[index]}.200`}
-              rounded="md"
-            ></Box>
             <Heading size="md">{room.name}</Heading>
             <HStack>
               {room.is_randomized && (
