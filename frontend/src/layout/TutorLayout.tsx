@@ -16,11 +16,11 @@ import {
   Link,
   useColorMode,
   useColorModeValue,
-  Divider,
 } from "@chakra-ui/react";
 import { Sun, Moon, Goal, PlusCircle, UserCircle2 } from "lucide-react";
 import { Outlet, Link as RouterLink } from "react-router-dom";
 import { useReadTeacherMeInfoGet } from "../api/user/user";
+import Quizzes from "../components/Quizzes";
 
 export default function TutorLayout() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -31,7 +31,7 @@ export default function TutorLayout() {
 
   return (
     <Flex direction="column" minH="100vh" width="100%" bg={bg} color={color}>
-      <Flex py="1" px="2" boxShadow="sm" gap="6" bg={navColor}>
+      <Flex height="3rem" py="1" px="2" boxShadow="sm" gap="6" bg={navColor}>
         <Button variant="ghost" as={RouterLink} to="/" display="flex" gap={1}>
           <Goal />
           <Text fontWeight="bold">quizy</Text>
@@ -71,24 +71,24 @@ export default function TutorLayout() {
           </Menu>
         </HStack>
       </Flex>
-      <Flex height="100vh">
-        <Box w="25%" maxWidth="15rem" p="4">
+      <Flex>
+        <Box w="25%" maxWidth="24rem" p="4" className="border border-r">
           <Stack spacing="4">
             <Link as={RouterLink} to="/quiz/create" w="100%">
               <Button colorScheme="blue" w="100%">
                 <PlusCircle size={20} className="mr-2" /> Create a quiz
               </Button>
             </Link>
-            <Link as={RouterLink} to="/quizzes">
-              Quizzes
-            </Link>
-            <Link as={RouterLink} to="/rooms">
-              Rooms
-            </Link>
+            <Quizzes />
           </Stack>
         </Box>
-        <Divider orientation="vertical" />
-        <Box w="75%" flexGrow={1} p="4">
+        <Box
+          w="75%"
+          height="calc(100vh - 3rem)"
+          overflow="auto"
+          flexGrow={1}
+          p="4"
+        >
           <Outlet />
         </Box>
       </Flex>

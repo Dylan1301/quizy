@@ -1,9 +1,7 @@
-import email
 from typing import Optional, Union, List, TYPE_CHECKING
-from sqlalchemy import table
 from sqlmodel import Field, Relationship, SQLModel, Column, TIMESTAMP, text, FetchedValue
 from datetime import datetime
-from models.question import QuestionAnswer, QuestionsPublic, Question, QuestionAnswerCreate
+from models.question import QuestionAnswer, Question, QuestionAnswerCreate
 
 
 if TYPE_CHECKING:

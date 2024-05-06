@@ -60,6 +60,13 @@ export default function SignInPage() {
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Login failed.",
+        description: "Incorrect email or password. Please try again",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   }
 

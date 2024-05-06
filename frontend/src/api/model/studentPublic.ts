@@ -8,5 +8,5 @@
 export interface StudentPublic {
   id: number;
   name: string;
-  room_id: string;
+  room_id: number;
 }

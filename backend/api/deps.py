@@ -1,18 +1,16 @@
-from ctypes import Union
-import secrets
 from xml.dom import ValidationErr
-from fastapi import Depends, HTTPException, status, Cookie
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from requests import get
 from sqlmodel import Session
-from models.user import Student, TeacherPublic, Teacher, TokenPayload
+from models.user import Teacher, TokenPayload
 from core.db.db import engine
 from collections.abc import Generator
-from typing import Annotated, Union
-from core.security import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from typing import Annotated
+from core.security import SECRET_KEY, ALGORITHM
 from jose import JWTError, jwt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/token")
+
 
 def get_db() -> Generator[Session, None, None]:
     with Session(engine) as session:
@@ -22,9 +20,10 @@ def get_db() -> Generator[Session, None, None]:
 SessionDep = Annotated[Session, Depends(get_db)]
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
+
 async def get_current_teacher(*, session: SessionDep, token: TokenDep) -> Teacher:
     try:
-        payload=jwt.decode(token, key = SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
         token_data = TokenPayload(**payload)
     except (JWTError, ValidationErr):
         raise HTTPException(
@@ -32,13 +31,12 @@ async def get_current_teacher(*, session: SessionDep, token: TokenDep) -> Teache
             detail="Could not validate credentials",
         )
 
-
-    teacher= session.get(Teacher, token_data.sub)
+    teacher = session.get(Teacher, token_data.sub)
 
     if not teacher:
         raise HTTPException(status_code=404, detail="Teacher not found")
-    
+
     return teacher
 
 
-CurrentUserDep= Annotated[Teacher, Depends(get_current_teacher)]
+CurrentUserDep = Annotated[Teacher, Depends(get_current_teacher)]

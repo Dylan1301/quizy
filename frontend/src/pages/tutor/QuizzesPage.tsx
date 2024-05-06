@@ -1,7 +1,7 @@
 import { Button, Flex, Text, Heading, IconButton } from "@chakra-ui/react";
 import { useGetAllQuizQuizzesGet } from "../../api/quiz/quiz";
 import { Link as RouterLink } from "react-router-dom";
-import { Edit, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 export default function QuizzesPage() {
   const { data: response } = useGetAllQuizQuizzesGet();
@@ -43,14 +43,6 @@ export default function QuizzesPage() {
               <Button as={RouterLink} to={`/quiz/${quiz.id}`}>
                 View
               </Button>
-              <IconButton
-                as={RouterLink}
-                variant={"outline"}
-                to={`/quiz/${quiz.id}/edit`}
-                aria-label="Edit"
-              >
-                <Edit />
-              </IconButton>
               <IconButton
                 colorScheme="red"
                 variant="outline"

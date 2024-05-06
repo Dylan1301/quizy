@@ -4,8 +4,8 @@
  * FastAPI
  * OpenAPI spec version: 0.1.0
  */
-import type { Quiz } from './quiz';
+import type { QuizPublic } from './quizPublic';
 
 export interface QuizzesPublic {
-  data: Quiz[];
+  data: QuizPublic[];
 }

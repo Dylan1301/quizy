@@ -1,10 +1,8 @@
-from json import detect_encoding
-from os import access
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 from api.deps import SessionDep, CurrentUserDep
-from core.security import create_access_token, verify_password
-from models.user import StudentRegister, Teacher, TeacherCreate, TeacherPassword, TeacherPublic
-from core.db.db import authenticate_teacher, get_teacher_by_email, get_password_hash, create_teacher
+from core.security import verify_password
+from models.user import TeacherCreate, TeacherPassword, TeacherPublic
+from core.db.db import get_teacher_by_email, get_password_hash, create_teacher
 
 router = APIRouter()
 

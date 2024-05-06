@@ -1,6 +1,4 @@
-import email
 from typing import Optional, Union, List, TYPE_CHECKING
-from sqlalchemy import table
 from sqlmodel import Field, SQLModel, Column, TIMESTAMP, text, Relationship
 from datetime import datetime
 from models.quiz import Quiz
@@ -31,7 +29,7 @@ class TeacherCreate(TeacherBase):
 
 # Teacher model and table inside database
 class Teacher(TeacherBase, table=True):
-    id: Union[int, None] = Field(default=None, primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     hashed_password: str
     token: Union[str, None] = Field(default=None)
     quizzes: List[Quiz] = Relationship(back_populates="teacher")
