@@ -1,9 +1,6 @@
-from sqlalchemy import func
 from sqlmodel import create_engine, Session, select, SQLModel
-from typing import Dict, Union, List
-from backend.models.answer import Answer
-from backend.models.question import QuestionReponseBase, QuestionReponsePublic, QuestionResponse
-from models.room import RoomCreate, Room, RoomPublic, RoomList, RoomStat, RoomUpdate
+from typing import Union, List
+from models.room import RoomCreate, Room, RoomPublic, RoomList, RoomUpdate
 from models.user import Student
 from core.db.quiz import get_quiz_owner_id
 import datetime
@@ -64,7 +61,7 @@ def publish_room(*, session: Session, room_id: int):
     return room
 
 
-def end_room(*, session: Session, room_id: int):
+def end_room(*, session: Session, room_id: int) -> Union[Room, None]:
     statement = (select(Room)
                 .where(Room.id == room_id)
     )
@@ -74,29 +71,7 @@ def end_room(*, session: Session, room_id: int):
     session.add(room)
     session.commit()
     session.refresh(room)
-    
     return room
-
-def get_room_stat(*, session: Session, room_id: int):
-    """
-    get student score for teacher
-
-    Expected SQL: 
-        SELECT q.student_id, count(*) AS score
-        FROM QuestionResponse q
-        LEFT JOIN Answer a
-        ON q.answer_id = a.id
-        WHERE q.room_id = {room_id}
-          AND a.is_correct = True
-        GROUP BY q.student_id
-    """
-    statement = (select([QuestionResponse.student, func.count().label('score')])
-                 .join(Answer, QuestionResponse.c.answer_id==Answer.c.id)
-                 .where(QuestionResponse.room_id==room_id)
-                 .group_by(QuestionResponse.student))
-    room_stat = session.exec(statement)
-
-    return room_stat
 
 
 def get_room_student(*, session:Session, room_id: int) -> Union[Room, None]:
@@ -142,4 +117,3 @@ def verify_student_in_room(*, session: Session, room_id: int, student_id: int):
         return True
     
     return False
-
