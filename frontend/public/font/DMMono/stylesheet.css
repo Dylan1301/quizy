@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'DMMono';
+    src: url('DMMono-Regular.woff2') format('woff2'),
+        url('DMMono-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DMMono';
+    src: url('DMMono-LightItalic.woff2') format('woff2'),
+        url('DMMono-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DMMono';
+    src: url('DMMono-Light.woff2') format('woff2'),
+        url('DMMono-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DMMono';
+    src: url('DMMono-Italic.woff2') format('woff2'),
+        url('DMMono-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DMMono';
+    src: url('DMMono-MediumItalic.woff2') format('woff2'),
+        url('DMMono-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DMMono';
+    src: url('DMMono-Medium.woff2') format('woff2'),
+        url('DMMono-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
