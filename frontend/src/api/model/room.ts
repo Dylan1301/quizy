@@ -11,6 +11,7 @@ import type { RoomQuizId } from './roomQuizId';
 import type { RoomUpdatedAt } from './roomUpdatedAt';
 
 export interface Room {
+  questions: any;
   created_at?: RoomCreatedAt;
   ended_at?: RoomEndedAt;
   id: RoomId;

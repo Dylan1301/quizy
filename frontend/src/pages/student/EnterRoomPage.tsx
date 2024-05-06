@@ -8,6 +8,7 @@ export default function EnterRoomPage() {
 
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("");
+  const navigate = useNavigate();
 
   const handleNameChange = (event: {
     target: { value: SetStateAction<string> };
@@ -32,17 +33,18 @@ export default function EnterRoomPage() {
       return;
     }
 
-    // Proceed with form submission or further actions
+    // Navigate to waiting room and pass data
+    navigate("waiting", { state: { name, selectedIcon } });
   };
 
   return (
-    <>
-      <ChevronLeft />
+    <Flex direction="column" align="center" justify="center" h="100vh" gap={10}>
       <Heading>Choose Your Name and Avatar</Heading>
       <Input
         placeholder="Enter your name"
         value={name}
         onChange={handleNameChange}
+        width="30%"
       />
       <Box mt={4}>
         <Text>Select an avatar:</Text>
@@ -63,9 +65,9 @@ export default function EnterRoomPage() {
           ))}
         </Box>
       </Box>
-      <Button mt={4} onClick={handleSubmit} as={RouterLink} to="waiting">
+      <Button mt={4} onClick={handleSubmit}>
         Submit
       </Button>
-    </>
+    </Flex>
   );
 }
