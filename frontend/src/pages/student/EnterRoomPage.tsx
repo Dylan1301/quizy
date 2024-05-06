@@ -1,24 +1,17 @@
 import { SetStateAction, useState } from "react";
 import { Heading, Input, Button, Box, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { ChevronLeft } from "lucide-react";
 
 export default function EnterRoomPage() {
-  const icons = [
-    "👩‍🎓",
-    "👨‍🎓",
-    "👩‍💻",
-    "👨‍💻",
-    "👩‍🔬",
-    "👨‍🔬",
-    "👩‍🚀",
-    "👨‍🚀",
-  ];
-  
+  const icons = ["👩‍🎓", "👨‍🎓", "👩‍💻", "👨‍💻", "👩‍🔬", "👨‍🔬", "👩‍🚀", "👨‍🚀"];
+
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("");
 
-  const handleNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleNameChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setName(event.target.value);
   };
 
@@ -44,9 +37,13 @@ export default function EnterRoomPage() {
 
   return (
     <>
-      <ChevronLeftIcon/>
+      <ChevronLeft />
       <Heading>Choose Your Name and Avatar</Heading>
-      <Input placeholder="Enter your name" value={name} onChange={handleNameChange} />
+      <Input
+        placeholder="Enter your name"
+        value={name}
+        onChange={handleNameChange}
+      />
       <Box mt={4}>
         <Text>Select an avatar:</Text>
         <Box display="flex" mt={2}>
