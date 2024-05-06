@@ -1,0 +1,285 @@
+{
+  "teacher": {
+    "email": "admin@email.com",
+    "name": "adminuser",
+    "password": "admin"
+  },
+  "quiz": [
+    {
+      "tilte": "Data Science Quiz",
+      "description": "Test your knowledge in Data Science",
+      "questions": [
+        {
+          "tilte": "What is Data Science?",
+          "explaination": "Data Science is an interdisciplinary field that uses scientific methods, processes, algorithms, and systems to extract knowledge and insights from structured and unstructured data.",
+          "type": "multiple_choice",
+          "time_limit": 30,
+          "answers": [
+            {
+              "content": "The study of data",
+              "is_correct": false
+            },
+            {
+              "content": "Interdisciplinary field that uses scientific methods to extract knowledge from data",
+              "is_correct": true
+            },
+            {
+              "content": "Analyzing spreadsheets",
+              "is_correct": false
+            },
+            {
+              "content": "Data manipulation",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "tilte": "Which programming language is commonly used in Data Science?",
+          "explaination": "Python is widely used in Data Science due to its simplicity, versatility, and extensive libraries for data analysis and machine learning.",
+          "type": "multiple_choice",
+          "time_limit": 20,
+          "answers": [
+            {
+              "content": "Java",
+              "is_correct": false
+            },
+            {
+              "content": "Python",
+              "is_correct": true
+            },
+            {
+              "content": "C++",
+              "is_correct": false
+            },
+            {
+              "content": "JavaScript",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "tilte": "What is the process of cleaning and preparing data for analysis called?",
+          "explaination": "Data preprocessing involves cleaning, transforming, and organizing data to make it suitable for analysis.",
+          "type": "multiple_choice",
+          "time_limit": 25,
+          "answers": [
+            {
+              "content": "Data preprocessing",
+              "is_correct": true
+            },
+            {
+              "content": "Data visualization",
+              "is_correct": false
+            },
+            {
+              "content": "Data modeling",
+              "is_correct": false
+            },
+            {
+              "content": "Data analysis",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "tilte": "What is the process of exploring and analyzing data to discover meaningful insights called?",
+          "explaination": "Data analysis involves exploring and examining data sets to uncover useful information and patterns.",
+          "type": "multiple_choice",
+          "time_limit": 30,
+          "answers": [
+            {
+              "content": "Data preprocessing",
+              "is_correct": false
+            },
+            {
+              "content": "Data visualization",
+              "is_correct": false
+            },
+            {
+              "content": "Data mining",
+              "is_correct": true
+            },
+            {
+              "content": "Data modeling",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "tilte": "Which of the following is NOT a supervised learning algorithm?",
+          "explaination": "Supervised learning algorithms learn from labeled data, while unsupervised learning algorithms find hidden patterns or intrinsic structures in input data.",
+          "type": "multiple_choice",
+          "time_limit": 25,
+          "answers": [
+            {
+              "content": "Linear regression",
+              "is_correct": false
+            },
+            {
+              "content": "Decision tree",
+              "is_correct": false
+            },
+            {
+              "content": "K-means clustering",
+              "is_correct": true
+            },
+            {
+              "content": "Support Vector Machine (SVM)",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "tilte": "What is the process of training a machine learning model on a dataset called?",
+          "explaination": "Training a machine learning model involves feeding input data into the model and adjusting its parameters to optimize performance.",
+          "type": "multiple_choice",
+          "time_limit": 30,
+          "answers": [
+            {
+              "content": "Modeling",
+              "is_correct": false
+            },
+            {
+              "content": "Evaluation",
+              "is_correct": false
+            },
+            {
+              "content": "Inference",
+              "is_correct": false
+            },
+            {
+              "content": "Learning",
+              "is_correct": true
+            }
+          ]
+        },
+        {
+          "tilte": "Which technique is used to handle missing data in a dataset?",
+          "explaination": "Imputation is the process of replacing missing data with substituted values.",
+          "type": "multiple_choice",
+          "time_limit": 25,
+          "answers": [
+            {
+              "content": "Deletion",
+              "is_correct": false
+            },
+            {
+              "content": "Imputation",
+              "is_correct": true
+            },
+            {
+              "content": "Interpolation",
+              "is_correct": false
+            },
+            {
+              "content": "Extrapolation",
+              "is_correct": false
+            }
+          ]
+        },
+        {
+          "tilte": "What is the process of selecting the most important features for a machine learning model called?",
+          "explaination": "Feature selection helps improve model performance and reduce overfitting by focusing on the most relevant features.",
+          "type": "multiple_choice",
+          "time_limit": 30,
+          "answers": [
+            {
+              "content": "Feature extraction",
+              "is_correct": false
+            },
+            {
+              "content": "Feature engineering",
+              "is_correct": false
+            },
+            {
+              "content": "Dimensionality reduction",
+              "is_correct": false
+            },
+            {
+              "content": "Feature selection",
+              "is_correct": true
+            }
+          ]
+        },
+        {
+          "tilte": "Which of the following is an example of an ensemble learning technique?",
+          "explaination": "Ensemble learning combines multiple models to improve prediction accuracy and robustness.",
+          "type": "multiple_choice",
+          "time_limit": 25,
+          "answers": [
+            {
+              "content": "Logistic regression",
+              "is_correct": false
+            },
+            {
+              "content": "Random forest",
+              "is_correct": true
+            },
+            {
+              "content": "K-nearest neighbors",
+              "is_correct": false
+            },
+            {
+              "content": "Naive Bayes",
+              "is_correct": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "name": "DS1001",
+      "is_randomized": true,
+      "is_published": true
+    },
+    {
+      "name": "DS1002",
+      "is_randomized": true,
+      "is_published": false
+    },
+    {
+      "name": "DS1003",
+      "is_randomized": false,
+      "is_published": false
+    },
+    {
+      "name": "DS1004",
+      "is_randomized": true,
+      "is_published": false
+    }
+  ],
+  "students": [
+    {
+      "name": "Alice Smith"
+    },
+    {
+      "name": "John Doe"
+    },
+    {
+      "name": "Emily Johnson"
+    },
+    {
+      "name": "Michael Brown"
+    },
+    {
+      "name": "Jessica Taylor"
+    },
+    {
+      "name": "Daniel Martinez"
+    },
+    {
+      "name": "Sarah Anderson"
+    },
+    {
+      "name": "Matthew Wilson"
+    },
+    {
+      "name": "Lauren Garcia"
+    },
+    {
+      "name": "Christopher Lopez"
+    }
+  ]
+}
