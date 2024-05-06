@@ -1,7 +1,6 @@
 import { SetStateAction, useState } from "react";
-import { Heading, Input, Button, Box, Text } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { Heading, Input, Button, Box, Text, Flex } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 export default function EnterRoomPage() {
   const icons = ["👩‍🎓", "👨‍🎓", "👩‍💻", "👨‍💻", "👩‍🔬", "👨‍🔬", "👩‍🚀", "👨‍🚀"];

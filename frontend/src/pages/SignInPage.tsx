@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {
   Button,
   Input,
@@ -13,7 +12,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ChevronLeft } from "lucide-react";
-import { firebaseAuth } from "../utils/constants";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +26,6 @@ const signInFormSchema = z.object({
 });
 
 export default function SignInPage() {
-  const [isSigningGoogle, setIsSigningGoogle] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
   const {
@@ -68,18 +65,6 @@ export default function SignInPage() {
       });
     }
   }
-
-  const signInWithGoogle = async () => {
-    setIsSigningGoogle(true);
-    try {
-      await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
-      // navigate("/home");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSigningGoogle(false);
-    }
-  };
 
   return (
     <Flex direction="column" align="center" justify="center">

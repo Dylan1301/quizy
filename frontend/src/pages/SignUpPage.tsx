@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {
   Button,
   Input,
@@ -13,12 +12,10 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { ChevronLeft } from "lucide-react";
-import { firebaseAuth } from "../utils/constants";
 import fetcher from "../utils/fetcher";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 const signUpApi = fetcher.path("/signup").method("post").create();
@@ -31,7 +28,6 @@ const signUpFormSchema = z.object({
 });
 
 export default function SignUpPage() {
-  const [isSigningGoogle, setIsSigningGoogle] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
   const {
@@ -62,23 +58,6 @@ export default function SignUpPage() {
       console.error(error);
     }
   }
-
-  const signInWithGoogle = async () => {
-    setIsSigningGoogle(true);
-    try {
-      const { user } = await signInWithPopup(
-        firebaseAuth,
-        new GoogleAuthProvider()
-      );
-      console.log(user);
-
-      setIsSigningGoogle(false);
-      // navigate("/home");
-    } catch (error) {
-      setIsSigningGoogle(false);
-      console.error(error);
-    }
-  };
 
   return (
     <Flex direction="column" align="center" justify="center">

@@ -4,15 +4,15 @@
  * FastAPI
  * OpenAPI spec version: 0.1.0
  */
-import type { AnswerCreatedAt } from './answerCreatedAt';
-import type { AnswerId } from './answerId';
-import type { AnswerQuestionId } from './answerQuestionId';
-import type { AnswerUpdatedAt } from './answerUpdatedAt';
+import type { AnswerCreatedAt } from "./answerCreatedAt";
+import type { AnswerId } from "./answerId";
+import type { AnswerQuestionId } from "./answerQuestionId";
+import type { AnswerUpdatedAt } from "./answerUpdatedAt";
 
 export interface Answer {
   content: string;
   created_at?: AnswerCreatedAt;
-  id?: AnswerId;
+  id: AnswerId;
   is_correct: boolean;
   question_id?: AnswerQuestionId;
   updated_at?: AnswerUpdatedAt;

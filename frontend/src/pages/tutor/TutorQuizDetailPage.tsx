@@ -34,7 +34,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Code,
@@ -47,6 +46,7 @@ import { CheckCircle, Share } from "lucide-react";
 import QRCode from "qrcode.react";
 import { Room } from "../../api/model";
 import { COLORS } from "../../utils/constants";
+import { toSixDigits } from "../../utils/functions";
 
 const roomFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -94,49 +94,59 @@ export default function TutorQuizDetailPage() {
         <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
           View question list
         </Button>
-        <Button colorScheme="teal" as={RouterLink} to={`/quiz/${quizId}/room/create`} marginLeft="5px">
+        <Button
+          colorScheme="teal"
+          as={RouterLink}
+          to={`/quiz/${quizId}/room/create`}
+          marginLeft="5px"
+        >
           Create Room
         </Button>
       </Box>
 
-      <OrderedList listStyleType="none" display="flex" gap={4} ml={0} mt={4}>
-        <ListItem>
-          <Card>
-            <CardBody>
-              <form onSubmit={roomForm.handleSubmit(onSubmit)}>
-                <Stack>
-                  <Heading size="md">Create new room</Heading>
-                  <FormControl>
-                    <FormLabel>Room name</FormLabel>
-                    <Input {...roomForm.register("name")} placeholder="Name" />
-                  </FormControl>
-                  <FormControl>
-                    <Checkbox {...roomForm.register("is_randomized")}>
-                      Will randomize?
-                    </Checkbox>
-                  </FormControl>
-                  <FormControl>
-                    <Checkbox {...roomForm.register("is_published")}>
-                      Publish now?
-                    </Checkbox>
-                  </FormControl>
-                  <Button type="submit" mt={2}>
-                    Create
-                  </Button>
-                </Stack>
-              </form>
-            </CardBody>
-          </Card>
-        </ListItem>
-        {roomsResponse?.data.data.map((room, index) => (
-          <RoomDetail
-            key={room.id}
-            room={room}
-            index={index}
-            onClickShare={() => onClickShare(room)}
-          />
-        ))}
-      </OrderedList>
+      <HStack mt={4} alignItems={"flex-start"}>
+        <Card minW={"15rem"}>
+          <CardBody>
+            <form onSubmit={roomForm.handleSubmit(onSubmit)}>
+              <Stack>
+                <Heading size="md">Create new room</Heading>
+                <FormControl>
+                  <FormLabel>Room name</FormLabel>
+                  <Input {...roomForm.register("name")} placeholder="Name" />
+                </FormControl>
+                <FormControl>
+                  <Checkbox {...roomForm.register("is_randomized")}>
+                    Will randomize?
+                  </Checkbox>
+                </FormControl>
+                <FormControl>
+                  <Checkbox {...roomForm.register("is_published")}>
+                    Publish now?
+                  </Checkbox>
+                </FormControl>
+                <Button type="submit" mt={2}>
+                  Create
+                </Button>
+              </Stack>
+            </form>
+          </CardBody>
+        </Card>
+        <OrderedList
+          listStyleType="none"
+          display="flex"
+          flexWrap={"wrap"}
+          gap={4}
+        >
+          {roomsResponse?.data.data.map((room, index) => (
+            <RoomDetail
+              key={room.id}
+              room={room}
+              index={index}
+              onClickShare={() => onClickShare(room)}
+            />
+          ))}
+        </OrderedList>
+      </HStack>
 
       <Drawer
         isOpen={isOpen}
@@ -171,7 +181,7 @@ export default function TutorQuizDetailPage() {
 
       <Modal isOpen={shareModal.isOpen} onClose={shareModal.onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent pb={6}>
           <ModalHeader textAlign="center">
             Scan QR Code to join the room
           </ModalHeader>
@@ -183,18 +193,9 @@ export default function TutorQuizDetailPage() {
                 className="inline-block"
               />
               <Text mt={4}>Or via PIN:</Text>
-              <Code fontSize="xl">{selectedRoom.id}</Code>
+              <Code fontSize="xl">{toSixDigits(selectedRoom.id)}</Code>
             </ModalBody>
           )}
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Start room
-            </Button>
-            <Button mr={3} onClick={shareModal.onClose}>
-              Close
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
@@ -249,13 +250,16 @@ function RoomDetail({
             to={`/quiz/${room.quiz_id}/room/${room.id}`}
             size={"sm"}
             colorScheme="blue"
+            variant={"outline"}
             w={"full"}
           >
-            View here
+            Detail
           </Button>
           <IconButton
             size="sm"
             aria-label="Share"
+            colorScheme="black"
+            variant={"outline"}
             icon={<Share size={16} />}
             onClick={onClickShare}
           />

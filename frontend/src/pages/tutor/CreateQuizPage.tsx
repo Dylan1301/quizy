@@ -30,7 +30,6 @@ const quizDetailFormSchema = z.object({
       title: z.string().max(200),
       explanation: z.string().max(300),
       timeLimit: z.number().max(60),
-      correctAnswerId: z.string().nullable(),
     })
   ),
   answers: z.array(
@@ -227,7 +226,7 @@ export default function CreateQuizPage() {
                               <HStack key={answer.id}>
                                 <Radio
                                   {...quizForm.register(
-                                    `questions.${index}.correctAnswerId`
+                                    `answers.${index}.isCorrect`
                                   )}
                                   value={answer.id}
                                   title="Is correct answer?"
@@ -277,7 +276,6 @@ export default function CreateQuizPage() {
                   questionsField.append({
                     title: "",
                     explanation: "",
-                    correctAnswerId: null,
                     timeLimit: 30,
                   })
                 }
