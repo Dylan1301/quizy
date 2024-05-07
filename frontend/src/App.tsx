@@ -74,12 +74,12 @@ const router = createBrowserRouter([
   // Student paths
   { path: "/enter", element: <EnterRoomPage /> },
   {
-    path: "/:roomId",
+    path: "", // Actual link "/:roomId"
     children: [
       { path: "waiting", element: <WaitingRoomPage /> },
-      { path: "question/:questionId", element: <QuestionPage /> },
+      { path: "question", element: <QuestionPage /> }, // Actual link "question/:questionId"
       {
-        path: "question/:questionId/statistic",
+        path: "question/statistic", // Actual link "question/:questionId/statistic"
         element: <QuestionStatisticPage />,
       },
       {
