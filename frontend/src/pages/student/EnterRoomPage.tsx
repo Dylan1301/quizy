@@ -1,60 +1,92 @@
-import { SetStateAction, useState } from "react";
-import { Heading, Input, Button, Box, Text, Flex } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Heading,
+  Input,
+  Button,
+  Box,
+  Stack,
+  FormLabel,
+  FormControl,
+  HStack,
+  useToast,
+} from "@chakra-ui/react";
+import { useNavigate, useParams } from "react-router-dom";
+import { studentJoinRoomRoomRoomIdJoinPost } from "../../api/session/session";
+import { getFirebaseRoomActions } from "../../utils/firebase";
 
-export default function EnterRoomPage() {
-  const icons = ["👩‍🎓", "👨‍🎓", "👩‍💻", "👨‍💻", "👩‍🔬", "👨‍🔬", "👩‍🚀", "👨‍🚀"];
+const icons = ["👩‍🎓", "🎁", "👩‍💻", "👨‍💻", "👩‍🔬", "🎃", "👩‍🚀", "🇻🇳"];
 
+export default function EnterRoomPage({ roomId }: { roomId?: number }) {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const params = useParams();
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("");
-  const navigate = useNavigate();
+  const [activeRoomId, setActiveRoomId] = useState<number>();
+  const roomActions = useMemo(
+    () => (activeRoomId ? getFirebaseRoomActions(activeRoomId) : undefined),
+    [activeRoomId]
+  );
 
-  const handleNameChange = (event: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setName(event.target.value);
-  };
+  useEffect(() => {
+    if (roomId || params.roomId) {
+      setActiveRoomId(roomId);
+    } else {
+      navigate("/");
+    }
+  }, [roomId, params.roomId, navigate]);
 
-  const handleIconClick = (icon: SetStateAction<string>) => {
-    setSelectedIcon(icon);
-  };
-
-  const handleSubmit = () => {
-    // Validate name
+  const handleSubmit = async () => {
     if (!name.trim()) {
       alert("Please enter your name.");
       return;
     }
-
-    // Validate selected icon
     if (!selectedIcon) {
       alert("Please select an avatar.");
       return;
     }
-
-    // Navigate to waiting room and pass data
-    navigate("waiting", { state: { name, selectedIcon } });
+    if (!activeRoomId) return;
+    try {
+      const { data } = await studentJoinRoomRoomRoomIdJoinPost(activeRoomId, {
+        name,
+        room_id: activeRoomId,
+      });
+      await roomActions?.join(data.id, name, selectedIcon);
+      localStorage.setItem("studentId", data.id.toString());
+      navigate(`/${roomId}/waiting`);
+    } catch (e) {
+      toast({ title: "The room has not been published yet", status: "error" });
+    }
   };
 
   return (
-    <Flex direction="column" align="center" justify="center" h="100vh" gap={10}>
-      <Heading>Choose Your Name and Avatar</Heading>
-      <Input
-        placeholder="Enter your name"
-        value={name}
-        onChange={handleNameChange}
-        width="30%"
-      />
-      <Box mt={4}>
-        <Text>Select an avatar:</Text>
-        <Box display="flex" mt={2}>
+    <Stack spacing={4} py={8} textAlign={"center"}>
+      <Heading size={"lg"}>Choose Name and Avatar</Heading>
+      <FormControl>
+        <FormLabel htmlFor="name" size={"md"}>
+          Your Name
+        </FormLabel>
+        <Input
+          id="name"
+          size={"lg"}
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </FormControl>
+
+      <FormControl>
+        <FormLabel htmlFor="name" size={"md"}>
+          Your Avatar
+        </FormLabel>
+        <HStack flexWrap={"wrap"} mt={2}>
           {icons.map((icon) => (
             <Box
               key={icon}
               as="button"
-              p={2}
-              fontSize="2xl"
-              onClick={() => handleIconClick(icon)}
+              px={2}
+              fontSize="5xl"
+              onClick={() => setSelectedIcon(icon)}
               bg={selectedIcon === icon ? "gray.200" : "transparent"}
               borderRadius="md"
               _hover={{ cursor: "pointer", bg: "gray.200" }}
@@ -62,11 +94,11 @@ export default function EnterRoomPage() {
               {icon}
             </Box>
           ))}
-        </Box>
-      </Box>
+        </HStack>
+      </FormControl>
       <Button mt={4} onClick={handleSubmit}>
-        Submit
+        Lets go
       </Button>
-    </Flex>
+    </Stack>
   );
 }

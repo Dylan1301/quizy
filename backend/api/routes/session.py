@@ -209,7 +209,7 @@ def student_join_room(session: SessionDep, room_id: int, student_in: StudentRegi
         raise HTTPException(status_code=400, detail="Room is not available")
 
     if not room_out.is_published:
-        raise HTTPException(status_code=400, detail="Room is not open")
+        raise HTTPException(status_code=400, detail="Room is not published")
 
     student = create_student(session=session, student_in=student_in)
     return student

@@ -1,24 +1,14 @@
-import {
-  Box,
-  Heading,
-  ListItem,
-  OrderedList,
-  Stack,
-  Text,
-  AvatarGroup,
-  Avatar,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Box, Heading, ListItem, OrderedList, Stack } from "@chakra-ui/react";
 import { LoaderQuestionData } from "../api/model";
-import { RoomStudent } from "../utils/types";
 import { COLORS } from "../utils/constants";
+import StudentAvatars from "./StudentAvatars";
 
 export default function QuestionDetail({
   question,
-  answeredStudents,
+  answeredStudentIds,
 }: {
   question: LoaderQuestionData;
-  answeredStudents: RoomStudent[];
+  answeredStudentIds: number[];
 }) {
   return (
     <>
@@ -40,23 +30,7 @@ export default function QuestionDetail({
       </OrderedList>
       <Stack mt={8}>
         <Heading size={"sm"}>Looks who replied</Heading>
-        <AvatarGroup size="md" max={12} mx={"auto"}>
-          {answeredStudents.length === 0 && (
-            <Text color={"gray.500"}>No one answered yet</Text>
-          )}
-          {answeredStudents.map((stu) => (
-            <Avatar
-              bg={"gray.100"}
-              icon={
-                <Tooltip label={stu.name} key={stu.id}>
-                  <Text fontSize={"x-large"} cursor={"default"}>
-                    {stu.icon || "🍀"}
-                  </Text>
-                </Tooltip>
-              }
-            />
-          ))}
-        </AvatarGroup>
+        <StudentAvatars studentIds={answeredStudentIds} />
       </Stack>
     </>
   );

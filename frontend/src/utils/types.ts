@@ -7,10 +7,11 @@ export interface RoomStudent {
 }
 
 export interface FirebaseRoomInfo {
-  questionOrder: Id[];
   students: {
     [key: Id]: RoomStudent;
   };
+  questionOrder: Id[];
+  activeQuestionIndex: number;
   questions: {
     [key: Id]: {
       correctAnswerId: Id;

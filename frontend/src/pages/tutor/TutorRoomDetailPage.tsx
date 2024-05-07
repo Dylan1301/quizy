@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import QRCode from "qrcode.react";
 import {
   roomPublishRoomRoomIdPublishPost,
@@ -26,15 +26,14 @@ import {
   startRoomQuizRoomRoomIdStartQuizPost,
 } from "../../api/session/session";
 import { LoaderQuizData } from "../../api/model";
-import { firebaseFirestore } from "../../utils/constants";
 import CountDown from "../../components/CountDown";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { FirebaseRoomInfo } from "../../utils/types";
 import { nonNullable, toSixDigits } from "../../utils/functions";
 import { QuestionStats } from "../../components/QuestionStats";
 import QuestionDetail from "../../components/QuestionDetail";
+import { getFirebaseRoomActions } from "../../utils/firebase";
 
-const TutorRoomDetailPage: React.FC = () => {
+const TutorRoomDetailPage = () => {
   const roomId = parseInt(useParams().roomId || "");
   const { data: response } = useRoomDetailRoomRoomIdGet(roomId);
   const [publishing, setPublishing] = useState(false);
@@ -42,10 +41,7 @@ const TutorRoomDetailPage: React.FC = () => {
   const [startedQuizData, setStartedQuizData] = useState<LoaderQuizData>();
   const room = response?.data;
   const [roomFromFirebase, setRoomFromFirebase] = useState<FirebaseRoomInfo>();
-  const roomDoc = useMemo(
-    () => doc(firebaseFirestore, "room", `${roomId}`),
-    [roomId]
-  );
+  const roomActions = useMemo(() => getFirebaseRoomActions(roomId), [roomId]);
 
   useEffect(() => {
     getRoomInfoRoomRoomIdInfoGet(roomId).then(({ data }) => {
@@ -53,11 +49,10 @@ const TutorRoomDetailPage: React.FC = () => {
     });
   }, [roomId]);
 
-  useEffect(() => {
-    onSnapshot(roomDoc, (d) =>
-      setRoomFromFirebase(d.data() as FirebaseRoomInfo)
-    );
-  }, [roomDoc]);
+  useEffect(
+    () => roomActions.watch(setRoomFromFirebase),
+    [roomActions, setRoomFromFirebase]
+  );
 
   const publishRoom = async () => {
     setPublishing(true);
@@ -68,29 +63,7 @@ const TutorRoomDetailPage: React.FC = () => {
   const startRoom = async () => {
     setStarting(true);
     const { data } = await startRoomQuizRoomRoomIdStartQuizPost(roomId);
-
-    const content: FirebaseRoomInfo = {
-      questionOrder: data.questions.map((q) => q.id),
-      questions: data.questions.reduce(
-        (preQ, curQ) => ({
-          ...preQ,
-          [curQ.id]: {
-            answers: curQ.answers.reduce(
-              (pre, cur) => ({
-                ...pre,
-                [cur.id]: { count: 0, studentIds: [] },
-              }),
-              {}
-            ),
-            correctedAnswerId: curQ.answers.find((a) => a.is_correct)?.id,
-          },
-        }),
-        {}
-      ),
-      students: {},
-    };
-    await setDoc(roomDoc, content);
-
+    await roomActions.publish(data);
     setStartedQuizData(data);
     setStarting(false);
   };
@@ -198,7 +171,10 @@ function QuestionPresenation({
   const totalStudentsCount = Object.keys(
     roomFromFirebase?.students || {}
   ).length;
-  const answeredStudents = answerCounts.map((answer) => answer.students).flat();
+  const answeredStudentIds = answerCounts
+    .map((answer) => answer.students)
+    .flat()
+    .map((s) => s.id);
 
   const nextQuestion = () => {
     if (currentQuestionIndex + 1 < loadedQuizData.questions.length) {
@@ -221,7 +197,7 @@ function QuestionPresenation({
         ) : (
           <QuestionDetail
             question={question}
-            answeredStudents={answeredStudents}
+            answeredStudentIds={answeredStudentIds}
           />
         )}
       </CardBody>
