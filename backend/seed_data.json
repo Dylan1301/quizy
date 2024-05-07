@@ -252,34 +252,45 @@
   ],
   "students": [
     {
-      "name": "Alice Smith"
+      "name": "Alice Smith",
+      "icon": null
+
     },
     {
-      "name": "John Doe"
+      "name": "John Doe",
+      "icon": null
     },
     {
-      "name": "Emily Johnson"
+      "name": "Emily Johnson",
+      "icon": null
     },
     {
-      "name": "Michael Brown"
+      "name": "Michael Brown",
+      "icon": null
     },
     {
-      "name": "Jessica Taylor"
+      "name": "Jessica Taylor",
+      "icon": null
     },
     {
-      "name": "Daniel Martinez"
+      "name": "Daniel Martinez",
+      "icon": null
     },
     {
-      "name": "Sarah Anderson"
+      "name": "Sarah Anderson",
+      "icon": null
     },
     {
-      "name": "Matthew Wilson"
+      "name": "Matthew Wilson",
+      "icon": null
     },
     {
-      "name": "Lauren Garcia"
+      "name": "Lauren Garcia",
+      "icon": null
     },
     {
-      "name": "Christopher Lopez"
+      "name": "Christopher Lopez",
+      "icon": null
     }
   ]
 }

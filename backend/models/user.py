@@ -77,7 +77,7 @@ class NewPassword(SQLModel):
 class StudentBase(SQLModel):
     room_id: int
     name: str
-
+    icon: Optional[str]
 
 class Student(StudentBase, table=True):
     id: int = Field(default=None, primary_key=True)
