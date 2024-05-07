@@ -12,7 +12,8 @@ export default function WaitingRoomPage() {
 
   useEffect(() => {
     if (!roomId) return;
-    getFirebaseRoomActions(roomId)
+    const roomIdInt = parseInt(roomId);
+    getFirebaseRoomActions(roomIdInt)
       .get()
       .then((info) => {
         const studentId = parseInt(localStorage.getItem("studentId") || "0");

@@ -32,6 +32,7 @@ import { nonNullable, toSixDigits } from "../../utils/functions";
 import { QuestionStats } from "../../components/QuestionStats";
 import QuestionDetail from "../../components/QuestionDetail";
 import { getFirebaseRoomActions } from "../../utils/firebase";
+import StudentAvatars from "../../components/StudentAvatars";
 
 const TutorRoomDetailPage = () => {
   const roomId = parseInt(useParams().roomId || "");
@@ -195,10 +196,13 @@ function QuestionPresenation({
             answers={question.answers}
           />
         ) : (
-          <QuestionDetail
-            question={question}
-            answeredStudentIds={answeredStudentIds}
-          />
+          <>
+            <QuestionDetail question={question} />
+            <Stack mt={8}>
+              <Heading size={"sm"}>Looks who replied</Heading>
+              <StudentAvatars studentIds={answeredStudentIds} />
+            </Stack>
+          </>
         )}
       </CardBody>
       <CardFooter gap={4} justifyContent={"space-between"}>

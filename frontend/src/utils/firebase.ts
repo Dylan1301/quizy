@@ -51,5 +51,23 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
       info.students[id] = { id, name, icon };
       return this.set(info);
     },
+    answer: async function ({
+      answerId,
+      questionId,
+      studentId,
+    }: {
+      questionId: number;
+      answerId: number;
+      studentId: number;
+    }) {
+      const info = await this.get();
+      if (!info) throw new Error("Room has not been started yet");
+      const answer = info.questions[questionId].answers[answerId];
+      info.questions[questionId].answers[answerId] = {
+        count: answer.count + 1,
+        studentIds: [...answer.studentIds, studentId],
+      };
+      return this.set(info);
+    },
   };
 };

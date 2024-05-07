@@ -1,115 +1,83 @@
-import { useState } from "react";
-import { Box, Button, Progress, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Heading, Progress, Stack, Text } from "@chakra-ui/react";
+import { getRoomInfoRoomRoomIdInfoGet } from "../../api/session/session";
+import { LoaderQuizData } from "../../api/model";
+import { useParams } from "react-router-dom";
+import { getFirebaseRoomActions } from "../../utils/firebase";
+import { FirebaseRoomInfo } from "../../utils/types";
+import { COLORS } from "../../utils/constants";
 
 const QuestionPage = () => {
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [answerLocked, setAnswerLocked] = useState(false);
+  const roomId = parseInt(useParams().roomId || "");
+  const [selectedAnswer, setSelectedAnswer] = useState<number>();
+  const roomActions = useMemo(() => getFirebaseRoomActions(roomId), [roomId]);
+  const [startedQuizData, setStartedQuizData] = useState<LoaderQuizData>();
+  const [roomFromFirebase, setRoomFromFirebase] = useState<FirebaseRoomInfo>();
+  const question =
+    roomFromFirebase &&
+    startedQuizData?.questions[roomFromFirebase.activeQuestionIndex];
 
-  const handleAnswerSelect = (answerIndex: number) => {
-    setSelectedAnswer(answerIndex);
-    setAnswerLocked(true);
+  const onSelectAnswer = (answerId: number) => {
+    if (!question) return;
+    if (selectedAnswer !== undefined) return;
+    setSelectedAnswer(answerId);
+    const studentId = parseInt(localStorage.getItem("studentId") || "0");
+    roomActions.answer({ answerId, questionId: question.id, studentId });
   };
 
+  useEffect(() => {
+    if (!roomId) return;
+    getRoomInfoRoomRoomIdInfoGet(roomId).then(({ data }) => {
+      setStartedQuizData(data);
+    });
+  }, [roomId]);
+
+  useEffect(
+    () => roomActions.watch(setRoomFromFirebase),
+    [roomActions, setRoomFromFirebase]
+  );
+
   return (
-    <Box p={4} width="33%" mx="auto">
-      <Progress value={25} mb={4} />
+    <Stack spacing={10} p={4} maxW={"md"} mx="auto">
+      <Progress value={25} />
 
-      <VStack spacing={4} align="stretch">
-        <Text style={{ fontSize: "1.5em" }}>
-          <strong>Question 1: What is the capital of France?</strong>
-        </Text>
-        <Button
-          w="100%"
-          h="24"
-          p="5"
-          borderRadius="3xl"
-          borderWidth="4px"
-          borderColor={selectedAnswer === 0 ? "blue.500" : "blue.500"}
-          bg={selectedAnswer === 0 ? "blue.500" : "transparent"}
-          color={selectedAnswer === 0 ? "white" : "blue.500"}
-          fontSize="2xl"
-          fontWeight="extrabold"
-          fontFamily="Public Sans"
-          _hover={{
-            bg: selectedAnswer === 0 ? "blue.500" : "blue.500",
-            color: "white",
-          }}
-          onClick={() => handleAnswerSelect(0)}
-          disabled={answerLocked}
-        >
-          Deoxyribonucleic Acid
-        </Button>
-        <Button
-          w="100%"
-          h="24"
-          p="5"
-          borderRadius="3xl"
-          borderWidth="4px"
-          borderColor={selectedAnswer === 1 ? "red.500" : "red.500"}
-          bg={selectedAnswer === 1 ? "red.500" : "transparent"}
-          color={selectedAnswer === 1 ? "white" : "red.500"}
-          fontSize="2xl"
-          fontWeight="extrabold"
-          fontFamily="Public Sans"
-          _hover={{
-            bg: selectedAnswer === 1 ? "red.500" : "red.500",
-            color: "white",
-          }}
-          onClick={() => handleAnswerSelect(1)}
-          disabled={answerLocked}
-        >
-          Dehydrogenated Acid
-        </Button>
-        <Button
-          w="100%"
-          h="24"
-          p="5"
-          borderRadius="3xl"
-          borderWidth="4px"
-          borderColor={selectedAnswer === 2 ? "yellow.500" : "yellow.500"}
-          bg={selectedAnswer === 2 ? "yellow.500" : "transparent"}
-          color={selectedAnswer === 2 ? "white" : "yellow.500"}
-          fontSize="2xl"
-          fontWeight="extrabold"
-          fontFamily="Public Sans"
-          _hover={{
-            bg: selectedAnswer === 2 ? "yellow.500" : "yellow.500",
-            color: "white",
-          }}
-          onClick={() => handleAnswerSelect(2)}
-          disabled={answerLocked}
-        >
-          Dinitroamylose
-        </Button>
-        <Button
-          w="100%"
-          h="24"
-          p="5"
-          borderRadius="3xl"
-          borderWidth="4px"
-          borderColor={selectedAnswer === 3 ? "green.500" : "green.500"}
-          bg={selectedAnswer === 3 ? "green.500" : "transparent"}
-          color={selectedAnswer === 3 ? "white" : "green.500"}
-          fontSize="2xl"
-          fontWeight="extrabold"
-          fontFamily="Public Sans"
-          _hover={{
-            bg: selectedAnswer === 3 ? "green.500" : "green.500",
-            color: "white",
-          }}
-          onClick={() => handleAnswerSelect(3)}
-          disabled={answerLocked}
-        >
-          Denaturedamylase
-        </Button>
-      </VStack>
+      <Stack spacing={4}>
+        <Heading fontSize={"2xl"} textAlign={"center"}>
+          {question?.tilte}
+        </Heading>
+        {question?.answers.map((answer, index) => (
+          <Button
+            key={answer.id}
+            h="24"
+            p="5"
+            borderRadius="3xl"
+            bgColor={
+              selectedAnswer === undefined || selectedAnswer === answer.id
+                ? `${COLORS[index]}.600`
+                : `${COLORS[index]}.100`
+            }
+            color={
+              selectedAnswer === undefined || selectedAnswer === answer.id
+                ? `white`
+                : `${COLORS[index]}.200`
+            }
+            fontSize="2xl"
+            fontWeight="bold"
+            _hover={{ bg: `${COLORS[index]}.500` }}
+            onClick={() => onSelectAnswer(answer.id)}
+            pointerEvents={selectedAnswer !== undefined ? "none" : "auto"}
+          >
+            {answer.content}
+          </Button>
+        ))}
+      </Stack>
 
-      {answerLocked && (
-        <Text mt={4} color="black" textAlign="center">
-          <strong>Answer locked in</strong>
+      {selectedAnswer && (
+        <Text textAlign="center">
+          <strong>Your answer locked in</strong>
         </Text>
       )}
-    </Box>
+    </Stack>
   );
 };
 

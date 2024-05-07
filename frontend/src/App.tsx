@@ -74,9 +74,9 @@ const router = createBrowserRouter([
   {
     path: "/:roomId",
     children: [
-      { path: "/enter", element: <EnterRoomPage /> },
+      { path: "enter", element: <EnterRoomPage /> },
       { path: "waiting", element: <WaitingRoomPage /> },
-      { path: "question/:questionId", element: <QuestionPage /> },
+      { path: "question", element: <QuestionPage /> },
       {
         path: "question/:questionId/statistic",
         element: <QuestionStatisticPage />,
@@ -98,7 +98,7 @@ function App() {
       value={{
         errorRetryCount: 1,
         onError: (error) => {
-          if (error.response?.status === 403) {
+          if ([401, 403].includes(error.response?.status)) {
             localStorage.removeItem("token");
             onOpen();
           }
