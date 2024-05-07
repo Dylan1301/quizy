@@ -71,15 +71,14 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // Student paths
-  { path: "/enter", element: <EnterRoomPage /> },
   {
-    path: "", // Actual link "/:roomId"
+    path: "/:roomId",
     children: [
+      { path: "/enter", element: <EnterRoomPage /> },
       { path: "waiting", element: <WaitingRoomPage /> },
-      { path: "question", element: <QuestionPage /> }, // Actual link "question/:questionId"
+      { path: "question/:questionId", element: <QuestionPage /> },
       {
-        path: "question/statistic", // Actual link "question/:questionId/statistic"
+        path: "question/:questionId/statistic",
         element: <QuestionStatisticPage />,
       },
       {
