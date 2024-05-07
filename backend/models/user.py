@@ -97,3 +97,7 @@ class StudentRegister(StudentBase):
 
 class StudentPublic(StudentBase):
     id: int
+
+
+class StudentList(SQLModel):
+    data: list[Student]

@@ -88,3 +88,12 @@ Before starting a new task, follow these steps:
 6. Let the team know about your PR, paste it to the group chat for review & merge
 
 Remember to replace `your-branch-name` and `Your commit message` with your actual branch name and commit message.
+
+7. Running and testing seed data
+   - Get to Docker Backend container
+   - Get to Exec tab and run `python seed.py`. You only need to run this once.
+   - Incase issues: DROP CASCADE all tables and retry. (This will wipe out all data)
+   - The teacher test credentials is:
+      - Username: `admin@email.com`
+      - Password: `admin`
+   - Please check seed_data.json file in the backend for more info.
