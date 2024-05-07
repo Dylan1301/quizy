@@ -71,11 +71,10 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // Student paths
-  { path: "/enter", element: <EnterRoomPage /> },
   {
     path: "/:roomId",
     children: [
+      { path: "/enter", element: <EnterRoomPage /> },
       { path: "waiting", element: <WaitingRoomPage /> },
       { path: "question/:questionId", element: <QuestionPage /> },
       {

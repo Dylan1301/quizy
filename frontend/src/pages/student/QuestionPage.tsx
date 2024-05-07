@@ -1,71 +1,115 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { Box, Button, Progress, Text, VStack } from "@chakra-ui/react";
 
-const QuestionPage: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState('');
+const QuestionPage = () => {
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [answerLocked, setAnswerLocked] = useState(false);
 
-  const handleOptionChange = (option: string) => {
-    setSelectedOption(option);
-  };
-
-  const handleSubmit = () => {
-    // Work on submitting information to server for answer and send back
+  const handleAnswerSelect = (answerIndex: number) => {
+    setSelectedAnswer(answerIndex);
+    setAnswerLocked(true);
   };
 
   return (
-    <div>
-      <h1>Question Page</h1>
-      <p>Question goes here...</p>
+    <Box p={4} width="33%" mx="auto">
+      <Progress value={25} mb={4} />
 
-      <div>
-        <label>
-          <input
-            type="radio"
-            value="option1"
-            checked={selectedOption === 'option1'}
-            onChange={() => handleOptionChange('option1')}
-          />
-          Option 1
-        </label>
-      </div>
+      <VStack spacing={4} align="stretch">
+        <Text style={{ fontSize: "1.5em" }}>
+          <strong>Question 1: What is the capital of France?</strong>
+        </Text>
+        <Button
+          w="100%"
+          h="24"
+          p="5"
+          borderRadius="3xl"
+          borderWidth="4px"
+          borderColor={selectedAnswer === 0 ? "blue.500" : "blue.500"}
+          bg={selectedAnswer === 0 ? "blue.500" : "transparent"}
+          color={selectedAnswer === 0 ? "white" : "blue.500"}
+          fontSize="2xl"
+          fontWeight="extrabold"
+          fontFamily="Public Sans"
+          _hover={{
+            bg: selectedAnswer === 0 ? "blue.500" : "blue.500",
+            color: "white",
+          }}
+          onClick={() => handleAnswerSelect(0)}
+          disabled={answerLocked}
+        >
+          Deoxyribonucleic Acid
+        </Button>
+        <Button
+          w="100%"
+          h="24"
+          p="5"
+          borderRadius="3xl"
+          borderWidth="4px"
+          borderColor={selectedAnswer === 1 ? "red.500" : "red.500"}
+          bg={selectedAnswer === 1 ? "red.500" : "transparent"}
+          color={selectedAnswer === 1 ? "white" : "red.500"}
+          fontSize="2xl"
+          fontWeight="extrabold"
+          fontFamily="Public Sans"
+          _hover={{
+            bg: selectedAnswer === 1 ? "red.500" : "red.500",
+            color: "white",
+          }}
+          onClick={() => handleAnswerSelect(1)}
+          disabled={answerLocked}
+        >
+          Dehydrogenated Acid
+        </Button>
+        <Button
+          w="100%"
+          h="24"
+          p="5"
+          borderRadius="3xl"
+          borderWidth="4px"
+          borderColor={selectedAnswer === 2 ? "yellow.500" : "yellow.500"}
+          bg={selectedAnswer === 2 ? "yellow.500" : "transparent"}
+          color={selectedAnswer === 2 ? "white" : "yellow.500"}
+          fontSize="2xl"
+          fontWeight="extrabold"
+          fontFamily="Public Sans"
+          _hover={{
+            bg: selectedAnswer === 2 ? "yellow.500" : "yellow.500",
+            color: "white",
+          }}
+          onClick={() => handleAnswerSelect(2)}
+          disabled={answerLocked}
+        >
+          Dinitroamylose
+        </Button>
+        <Button
+          w="100%"
+          h="24"
+          p="5"
+          borderRadius="3xl"
+          borderWidth="4px"
+          borderColor={selectedAnswer === 3 ? "green.500" : "green.500"}
+          bg={selectedAnswer === 3 ? "green.500" : "transparent"}
+          color={selectedAnswer === 3 ? "white" : "green.500"}
+          fontSize="2xl"
+          fontWeight="extrabold"
+          fontFamily="Public Sans"
+          _hover={{
+            bg: selectedAnswer === 3 ? "green.500" : "green.500",
+            color: "white",
+          }}
+          onClick={() => handleAnswerSelect(3)}
+          disabled={answerLocked}
+        >
+          Denaturedamylase
+        </Button>
+      </VStack>
 
-      <div>
-        <label>
-          <input
-            type="radio"
-            value="option2"
-            checked={selectedOption === 'option2'}
-            onChange={() => handleOptionChange('option2')}
-          />
-          Option 2
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="radio"
-            value="option3"
-            checked={selectedOption === 'option3'}
-            onChange={() => handleOptionChange('option3')}
-          />
-          Option 3
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="radio"
-            value="option4"
-            checked={selectedOption === 'option4'}
-            onChange={() => handleOptionChange('option4')}
-          />
-          Option 4
-        </label>
-      </div>
-
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+      {answerLocked && (
+        <Text mt={4} color="black" textAlign="center">
+          <strong>Answer locked in</strong>
+        </Text>
+      )}
+    </Box>
   );
 };
 
