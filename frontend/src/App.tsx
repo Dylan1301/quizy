@@ -6,7 +6,6 @@ import TutorLayout from "./layout/TutorLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import DashboardPage from "./pages/tutor/DashboardPage";
 import CreateQuizPage from "./pages/tutor/CreateQuizPage";
-import CreateRoomPage from "./pages/tutor/CreateRoomPage";
 import { API_URL } from "./utils/constants";
 import axios from "axios";
 import {
@@ -24,13 +23,8 @@ import { useRef } from "react";
 import EnterRoomPage from "./pages/student/EnterRoomPage";
 import WaitingRoomPage from "./pages/student/WaitingRoomPage";
 import QuestionPage from "./pages/student/QuestionPage";
-import QuestionStatisticPage from "./pages/student/QuestionStatisticPage";
 import QuizStatisticPage from "./pages/student/QuizStatisticPage";
-import TutorQuestionPage from "./pages/tutor/TutorQuestionPage";
-import TutorQuestionStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
 import TutorQuizStatisticPage from "./pages/tutor/TutorQuizStatisticPage";
-import QuizzesPage from "./pages/tutor/QuizzesPage";
-import RoomsPage from "./pages/tutor/RoomsPage";
 import TutorQuizDetailPage from "./pages/tutor/TutorQuizDetailPage";
 import TutorRoomDetailPage from "./pages/tutor/TutorRoomDetailPage";
 
@@ -54,21 +48,10 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardPage />,
       },
-      { path: "/quizzes", element: <QuizzesPage /> },
       { path: "/quiz/create", element: <CreateQuizPage /> },
       { path: "/quiz/:quizId", element: <TutorQuizDetailPage /> },
       { path: "/quiz/:quizId/statistic", element: <TutorQuizStatisticPage /> },
-      { path: "/quiz/:quizId/rooms", element: <RoomsPage /> },
-      { path: "/quiz/:quizId/room/create", element: <CreateRoomPage /> },
       { path: "/quiz/:quizId/room/:roomId", element: <TutorRoomDetailPage /> },
-      {
-        path: "/quiz/:quizId/room/:roomId/:questionId",
-        element: <TutorQuestionPage />,
-      },
-      {
-        path: "/quiz/:quizId/room/:roomId/question/statistic",
-        element: <TutorQuestionStatisticPage />,
-      },
     ],
   },
   {
@@ -77,14 +60,7 @@ const router = createBrowserRouter([
       { path: "enter", element: <EnterRoomPage /> },
       { path: "waiting", element: <WaitingRoomPage /> },
       { path: "question", element: <QuestionPage /> },
-      {
-        path: "question/:questionId/statistic",
-        element: <QuestionStatisticPage />,
-      },
-      {
-        path: "statistic",
-        element: <QuizStatisticPage />,
-      },
+      { path: "statistic", element: <QuizStatisticPage /> },
     ],
   },
 ]);

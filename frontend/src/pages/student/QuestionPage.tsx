@@ -1,48 +1,62 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Heading, Progress, Stack, Text } from "@chakra-ui/react";
-import { getRoomInfoRoomRoomIdInfoGet } from "../../api/session/session";
-import { LoaderQuizData } from "../../api/model";
-import { useParams } from "react-router-dom";
+import { RoomWithQuiz } from "../../api/model";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { getFirebaseRoomActions } from "../../utils/firebase";
 import { FirebaseRoomInfo } from "../../utils/types";
 import { COLORS } from "../../utils/constants";
 
 const QuestionPage = () => {
   const roomId = parseInt(useParams().roomId || "");
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [selectedAnswer, setSelectedAnswer] = useState<number>();
   const roomActions = useMemo(() => getFirebaseRoomActions(roomId), [roomId]);
-  const [startedQuizData, setStartedQuizData] = useState<LoaderQuizData>();
-  const [roomFromFirebase, setRoomFromFirebase] = useState<FirebaseRoomInfo>();
+  const roomData = location.state.room as RoomWithQuiz;
+  const [roomFromFirebase, setRoomFromFirebase] = useState<FirebaseRoomInfo>(
+    location.state.info
+  );
+  const activeQuesId =
+    roomFromFirebase.questionOrder[roomFromFirebase.activeQuestionIndex];
   const question =
     roomFromFirebase &&
-    startedQuizData?.questions[roomFromFirebase.activeQuestionIndex];
+    roomData.quiz.questions.find((q) => q.id === activeQuesId);
 
   const onSelectAnswer = (answerId: number) => {
     if (!question) return;
     if (selectedAnswer !== undefined) return;
     setSelectedAnswer(answerId);
-    const studentId = parseInt(localStorage.getItem("studentId") || "0");
+    const studentId = parseInt(searchParams.get("studentId") || "");
     roomActions.answer({ answerId, questionId: question.id, studentId });
   };
 
-  useEffect(() => {
-    if (!roomId) return;
-    getRoomInfoRoomRoomIdInfoGet(roomId).then(({ data }) => {
-      setStartedQuizData(data);
-    });
-  }, [roomId]);
-
   useEffect(
-    () => roomActions.watch(setRoomFromFirebase),
-    [roomActions, setRoomFromFirebase]
+    () =>
+      roomActions.watch((info) => {
+        if (activeQuesId !== info.questionOrder[info.activeQuestionIndex]) {
+          setSelectedAnswer(undefined);
+        }
+        setRoomFromFirebase(info);
+      }),
+    [roomActions, activeQuesId, setRoomFromFirebase]
   );
 
   return (
     <Stack spacing={10} p={4} maxW={"md"} mx="auto">
-      <Progress value={25} />
+      <Progress
+        value={
+          (roomFromFirebase.activeQuestionIndex /
+            roomFromFirebase.questionOrder.length) *
+          100
+        }
+      />
 
       <Stack spacing={4}>
         <Heading fontSize={"2xl"} textAlign={"center"}>
+          <Text fontSize={"md"} color={"gray.500"}>
+            [QUESTION {roomFromFirebase.activeQuestionIndex + 1} /{" "}
+            {roomFromFirebase.questionOrder.length}]
+          </Text>
           {question?.tilte}
         </Heading>
         {question?.answers.map((answer, index) => (

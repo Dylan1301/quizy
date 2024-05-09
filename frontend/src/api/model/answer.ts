@@ -14,6 +14,6 @@ export interface Answer {
   created_at?: AnswerCreatedAt;
   id: AnswerId;
   is_correct: boolean;
-  question_id?: AnswerQuestionId;
+  question_id: AnswerQuestionId;
   updated_at?: AnswerUpdatedAt;
 }

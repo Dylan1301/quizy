@@ -15,6 +15,7 @@ import {
 import type {
   LoaderQuizData,
   QuestionReponsePublic,
+  StudentList,
   StudentPublic
 } from '.././model'
 
@@ -25,6 +26,8 @@ export const getStartRoomQuizRoomRoomIdStartQuizPostResponseMock = (overrideResp
 export const getSubmitQuestionResponseRoomRoomIdAnswerPostResponseMock = (overrideResponse: any = {}): QuestionReponsePublic => ({answer_id: faker.number.int({min: undefined, max: undefined}), created_at: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.number.int({min: undefined, max: undefined}), question_id: faker.number.int({min: undefined, max: undefined}), room_id: faker.number.int({min: undefined, max: undefined}), student_id: faker.number.int({min: undefined, max: undefined}), total_time_taken: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
 
 export const getStudentJoinRoomRoomRoomIdJoinPostResponseMock = (overrideResponse: any = {}): StudentPublic => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample(), room_id: faker.number.int({min: undefined, max: undefined}), ...overrideResponse})
+
+export const getGetRoomStudentsRoomRoomIdStudentsGetResponseMock = (overrideResponse: any = {}): StudentList => ({data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`,{}]), undefined]), id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), name: faker.word.sample(), room_id: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}),{}]), undefined]), ...overrideResponse})), ...overrideResponse})
 
 
 export const getGetRoomInfoRoomRoomIdInfoGetMockHandler = (overrideResponse?: LoaderQuizData) => {
@@ -125,8 +128,22 @@ export const getStudentJoinRoomRoomRoomIdJoinPostMockHandler = (overrideResponse
   })
 }
 
-export const getGetRoomStatsRoomRoomIdStatsPostMockHandler = () => {
-  return http.post('*/room/:roomId/stats', async () => {
+export const getGetRoomStudentsRoomRoomIdStudentsGetMockHandler = (overrideResponse?: StudentList) => {
+  return http.get('*/room/:roomId/students', async () => {
+    await delay(1000);
+    return new HttpResponse(JSON.stringify(overrideResponse ? overrideResponse : getGetRoomStudentsRoomRoomIdStudentsGetResponseMock()),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
+
+export const getGetRoomStatsRoomRoomIdStatsGetMockHandler = () => {
+  return http.get('*/room/:roomId/stats', async () => {
     await delay(1000);
     return new HttpResponse(null,
       {
@@ -146,5 +163,6 @@ export const getSessionMock = () => [
   getEndRoomQuizRoomRoomIdEndSessionPostMockHandler(),
   getSubmitQuestionResponseRoomRoomIdAnswerPostMockHandler(),
   getStudentJoinRoomRoomRoomIdJoinPostMockHandler(),
-  getGetRoomStatsRoomRoomIdStatsPostMockHandler()
+  getGetRoomStudentsRoomRoomIdStudentsGetMockHandler(),
+  getGetRoomStatsRoomRoomIdStatsGetMockHandler()
 ]

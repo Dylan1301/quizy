@@ -1,7 +1,26 @@
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { firebaseFirestore } from "./constants";
 import { FirebaseRoomInfo } from "./types";
-import { LoaderQuizData } from "../api/model";
+import { QuestionAnswer } from "../api/model";
+
+function shuffle<T>(array: T[]) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
 
 export const getFirebaseRoomActions = (roomId: number | string) => {
   const roomDoc = doc(firebaseFirestore, "room", `${roomId}`);
@@ -15,11 +34,11 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
       return roomSnap.data() as FirebaseRoomInfo;
     },
     set: async (info: FirebaseRoomInfo) => setDoc(roomDoc, info),
-    publish: async function (data: LoaderQuizData) {
+    publish: async function (questions: QuestionAnswer[]) {
       const info: FirebaseRoomInfo = {
-        questionOrder: data.questions.map((q) => q.id),
+        questionOrder: shuffle(questions.map((q) => q.id)),
         activeQuestionIndex: -1,
-        questions: data.questions.reduce(
+        questions: questions.reduce(
           (preQ, curQ) => ({
             ...preQ,
             [curQ.id]: {
@@ -63,10 +82,18 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
       const info = await this.get();
       if (!info) throw new Error("Room has not been started yet");
       const answer = info.questions[questionId].answers[answerId];
+      if (answer.studentIds.includes(studentId)) return;
       info.questions[questionId].answers[answerId] = {
         count: answer.count + 1,
         studentIds: [...answer.studentIds, studentId],
       };
+      return this.set(info);
+    },
+    nextQuestion: async function () {
+      const info = await this.get();
+      if (!info) throw new Error("Room has not been started yet");
+      if (info.activeQuestionIndex + 1 >= info.questionOrder.length) return;
+      info.activeQuestionIndex++;
       return this.set(info);
     },
   };

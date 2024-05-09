@@ -21,6 +21,7 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
   const toast = useToast();
   const params = useParams();
   const [name, setName] = useState("");
+  const [joining, setJoining] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
   const [activeRoomId, setActiveRoomId] = useState<number>();
   const roomActions = useMemo(
@@ -29,11 +30,9 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
   );
 
   useEffect(() => {
-    if (roomId || params.roomId) {
-      setActiveRoomId(roomId);
-    } else {
-      navigate("/");
-    }
+    const id = roomId || parseInt(params.roomId || "");
+    if (id) setActiveRoomId(id);
+    else navigate("/");
   }, [roomId, params.roomId, navigate]);
 
   const handleSubmit = async () => {
@@ -45,22 +44,24 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
       alert("Please select an avatar.");
       return;
     }
+
     if (!activeRoomId) return;
     try {
+      setJoining(true);
       const { data } = await studentJoinRoomRoomRoomIdJoinPost(activeRoomId, {
         name,
         room_id: activeRoomId,
       });
       await roomActions?.join(data.id, name, selectedIcon);
-      localStorage.setItem("studentId", data.id.toString());
-      navigate(`/${roomId}/waiting`);
+      navigate(`/${activeRoomId}/waiting?studentId=${data.id}`);
+      setJoining(false);
     } catch (e) {
       toast({ title: "The room has not been published yet", status: "error" });
     }
   };
 
   return (
-    <Stack spacing={4} py={8} textAlign={"center"}>
+    <Stack spacing={4} p={8} textAlign={"center"}>
       <Heading size={"lg"}>Choose Name and Avatar</Heading>
       <FormControl>
         <FormLabel htmlFor="name" size={"md"}>
@@ -96,7 +97,12 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
           ))}
         </HStack>
       </FormControl>
-      <Button mt={4} onClick={handleSubmit}>
+      <Button
+        mt={4}
+        colorScheme="blue"
+        isLoading={joining}
+        onClick={handleSubmit}
+      >
         Lets go
       </Button>
     </Stack>

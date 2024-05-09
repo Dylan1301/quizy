@@ -22,12 +22,13 @@ export function QuestionStats({
           key={answer.id}
           p={4}
           rounded={"xl"}
-          borderWidth={1}
+          borderWidth={answer.is_correct ? 3 : 1}
           borderColor={answer.is_correct ? "gray.900" : "gray.500"}
           fontWeight={answer.is_correct ? "bold" : "semibold"}
           position={"relative"}
           overflow={"hidden"}
           color={answer.is_correct ? "gray.900" : "gray.500"}
+          bgColor={answer.is_correct ? "green.100" : "white"}
         >
           <Box
             pos={"absolute"}

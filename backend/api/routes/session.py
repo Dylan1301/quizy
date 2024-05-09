@@ -3,7 +3,13 @@ from typing import Union, Annotated
 
 from fastapi import APIRouter, HTTPException, Header
 from api.deps import SessionDep, CurrentUserDep
-from core.db.room import get_room_by_id, get_student_in_room, verify_room_owner, verify_student_in_room, get_room_student
+from core.db.room import (
+    get_room_by_id,
+    get_student_in_room,
+    verify_room_owner,
+    verify_student_in_room,
+    get_room_student,
+)
 from core.db.question import create_question_response
 from core.db.db import create_student
 from core.db.quiz import get_quiz
@@ -32,7 +38,7 @@ router = APIRouter(lifespan=lifespan)
 
 
 @router.get("/room/{room_id}/info", response_model=LoaderQuizData)
-async def get_room_info(session: SessionDep, room_id: int):
+async def get_room_info(room_id: int):
     """
     Return QuizzesSession  - Quiz contain list of quiz in different
     Params:
@@ -215,9 +221,7 @@ def student_join_room(session: SessionDep, room_id: int, student_in: StudentRegi
     return student
 
 
-@router.get("/room/{room_id}/students"
-            , response_model=StudentList
-            )
+@router.get("/room/{room_id}/students", response_model=StudentList)
 def get_room_students(session: SessionDep, room_id: int):
     """
     Get all students for room if room is open

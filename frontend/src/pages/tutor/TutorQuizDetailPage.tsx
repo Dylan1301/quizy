@@ -160,18 +160,19 @@ export default function TutorQuizDetailPage() {
           <DrawerHeader>Question List</DrawerHeader>
 
           <DrawerBody>
-            <OrderedList>
+            <OrderedList spacing={6}>
               {quiz?.questions.map((question) => (
                 <ListItem key={question.id}>
                   <Heading as="h3" size="md">
                     {question.tilte}
                   </Heading>
-                  <Text>{question.tilte}</Text>
-                  {question.answers.map((answer) => (
-                    <Box key={answer.id}>
-                      <Text>{answer.content}</Text>
-                    </Box>
-                  ))}
+                  <OrderedList listStyleType={"lower-alpha"}>
+                    {question.answers.map((answer) => (
+                      <ListItem key={answer.id}>
+                        <Text>{answer.content}</Text>
+                      </ListItem>
+                    ))}
+                  </OrderedList>
                 </ListItem>
               ))}
             </OrderedList>

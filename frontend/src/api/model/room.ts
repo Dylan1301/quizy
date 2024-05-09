@@ -7,17 +7,15 @@
 import type { RoomCreatedAt } from './roomCreatedAt';
 import type { RoomEndedAt } from './roomEndedAt';
 import type { RoomId } from './roomId';
-import type { RoomQuizId } from './roomQuizId';
 import type { RoomUpdatedAt } from './roomUpdatedAt';
 
 export interface Room {
-  questions: any;
   created_at?: RoomCreatedAt;
   ended_at?: RoomEndedAt;
   id?: RoomId;
   is_published: boolean;
   is_randomized: boolean;
   name: string;
-  quiz_id?: RoomQuizId;
+  quiz_id?: number;
   updated_at?: RoomUpdatedAt;
 }

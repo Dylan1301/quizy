@@ -34,6 +34,10 @@ export interface paths {
     /** Delete a room based on room_id */
     delete: operations["room_delete_room__room_id__delete"];
   };
+  "/room/student/{room_id}": {
+    /** For student getting room detail */
+    get: operations["student_room_detail_room_student__room_id__get"];
+  };
   "/room/{room_id}/public": {
     /** For public/non login user to get room information. Only work if room is published */
     get: operations["room_public_detail_room__room_id__public_get"];
@@ -131,12 +135,16 @@ export interface paths {
     /** Student join room */
     post: operations["student_join_room_room__room_id__join_post"];
   };
+  "/room/{room_id}/students": {
+    /** Get all students for room if room is open */
+    get: operations["get_room_students_room__room_id__students_get"];
+  };
   "/room/{room_id}/stats": {
     /**
      * Not Implemented yet
      * Get statistics for the whole group
      */
-    post: operations["get_room_stats_room__room_id__stats_post"];
+    get: operations["get_room_stats_room__room_id__stats_get"];
   };
   "/startup": {
     get: operations["startup_event_2_startup_get"];
@@ -405,7 +413,7 @@ export interface components {
     /** Room */
     Room: {
       /** Quiz Id */
-      quiz_id?: Partial<number> & Partial<unknown>;
+      quiz_id?: number;
       /** Name */
       name: string;
       /** Is Randomized */
@@ -476,6 +484,51 @@ export interface components {
       is_randomized: Partial<boolean> & Partial<unknown>;
       /** Is Published */
       is_published: Partial<boolean> & Partial<unknown>;
+    };
+    /** RoomWithQuiz */
+    RoomWithQuiz: {
+      /** Quiz Id */
+      quiz_id: number;
+      /** Name */
+      name: string;
+      /** Is Randomized */
+      is_randomized: boolean;
+      /**
+       * Is Published
+       * @default false
+       */
+      is_published?: boolean;
+      /** Id */
+      id: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Ended At */
+      ended_at: Partial<string> & Partial<unknown>;
+      quiz: components["schemas"]["QuizQuestions"];
+    };
+    /** Student */
+    Student: {
+      /** Room Id */
+      room_id?: Partial<number> & Partial<unknown>;
+      /** Name */
+      name: string;
+      /** Id */
+      id?: number;
+      /** Created At */
+      created_at?: Partial<string> & Partial<unknown>;
+    };
+    /** StudentList */
+    StudentList: {
+      /** Data */
+      data: components["schemas"]["Student"][];
     };
     /** StudentPublic */
     StudentPublic: {
@@ -750,6 +803,28 @@ export interface operations {
       200: {
         content: {
           "application/json": unknown;
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** For student getting room detail */
+  student_room_detail_room_student__room_id__get: {
+    parameters: {
+      path: {
+        room_id: number;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RoomWithQuiz"];
         };
       };
       /** Validation Error */
@@ -1164,11 +1239,33 @@ export interface operations {
       };
     };
   };
+  /** Get all students for room if room is open */
+  get_room_students_room__room_id__students_get: {
+    parameters: {
+      path: {
+        room_id: number;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["StudentList"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /**
    * Not Implemented yet
    * Get statistics for the whole group
    */
-  get_room_stats_room__room_id__stats_post: {
+  get_room_stats_room__room_id__stats_get: {
     parameters: {
       path: {
         room_id: number;

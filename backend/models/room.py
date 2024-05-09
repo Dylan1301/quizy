@@ -9,6 +9,7 @@ from sqlmodel import (
     FetchedValue,
 )
 from datetime import datetime
+from models.quiz import QuizQuestions
 
 if TYPE_CHECKING:
     from models.user import Student
@@ -28,7 +29,7 @@ class RoomCreate(RoomBase):
 
 class Room(RoomBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    quiz_id: Optional[int] = Field(default=None, foreign_key="quiz.id")
+    quiz_id: int = Field(default=None, foreign_key="quiz.id")
     created_at: Union[datetime, None] = Field(
         default=None,
         sa_column=Column(
@@ -70,3 +71,11 @@ class RoomPublic(RoomBase):
     created_at: datetime
     updated_at: datetime
     ended_at: Optional[datetime]
+
+
+class RoomWithQuiz(RoomBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    ended_at: Optional[datetime]
+    quiz: QuizQuestions

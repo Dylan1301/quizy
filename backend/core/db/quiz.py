@@ -57,6 +57,22 @@ def get_quiz(
     return result
 
 
+def get_quiz_by_id(*, session: Session, quiz_id: Union[int, None]) -> QuizQuestions:
+    statement = select(Quiz).where(Quiz.id == quiz_id)
+    item = session.exec(statement).one()
+    result = QuizQuestions.model_validate(
+        item,
+        update={
+            # List of questions - inside each question -> list of answer.
+            "questions": map(
+                lambda x: get_question_answer(session=session, question_id=x.id),
+                item.questions,
+            )
+        },
+    )
+    return result
+
+
 def create_quiz_questions(
     *, session: Session, teacher_id: Union[int, None], quiz_in: QuizQuestionsCreate
 ) -> QuizQuestions:

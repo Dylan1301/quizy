@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from api.deps import CurrentUserDep, SessionDep
-from models.room import Room, RoomCreate, RoomList, RoomPublic, RoomUpdate
+from models.room import Room, RoomCreate, RoomList, RoomPublic, RoomUpdate, RoomWithQuiz
 from core.db.room import (
     create_room,
     get_room_detail,
@@ -11,7 +11,7 @@ from core.db.room import (
     verify_room_owner,
     end_room,
 )
-from core.db.quiz import get_quiz_owner_id
+from core.db.quiz import get_quiz, get_quiz_by_id, get_quiz_owner_id
 
 router = APIRouter()
 
@@ -68,6 +68,25 @@ def room_detail(session: SessionDep, teacher: CurrentUserDep, room_id: int):
     if not validate and not room_out.is_published:
         raise HTTPException(status_code=400, detail="You are not owner of this room")
     return room_out
+
+
+@router.get("/room/student/{room_id}", response_model=RoomWithQuiz)
+def student_room_detail(session: SessionDep, room_id: int):
+    """
+    For student getting room detail
+    """
+    room_out = get_room_detail(session=session, room_id=room_id)
+    if not room_out:
+        raise HTTPException(status_code=400, detail="Room is not available")
+
+    result = RoomWithQuiz.model_validate(
+        room_out,
+        update={
+            # List of questions - inside each question -> list of answer.
+            "quiz": get_quiz_by_id(session=session, quiz_id=room_out.quiz_id)
+        },
+    )
+    return result
 
 
 @router.get("/room/{room_id}/public", response_model=RoomPublic)

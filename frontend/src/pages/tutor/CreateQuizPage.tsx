@@ -21,6 +21,7 @@ import * as z from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Plus, Trash } from "lucide-react";
 import { createQuizQuestionsApiQuizVer2Post } from "../../api/quiz/quiz";
+import { useNavigate } from "react-router-dom";
 
 const quizDetailFormSchema = z.object({
   title: z.string().min(2).max(50),
@@ -42,6 +43,7 @@ const quizDetailFormSchema = z.object({
 });
 
 export default function CreateQuizPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const quizForm = useForm<z.infer<typeof quizDetailFormSchema>>({
     resolver: zodResolver(quizDetailFormSchema),
@@ -99,6 +101,7 @@ export default function CreateQuizPage() {
       title: `Your quiz has been created!`,
       description: `Quiz "${quiz.tilte}" created successfully.`,
     });
+    navigate(`/quiz/${quiz.id}`);
   }
   return (
     <Box p={4}>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import QRCode from "qrcode.react";
 import {
   roomPublishRoomRoomIdPublishPost,
-  useRoomDetailRoomRoomIdGet,
+  useStudentRoomDetailRoomStudentRoomIdGet,
 } from "../../api/room/room";
 import { useParams } from "react-router-dom";
 import {
@@ -21,11 +21,8 @@ import {
   ModalContent,
 } from "@chakra-ui/react";
 import { ArrowRightCircle, BarChartBig, CheckCircle } from "lucide-react";
-import {
-  getRoomInfoRoomRoomIdInfoGet,
-  startRoomQuizRoomRoomIdStartQuizPost,
-} from "../../api/session/session";
-import { LoaderQuizData } from "../../api/model";
+import { startRoomQuizRoomRoomIdStartQuizPost } from "../../api/session/session";
+import { RoomWithQuiz } from "../../api/model";
 import CountDown from "../../components/CountDown";
 import { FirebaseRoomInfo } from "../../utils/types";
 import { nonNullable, toSixDigits } from "../../utils/functions";
@@ -36,19 +33,14 @@ import StudentAvatars from "../../components/StudentAvatars";
 
 const TutorRoomDetailPage = () => {
   const roomId = parseInt(useParams().roomId || "");
-  const { data: response } = useRoomDetailRoomRoomIdGet(roomId);
+  const { data: response } = useStudentRoomDetailRoomStudentRoomIdGet(roomId);
   const [publishing, setPublishing] = useState(false);
   const [starting, setStarting] = useState(false);
-  const [startedQuizData, setStartedQuizData] = useState<LoaderQuizData>();
   const room = response?.data;
   const [roomFromFirebase, setRoomFromFirebase] = useState<FirebaseRoomInfo>();
   const roomActions = useMemo(() => getFirebaseRoomActions(roomId), [roomId]);
-
-  useEffect(() => {
-    getRoomInfoRoomRoomIdInfoGet(roomId).then(({ data }) => {
-      setStartedQuizData(data);
-    });
-  }, [roomId]);
+  const isStarted =
+    roomFromFirebase && roomFromFirebase.activeQuestionIndex > -1;
 
   useEffect(
     () => roomActions.watch(setRoomFromFirebase),
@@ -57,15 +49,17 @@ const TutorRoomDetailPage = () => {
 
   const publishRoom = async () => {
     setPublishing(true);
-    await roomPublishRoomRoomIdPublishPost(roomId);
+    if (room) {
+      await roomPublishRoomRoomIdPublishPost(roomId);
+      await roomActions.publish(room.quiz.questions);
+    }
     setPublishing(false);
   };
 
   const startRoom = async () => {
     setStarting(true);
-    const { data } = await startRoomQuizRoomRoomIdStartQuizPost(roomId);
-    await roomActions.publish(data);
-    setStartedQuizData(data);
+    await startRoomQuizRoomRoomIdStartQuizPost(roomId);
+    await roomActions.start();
     setStarting(false);
   };
 
@@ -101,7 +95,7 @@ const TutorRoomDetailPage = () => {
           />
           <Text mt={4}>Or via PIN:</Text>
           <Code fontSize="xl">{toSixDigits(room.id)}</Code>
-          {startedQuizData && (
+          {isStarted && (
             <Heading size={"md"} mt={2} color={"green.500"}>
               STARTED
             </Heading>
@@ -118,7 +112,7 @@ const TutorRoomDetailPage = () => {
             Publish
           </Button>
         ) : (
-          !startedQuizData && (
+          !isStarted && (
             <Button
               colorScheme={"blue"}
               disabled={!room.is_published}
@@ -131,13 +125,20 @@ const TutorRoomDetailPage = () => {
         )}
       </HStack>
 
-      {startedQuizData && (
+      {isStarted && (
         <Modal isOpen={true} onClose={() => {}}>
           <ModalOverlay />
           <ModalContent w={"95%"} maxW={"unset"}>
             <QuestionPresenation
-              loadedQuizData={startedQuizData}
+              room={room}
               roomFromFirebase={roomFromFirebase}
+              nextLabel={
+                roomFromFirebase.activeQuestionIndex ===
+                roomFromFirebase.questionOrder.length - 1
+                  ? "Sum up"
+                  : "Next Question"
+              }
+              onClickNext={() => roomActions.nextQuestion()}
             />
           </ModalContent>
         </Modal>
@@ -147,16 +148,20 @@ const TutorRoomDetailPage = () => {
 };
 
 function QuestionPresenation({
-  loadedQuizData,
+  room: { quiz },
   roomFromFirebase,
+  nextLabel,
+  onClickNext,
 }: {
-  loadedQuizData: LoaderQuizData;
+  room: RoomWithQuiz;
   roomFromFirebase?: FirebaseRoomInfo;
+  nextLabel: string;
+  onClickNext: () => void;
 }) {
   const [isTimeUp, setTimeUp] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const question = loadedQuizData.questions[currentQuestionIndex];
+  const question = quiz.questions[currentQuestionIndex];
   const firebaseQuestion = roomFromFirebase?.questions[question.id];
   const answerCounts = useMemo(() => {
     if (firebaseQuestion === undefined) return [];
@@ -178,10 +183,11 @@ function QuestionPresenation({
     .map((s) => s.id);
 
   const nextQuestion = () => {
-    if (currentQuestionIndex + 1 < loadedQuizData.questions.length) {
+    if (currentQuestionIndex + 1 < quiz.questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setTimeUp(false);
       setShowStats(false);
+      onClickNext();
     }
   };
 
@@ -231,7 +237,7 @@ function QuestionPresenation({
           )}
           {showStats && (
             <Button colorScheme="blue" gap={2} onClick={nextQuestion}>
-              Next Question <ArrowRightCircle />
+              {nextLabel} <ArrowRightCircle />
             </Button>
           )}
         </HStack>

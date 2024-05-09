@@ -25,6 +25,7 @@ import type {
   LoaderQuizData,
   QuestionReponsePublic,
   QuestionResponseCreate,
+  StudentList,
   StudentPublic,
   StudentRegister
 } from '.././model'
@@ -341,45 +342,81 @@ export const useStudentJoinRoomRoomRoomIdJoinPost = <TError = AxiosError<HTTPVal
   }
 }
 /**
- * Not Implemented yet
-Get statistics for the whole group
- * @summary Get Room Stats
+ * Get all students for room if room is open
+ * @summary Get Room Students
  */
-export const getRoomStatsRoomRoomIdStatsPost = (
-    roomId: number,
-    studentPublic: StudentPublic, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
-    return axios.default.post(
-      `/room/${roomId}/stats`,
-      studentPublic,options
+export const getRoomStudentsRoomRoomIdStudentsGet = (
+    roomId: number, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<StudentList>> => {
+    return axios.default.get(
+      `/room/${roomId}/students`,options
     );
   }
 
 
 
-export const getGetRoomStatsRoomRoomIdStatsPostMutationFetcher = (roomId: number, options?: AxiosRequestConfig) => {
-  return (_: string, { arg }: { arg: Arguments }): Promise<AxiosResponse<unknown>> => {
-    return getRoomStatsRoomRoomIdStatsPost(roomId, arg as StudentPublic, options);
+export const getGetRoomStudentsRoomRoomIdStudentsGetKey = (roomId: number,) => [`/room/${roomId}/students`] as const;
+
+
+export type GetRoomStudentsRoomRoomIdStudentsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getRoomStudentsRoomRoomIdStudentsGet>>>
+export type GetRoomStudentsRoomRoomIdStudentsGetQueryError = AxiosError<HTTPValidationError>
+
+/**
+ * @summary Get Room Students
+ */
+export const useGetRoomStudentsRoomRoomIdStudentsGet = <TError = AxiosError<HTTPValidationError>>(
+  roomId: number, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRoomStudentsRoomRoomIdStudentsGet>>, TError> & { swrKey?: Key, enabled?: boolean }, axios?: AxiosRequestConfig }
+) => {
+  const {swr: swrOptions, axios: axiosOptions} = options ?? {}
+
+  const isEnabled = swrOptions?.enabled !== false && !!(roomId)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRoomStudentsRoomRoomIdStudentsGetKey(roomId) : null);
+  const swrFn = () => getRoomStudentsRoomRoomIdStudentsGet(roomId, axiosOptions);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
   }
 }
-export const getGetRoomStatsRoomRoomIdStatsPostMutationKey = (roomId: number,) => `/room/${roomId}/stats` as const;
+/**
+ * Not Implemented yet
+Get statistics for the whole group
+ * @summary Get Room Stats
+ */
+export const getRoomStatsRoomRoomIdStatsGet = (
+    roomId: number,
+    studentPublic: StudentPublic, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    return axios.default.get(
+      `/room/${roomId}/stats`,options
+    );
+  }
 
-export type GetRoomStatsRoomRoomIdStatsPostMutationResult = NonNullable<Awaited<ReturnType<typeof getRoomStatsRoomRoomIdStatsPost>>>
-export type GetRoomStatsRoomRoomIdStatsPostMutationError = AxiosError<HTTPValidationError>
+
+
+export const getGetRoomStatsRoomRoomIdStatsGetKey = (roomId: number,
+    studentPublic: StudentPublic,) => [`/room/${roomId}/stats`, studentPublic] as const;
+
+
+export type GetRoomStatsRoomRoomIdStatsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getRoomStatsRoomRoomIdStatsGet>>>
+export type GetRoomStatsRoomRoomIdStatsGetQueryError = AxiosError<HTTPValidationError>
 
 /**
  * @summary Get Room Stats
  */
-export const useGetRoomStatsRoomRoomIdStatsPost = <TError = AxiosError<HTTPValidationError>>(
-  roomId: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof getRoomStatsRoomRoomIdStatsPost>>, TError, string, Arguments, Awaited<ReturnType<typeof getRoomStatsRoomRoomIdStatsPost>>> & { swrKey?: string }, axios?: AxiosRequestConfig }
+export const useGetRoomStatsRoomRoomIdStatsGet = <TError = AxiosError<HTTPValidationError>>(
+  roomId: number,
+    studentPublic: StudentPublic, options?: { swr?:SWRConfiguration<Awaited<ReturnType<typeof getRoomStatsRoomRoomIdStatsGet>>, TError> & { swrKey?: Key, enabled?: boolean }, axios?: AxiosRequestConfig }
 ) => {
-
   const {swr: swrOptions, axios: axiosOptions} = options ?? {}
 
-  const swrKey = swrOptions?.swrKey ?? getGetRoomStatsRoomRoomIdStatsPostMutationKey(roomId);
-  const swrFn = getGetRoomStatsRoomRoomIdStatsPostMutationFetcher(roomId,axiosOptions);
+  const isEnabled = swrOptions?.enabled !== false && !!(roomId)
+  const swrKey = swrOptions?.swrKey ?? (() => isEnabled ? getGetRoomStatsRoomRoomIdStatsGetKey(roomId,studentPublic) : null);
+  const swrFn = () => getRoomStatsRoomRoomIdStatsGet(roomId,studentPublic, axiosOptions);
 
-  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions)
 
   return {
     swrKey,
