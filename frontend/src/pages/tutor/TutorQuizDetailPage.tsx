@@ -47,6 +47,7 @@ import QRCode from "qrcode.react";
 import { Room } from "../../api/model";
 import { COLORS } from "../../utils/constants";
 import { toSixDigits } from "../../utils/functions";
+import QuizQuestionsList from "../../components/QuizQuestionsList";
 
 const roomFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -159,24 +160,7 @@ export default function TutorQuizDetailPage() {
           <DrawerCloseButton />
           <DrawerHeader>Question List</DrawerHeader>
 
-          <DrawerBody>
-            <OrderedList spacing={6}>
-              {quiz?.questions.map((question) => (
-                <ListItem key={question.id}>
-                  <Heading as="h3" size="md">
-                    {question.tilte}
-                  </Heading>
-                  <OrderedList listStyleType={"lower-alpha"}>
-                    {question.answers.map((answer) => (
-                      <ListItem key={answer.id}>
-                        <Text>{answer.content}</Text>
-                      </ListItem>
-                    ))}
-                  </OrderedList>
-                </ListItem>
-              ))}
-            </OrderedList>
-          </DrawerBody>
+          <DrawerBody>{quiz && <QuizQuestionsList quiz={quiz} />}</DrawerBody>
         </DrawerContent>
       </Drawer>
 

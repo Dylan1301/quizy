@@ -7,6 +7,7 @@ export interface RoomStudent {
 }
 
 export interface FirebaseRoomInfo {
+  status: "published" | "started" | "ended";
   students: {
     [key: Id]: RoomStudent;
   };
@@ -14,7 +15,7 @@ export interface FirebaseRoomInfo {
   activeQuestionIndex: number;
   questions: {
     [key: Id]: {
-      correctAnswerId: Id;
+      correctedAnswerId: Id;
       answers: {
         [key: Id]: {
           count: number;

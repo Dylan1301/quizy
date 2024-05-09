@@ -36,6 +36,7 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
     set: async (info: FirebaseRoomInfo) => setDoc(roomDoc, info),
     publish: async function (questions: QuestionAnswer[]) {
       const info: FirebaseRoomInfo = {
+        status: "published",
         questionOrder: shuffle(questions.map((q) => q.id)),
         activeQuestionIndex: -1,
         questions: questions.reduce(
@@ -61,6 +62,7 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
     start: async function () {
       const info = await this.get();
       if (!info) throw new Error("Room has not been published yet");
+      info.status = "started";
       info.activeQuestionIndex = 0;
       return this.set(info);
     },
@@ -92,8 +94,13 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
     nextQuestion: async function () {
       const info = await this.get();
       if (!info) throw new Error("Room has not been started yet");
-      if (info.activeQuestionIndex + 1 >= info.questionOrder.length) return;
       info.activeQuestionIndex++;
+      return this.set(info);
+    },
+    end: async function () {
+      const info = await this.get();
+      if (!info) throw new Error("Room has not been started yet");
+      info.status = "ended";
       return this.set(info);
     },
   };

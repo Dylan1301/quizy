@@ -10,7 +10,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
   Code,
   HStack,
   Heading,
@@ -19,20 +18,21 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { ArrowRightCircle, BarChartBig, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { startRoomQuizRoomRoomIdStartQuizPost } from "../../api/session/session";
-import { RoomWithQuiz } from "../../api/model";
-import CountDown from "../../components/CountDown";
 import { FirebaseRoomInfo } from "../../utils/types";
-import { nonNullable, toSixDigits } from "../../utils/functions";
-import { QuestionStats } from "../../components/QuestionStats";
-import QuestionDetail from "../../components/QuestionDetail";
+import { toSixDigits } from "../../utils/functions";
 import { getFirebaseRoomActions } from "../../utils/firebase";
-import StudentAvatars from "../../components/StudentAvatars";
+import TutorQuestionPresenation from "../../components/TutorQuestionPresentation";
+import QuizStatistic from "../../components/QuizStatistic";
 
 const TutorRoomDetailPage = () => {
   const roomId = parseInt(useParams().roomId || "");
+  const { isOpen, onClose } = useDisclosure({
+    defaultIsOpen: true,
+  });
   const { data: response } = useStudentRoomDetailRoomStudentRoomIdGet(roomId);
   const [publishing, setPublishing] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -126,124 +126,46 @@ const TutorRoomDetailPage = () => {
       </HStack>
 
       {isStarted && (
-        <Modal isOpen={true} onClose={() => {}}>
+        <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent w={"95%"} maxW={"unset"}>
-            <QuestionPresenation
-              room={room}
-              roomFromFirebase={roomFromFirebase}
-              nextLabel={
-                roomFromFirebase.activeQuestionIndex ===
-                roomFromFirebase.questionOrder.length - 1
-                  ? "Sum up"
-                  : "Next Question"
-              }
-              onClickNext={() => roomActions.nextQuestion()}
-            />
+            {roomFromFirebase.activeQuestionIndex ===
+            roomFromFirebase.questionOrder.length ? (
+              <>
+                <QuizStatistic
+                  room={room}
+                  roomFromFirebase={roomFromFirebase}
+                />
+                <Stack p={2}>
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => {
+                      roomActions.end();
+                      onClose();
+                    }}
+                  >
+                    End room
+                  </Button>
+                </Stack>
+              </>
+            ) : (
+              <TutorQuestionPresenation
+                room={room}
+                roomFromFirebase={roomFromFirebase}
+                nextLabel={
+                  roomFromFirebase.activeQuestionIndex ===
+                  roomFromFirebase.questionOrder.length - 1
+                    ? "Sum up"
+                    : "Next Question"
+                }
+                onClickNext={() => roomActions.nextQuestion()}
+              />
+            )}
           </ModalContent>
         </Modal>
       )}
     </Stack>
   );
 };
-
-function QuestionPresenation({
-  room: { quiz },
-  roomFromFirebase,
-  nextLabel,
-  onClickNext,
-}: {
-  room: RoomWithQuiz;
-  roomFromFirebase?: FirebaseRoomInfo;
-  nextLabel: string;
-  onClickNext: () => void;
-}) {
-  const [isTimeUp, setTimeUp] = useState(false);
-  const [showStats, setShowStats] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const question = quiz.questions[currentQuestionIndex];
-  const firebaseQuestion = roomFromFirebase?.questions[question.id];
-  const answerCounts = useMemo(() => {
-    if (firebaseQuestion === undefined) return [];
-    return Object.entries(firebaseQuestion.answers).map(([id, answer]) => ({
-      id,
-      ...answer,
-      students:
-        answer.studentIds
-          .map((id) => roomFromFirebase?.students[id])
-          .filter(nonNullable) || [],
-    }));
-  }, [firebaseQuestion, roomFromFirebase?.students]);
-  const totalStudentsCount = Object.keys(
-    roomFromFirebase?.students || {}
-  ).length;
-  const answeredStudentIds = answerCounts
-    .map((answer) => answer.students)
-    .flat()
-    .map((s) => s.id);
-
-  const nextQuestion = () => {
-    if (currentQuestionIndex + 1 < quiz.questions.length) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setTimeUp(false);
-      setShowStats(false);
-      onClickNext();
-    }
-  };
-
-  return (
-    <Card w={"full"} h={"full"} textAlign={"center"} pt={8}>
-      <CardBody>
-        <Heading mb={8}>{question.tilte}</Heading>
-
-        {showStats ? (
-          <QuestionStats
-            answerCounts={firebaseQuestion?.answers || {}}
-            answers={question.answers}
-          />
-        ) : (
-          <>
-            <QuestionDetail question={question} />
-            <Stack mt={8}>
-              <Heading size={"sm"}>Looks who replied</Heading>
-              <StudentAvatars studentIds={answeredStudentIds} />
-            </Stack>
-          </>
-        )}
-      </CardBody>
-      <CardFooter gap={4} justifyContent={"space-between"}>
-        <Text>
-          Total joined student: <strong>{totalStudentsCount}</strong>
-        </Text>
-
-        <HStack>
-          {!showStats && question.time_limit && (
-            <CountDown
-              key={question.id}
-              timeInSeconds={question.time_limit}
-              fontSize={"2xl"}
-              fontWeight={"bold"}
-              timeUp={() => setTimeUp(true)}
-            />
-          )}
-          {!showStats && isTimeUp && (
-            <Button
-              colorScheme="blue"
-              gap={2}
-              onClick={() => setShowStats(true)}
-            >
-              <BarChartBig /> Show statistic
-            </Button>
-          )}
-          {showStats && (
-            <Button colorScheme="blue" gap={2} onClick={nextQuestion}>
-              {nextLabel} <ArrowRightCircle />
-            </Button>
-          )}
-        </HStack>
-      </CardFooter>
-    </Card>
-  );
-}
 
 export default TutorRoomDetailPage;
