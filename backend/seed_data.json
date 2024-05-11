@@ -2,7 +2,7 @@
   "teacher": {
     "email": "admin@email.com",
     "name": "adminuser",
-    "password": "admin"
+    "password": "admin123"
   },
   "quiz": [
     {
