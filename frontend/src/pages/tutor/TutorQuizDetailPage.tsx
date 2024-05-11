@@ -1,6 +1,7 @@
 import { Link as RouterLink, useParams } from "react-router-dom";
 import {
   roomCreateRoomPost,
+  roomDeleteRoomRoomIdDelete,
   useRoomListRoomListGet,
 } from "../../api/room/room";
 import { useGetQuizQuestionsQuizQuizIdGet } from "../../api/quiz/quiz";
@@ -36,13 +37,24 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
   Code,
+  UnorderedList,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle, Share } from "lucide-react";
+import { CheckCircle, MoreVertical, Share, Trash2 } from "lucide-react";
 import QRCode from "qrcode.react";
 import { Room } from "../../api/model";
 import { COLORS } from "../../utils/constants";
@@ -65,6 +77,8 @@ export default function TutorQuizDetailPage() {
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const shareModal = useDisclosure();
+  const deleteAlert = useDisclosure();
+  const deleteCancelRef = useRef<HTMLButtonElement>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const btnRef = useRef(null);
   const quiz = response?.data;
@@ -85,6 +99,23 @@ export default function TutorQuizDetailPage() {
   function onClickShare(room: Room) {
     setSelectedRoom(room);
     shareModal.onOpen();
+  }
+  function onClickDelete(room: Room) {
+    setSelectedRoom(room);
+    deleteAlert.onOpen();
+  }
+  async function onClickConfirmDelete() {
+    deleteAlert.onClose();
+    if (!selectedRoom) return;
+    try {
+      await roomDeleteRoomRoomIdDelete(selectedRoom.id);
+      toast({ status: "success", description: "Delete room successfully" });
+    } catch (error) {
+      toast({
+        status: "error",
+        description: "Sorry, deletion has failed for unknown reason.",
+      });
+    }
   }
 
   return (
@@ -144,6 +175,7 @@ export default function TutorQuizDetailPage() {
               room={room}
               index={index}
               onClickShare={() => onClickShare(room)}
+              onClickDelete={() => onClickDelete(room)}
             />
           ))}
         </OrderedList>
@@ -183,6 +215,33 @@ export default function TutorQuizDetailPage() {
           )}
         </ModalContent>
       </Modal>
+
+      <AlertDialog
+        isOpen={deleteAlert.isOpen}
+        leastDestructiveRef={deleteCancelRef}
+        onClose={deleteAlert.onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Room
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={deleteCancelRef} onClick={deleteAlert.onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={onClickConfirmDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 }
@@ -191,10 +250,12 @@ function RoomDetail({
   room,
   index,
   onClickShare,
+  onClickDelete,
 }: {
   room: Room;
   index: number;
   onClickShare: () => void;
+  onClickDelete: () => void;
 }) {
   return (
     <ListItem>
@@ -240,14 +301,46 @@ function RoomDetail({
           >
             Detail
           </Button>
-          <IconButton
-            size="sm"
-            aria-label="Share"
-            colorScheme="black"
-            variant={"outline"}
-            icon={<Share size={16} />}
-            onClick={onClickShare}
-          />
+          <Popover>
+            <PopoverTrigger>
+              <IconButton
+                size="sm"
+                aria-label="Share"
+                colorScheme="blue"
+                variant={"outline"}
+                icon={<MoreVertical size={16} />}
+              />
+            </PopoverTrigger>
+            <PopoverContent w={"8rem"}>
+              <PopoverArrow />
+              <UnorderedList listStyleType="none" ml={0} py={2} px={1}>
+                <ListItem>
+                  <Button
+                    variant={"ghost"}
+                    w={"full"}
+                    gap={2}
+                    justifyContent={"flex-start"}
+                    onClick={onClickShare}
+                  >
+                    <Share size={20} className="shrink-0" /> Share
+                  </Button>
+                </ListItem>
+                <ListItem>
+                  <Button
+                    colorScheme="red"
+                    variant={"ghost"}
+                    w={"full"}
+                    gap={2}
+                    justifyContent={"flex-start"}
+                    onClick={onClickDelete}
+                  >
+                    <Trash2 size={20} className="shrink-0" />
+                    Delete
+                  </Button>
+                </ListItem>
+              </UnorderedList>
+            </PopoverContent>
+          </Popover>
         </CardFooter>
       </Card>
     </ListItem>

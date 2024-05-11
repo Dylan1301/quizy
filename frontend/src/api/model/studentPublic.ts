@@ -4,8 +4,10 @@
  * FastAPI
  * OpenAPI spec version: 0.1.0
  */
+import type { StudentPublicIcon } from './studentPublicIcon';
 
 export interface StudentPublic {
+  icon: StudentPublicIcon;
   id: number;
   name: string;
   room_id: number;

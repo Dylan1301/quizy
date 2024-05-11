@@ -5,10 +5,12 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { StudentCreatedAt } from './studentCreatedAt';
+import type { StudentIcon } from './studentIcon';
 import type { StudentRoomId } from './studentRoomId';
 
 export interface Student {
   created_at?: StudentCreatedAt;
+  icon: StudentIcon;
   id?: number;
   name: string;
   room_id?: StudentRoomId;

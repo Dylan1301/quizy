@@ -9,9 +9,9 @@ import type { BodyLoginForAccessTokenLoginTokenPostClientSecret } from './bodyLo
 import type { BodyLoginForAccessTokenLoginTokenPostGrantType } from './bodyLoginForAccessTokenLoginTokenPostGrantType';
 
 export interface BodyLoginForAccessTokenLoginTokenPost {
-  client_id?: BodyLoginForAccessTokenLoginTokenPostClientId;
-  client_secret?: BodyLoginForAccessTokenLoginTokenPostClientSecret;
-  grant_type?: BodyLoginForAccessTokenLoginTokenPostGrantType;
+  client_id: BodyLoginForAccessTokenLoginTokenPostClientId;
+  client_secret: BodyLoginForAccessTokenLoginTokenPostClientSecret;
+  grant_type: BodyLoginForAccessTokenLoginTokenPostGrantType;
   password: string;
   scope?: string;
   username: string;

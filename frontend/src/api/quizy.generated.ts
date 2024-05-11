@@ -520,6 +520,8 @@ export interface components {
       room_id?: Partial<number> & Partial<unknown>;
       /** Name */
       name: string;
+      /** Icon */
+      icon: Partial<string> & Partial<unknown>;
       /** Id */
       id?: number;
       /** Created At */
@@ -536,6 +538,8 @@ export interface components {
       room_id: number;
       /** Name */
       name: string;
+      /** Icon */
+      icon: Partial<string> & Partial<unknown>;
       /** Id */
       id: number;
     };
@@ -545,6 +549,8 @@ export interface components {
       room_id: number;
       /** Name */
       name: string;
+      /** Icon */
+      icon: Partial<string> & Partial<unknown>;
     };
     /** TeacherCreate */
     TeacherCreate: {

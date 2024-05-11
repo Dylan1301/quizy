@@ -50,6 +50,7 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
       setJoining(true);
       const { data } = await studentJoinRoomRoomRoomIdJoinPost(activeRoomId, {
         name,
+        icon: selectedIcon,
         room_id: activeRoomId,
       });
       await roomActions?.join(data.id, name, selectedIcon);
