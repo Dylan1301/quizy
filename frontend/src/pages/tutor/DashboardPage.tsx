@@ -19,20 +19,11 @@ export default function DashboardPage() {
   return (
     <Stack>
       <Heading>Welcome back, {data?.data.name}</Heading>
-      <header className="mb-8 relative">
-        <Text>Here are all the quizzes you have created</Text>
-
-        <Button
-          as={RouterLink}
-          to="/quiz/create"
-          colorScheme="blue"
-          pos={"absolute"}
-          right={0}
-          top={4}
-        >
-          Create Quiz
-        </Button>
-      </header>
+      {quizzes?.length === 0 ? (
+        <Text>You have not created any quizzes yet</Text>
+      ) : (
+        <Text mb={4}>Here are all the quizzes you have created</Text>
+      )}
 
       <Flex direction="column" gap={4}>
         {quizzes?.map((quiz) => (

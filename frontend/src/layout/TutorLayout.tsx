@@ -37,7 +37,13 @@ export default function TutorLayout() {
       color={color}
     >
       <Flex height="3rem" py="1" px="2" boxShadow="sm" gap="6">
-        <Button variant="ghost" as={RouterLink} to="/" display="flex" gap={1}>
+        <Button
+          variant="ghost"
+          as={RouterLink}
+          to="/dashboard"
+          display="flex"
+          gap={1}
+        >
           <Goal />
           <Text fontWeight="bold">quizy</Text>
         </Button>

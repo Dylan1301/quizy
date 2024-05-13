@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,41 +15,39 @@ import {
   ListItem,
   OrderedList,
   Circle,
+  Alert,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, Wand2 } from "lucide-react";
 import { createQuizQuestionsApiQuizVer2Post } from "../../api/quiz/quiz";
 import { useNavigate } from "react-router-dom";
-
-const quizDetailFormSchema = z.object({
-  title: z.string().min(2).max(50),
-  description: z.string().min(2).max(200),
-  questions: z.array(
-    z.object({
-      title: z.string().max(200),
-      explanation: z.string().max(300),
-      timeLimit: z.number().max(60),
-    })
-  ),
-  answers: z.array(
-    z.object({
-      questionKey: z.string(),
-      text: z.string().max(100),
-      isCorrect: z.boolean(),
-    })
-  ),
-});
+import {
+  QuizDetailForm,
+  convertQuizDetailFormToApiModel,
+  quizDetailFormSchema,
+} from "../../utils/createQuiz";
+import {
+  GenerateQuestionResponse,
+  generateQuestions,
+} from "../../utils/openai";
 
 export default function CreateQuizPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const quizForm = useForm<z.infer<typeof quizDetailFormSchema>>({
+  const [generating, setGenerating] = useState(false);
+  const [generatedAnswersPayload, setGeneratedAnswersPayload] = useState<{
+    previousQuestionKeys: string[];
+    generatedQuestions: GenerateQuestionResponse;
+  } | null>(null);
+  const quizForm = useForm<QuizDetailForm>({
     resolver: zodResolver(quizDetailFormSchema),
     defaultValues: {
-      title: "Fundamental Programming with Python",
-      description: "Questions on Python syntax, if-else, and for loop.",
+      // title: "",
+      // description: "",
+      title: "Introduction to Data Science",
+      description:
+        "Questions on Python syntax, pandas functions, dataframe, numpy.",
       questions: [],
       answers: [],
     },
@@ -67,6 +65,35 @@ export default function CreateQuizPage() {
     name: "answers",
   });
 
+  useEffect(() => {
+    if (!generatedAnswersPayload) return;
+    const { generatedQuestions, previousQuestionKeys } =
+      generatedAnswersPayload;
+    const newQuestionFields = questionsField.fields.filter(
+      (q) => !previousQuestionKeys.includes(q.key)
+    );
+
+    for (const question of generatedQuestions.questions) {
+      const questionField = newQuestionFields.find(
+        (q) => q.title === question.title
+      );
+      if (!questionField) continue;
+
+      answersField.append(
+        generatedQuestions.answers
+          .filter((a) => a.questionKey === question.clientQuestionKey)
+          .map((a) => ({
+            ...a,
+            questionKey: questionField.key,
+            clientQuestionKey: questionField.key,
+          })),
+        { shouldFocus: false }
+      );
+    }
+
+    setGeneratedAnswersPayload(null);
+  }, [answersField, generatedAnswersPayload, questionsField.fields]);
+
   function handleRemoveQuestion(index: number, questionKey: string) {
     questionsField.remove(index);
     const answerIndexes = quizForm
@@ -76,38 +103,45 @@ export default function CreateQuizPage() {
     answersField.remove(answerIndexes);
   }
 
-  async function onSubmit(values: z.infer<typeof quizDetailFormSchema>) {
-    setLoading(true);
-
-    const { data: quiz } = await createQuizQuestionsApiQuizVer2Post({
-      tilte: values.title,
+  async function onClickGenerate() {
+    const values = quizForm.getValues();
+    setGenerating(true);
+    const response = await generateQuestions({
+      title: values.title,
       description: values.description,
-      questions: questionsField.fields.map((q) => ({
-        explaination: q.explanation,
-        tilte: q.title,
-        time_limit: q.timeLimit,
-        type: "multiple_choice",
-        answers: values.answers
-          .filter((a) => a.questionKey === q.key)
-          .map((a) => ({
-            content: a.text,
-            is_correct: a.isCorrect,
-          })),
-      })),
     });
+    if (response) {
+      if (!response.questions) return;
+      questionsField.append(response.questions);
+      setGeneratedAnswersPayload({
+        generatedQuestions: response,
+        previousQuestionKeys: questionsField.fields.map((f) => f.key),
+      });
+    }
+    setGenerating(false);
+  }
 
-    setLoading(false);
-    toast({
-      title: `Your quiz has been created!`,
-      description: `Quiz "${quiz.tilte}" created successfully.`,
-    });
-    navigate(`/quiz/${quiz.id}`);
+  async function onSubmit(values: QuizDetailForm) {
+    setLoading(true);
+    console.log(convertQuizDetailFormToApiModel(values));
+
+    // const { data: quiz } = await createQuizQuestionsApiQuizVer2Post(
+    //   convertQuizDetailFormToApiModel(values)
+    // );
+
+    // setLoading(false);
+    // toast({
+    //   title: `Your quiz has been created!`,
+    //   description: `Quiz "${quiz.tilte}" created successfully.`,
+    // });
+    // navigate(`/quiz/${quiz.id}`);
   }
   return (
     <Box p={4}>
       <form onSubmit={quizForm.handleSubmit(onSubmit)} className="mb-4">
         <HStack justify="space-between">
           <Heading size="lg">Create Quiz</Heading>
+
           <Button
             isLoading={loading}
             loadingText="Saving"
@@ -128,6 +162,29 @@ export default function CreateQuizPage() {
             <FormLabel>Description</FormLabel>
             <Input {...quizForm.register("description")} />
           </FormControl>
+
+          <Alert
+            status="info"
+            rounded={"lg"}
+            mt={4}
+            w={"fit-content"}
+            alignSelf={"flex-start"}
+          >
+            <Text maxW={"30rem"}>
+              By typing the title and description, try generate 10 questions
+              using OpenAI now instead of manually adding them.
+            </Text>
+            <Button
+              type="button"
+              onClick={onClickGenerate}
+              gap={1}
+              isLoading={generating}
+              className="!bg-gradient-to-br !text-white !from-pink-500 !to-indigo-600 hover:!from-pink-600 hover:!to-indigo-700 hover:shadow-2xl hover:-translate-y-1"
+            >
+              <Wand2 />
+              Generate Questions
+            </Button>
+          </Alert>
 
           <VStack w={"100%"} alignItems={"start"} mt={4} gap={0}>
             <Heading size="md">Questions</Heading>
@@ -219,23 +276,33 @@ export default function CreateQuizPage() {
                         <Trash />
                       </Button>
                     </HStack>
-
                     {/* Dynamic Form Array for Answers */}
-                    <RadioGroup>
+                    <RadioGroup
+                      value={
+                        answersField.fields.find(
+                          (a) => a.questionKey === question.key && a.isCorrect
+                        )?.id
+                      }
+                    >
                       <HStack gap={1} px={10}>
                         {answersField.fields.map(
                           (answer, answerIndex) =>
                             answer.questionKey === question.key && (
                               <HStack key={answer.id}>
                                 <Radio
-                                  {...quizForm.register(
-                                    `answers.${index}.isCorrect`
-                                  )}
                                   value={answer.id}
                                   title="Is correct answer?"
+                                  onClick={() => {
+                                    answersField.update(answerIndex, {
+                                      ...answer,
+                                      isCorrect: true,
+                                    });
+                                  }}
                                 />
                                 <Input
-                                  placeholder="Answer Text"
+                                  placeholder={`Answer Text - ${
+                                    answer.isCorrect ? "correct" : "notcor"
+                                  }`}
                                   size="sm"
                                   rounded={"md"}
                                   {...quizForm.register(

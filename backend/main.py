@@ -7,10 +7,9 @@ from api.main import api_router
 app = FastAPI()
 
 origins = [
-    "http://localhost",  # Whitelist localhost port 80
-    "http://localhost:5173",  # Whitelist localhost port 80
-    "http://144.91.127.242:3000",  # Whitelist your domain with port 80
-    # Add more origins if needed
+    "http://localhost",
+    "http://localhost:5173",
+    "http://144.91.127.242:8001",
 ]
 
 app.add_middleware(

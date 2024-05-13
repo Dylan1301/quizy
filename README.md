@@ -94,7 +94,7 @@ Remember to replace `your-branch-name` and `Your commit message` with your actua
    - Get to Exec tab and run `python seed.py`. You only need to run this once.
    - The teacher test credentials is:
       - Username: `admin@email.com`
-      - Password: `admin`
+      - Password: `admin123`
    - Please check seed_data.json file in the backend for more info.
    - Incase issues: DROP CASCADE all tables and rerun the docker. (This will wipe out all data)
     ```sql

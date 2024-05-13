@@ -67,15 +67,7 @@ export default function SignUpPage() {
       <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">
         QUIZZY
       </div>
-      <Heading
-        fontWeight="bold"
-        fontSize="36px"
-        letterSpacing="-0.02em"
-        textAlign="center"
-        marginTop="125px"
-      >
-        Sign-up as Instructor
-      </Heading>
+      <Heading marginTop="8">Sign-up as Instructor</Heading>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
@@ -88,6 +80,9 @@ export default function SignUpPage() {
               _hover={{ borderColor: "black" }}
               id="name"
               textAlign="center"
+              size={"lg"}
+              fontSize={"xl"}
+              fontWeight={"bold"}
               placeholder="Name"
               {...register("name")}
             />
@@ -105,6 +100,9 @@ export default function SignUpPage() {
               _hover={{ borderColor: "black" }}
               id="email"
               textAlign="center"
+              size={"lg"}
+              fontSize={"xl"}
+              fontWeight={"bold"}
               placeholder="Email Address"
               {...register("email")}
             />
@@ -123,6 +121,9 @@ export default function SignUpPage() {
               id="password"
               type="password"
               textAlign="center"
+              size={"lg"}
+              fontSize={"xl"}
+              fontWeight={"bold"}
               placeholder="Password"
               {...register("password")}
             />
@@ -131,39 +132,26 @@ export default function SignUpPage() {
             </FormErrorMessage>
           </FormControl>
 
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            width="180px"
+            height="50px"
+            mt={6}
+            mx={"auto"}
+            overflow="hidden"
+            backgroundColor="black"
+            textColor="white"
+            _hover={{ bg: "#474747" }}
+          >
+            Sign Up
+          </Button>
           <Text fontSize="sm" color="gray" textAlign="center" marginTop="10px">
             Already have an account?
             <Link as={RouterLink} to="/signin" color="blue.500" ml={1}>
               <strong>Sign in</strong>
             </Link>
           </Text>
-          <Stack
-            direction="row"
-            justify="center"
-            align="center"
-            spacing="10px"
-            mt="40px"
-          >
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              width="180px"
-              height="50px"
-              overflow="hidden"
-              backgroundColor="black"
-              textColor="white"
-              _hover={{ bg: "#474747" }}
-            >
-              Sign up
-            </Button>
-          </Stack>
-          {/* <Button
-                onClick={signInWithGoogle}
-                variant="outline"
-                isLoading={isSigningGoogle}
-              >
-                <Chrome className="mr-2" /> Sign up with Google
-              </Button> */}
         </Stack>
       </form>
     </Flex>

@@ -58,7 +58,12 @@ const TutorRoomDetailPage = () => {
 
   const startRoom = async () => {
     setStarting(true);
-    await startRoomQuizRoomRoomIdStartQuizPost(roomId);
+    try {
+      await startRoomQuizRoomRoomIdStartQuizPost(roomId);
+    } catch (error) {
+      console.log(error);
+    }
+
     await roomActions.start();
     setStarting(false);
   };

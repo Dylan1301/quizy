@@ -22,7 +22,7 @@ const loginApi = fetcher.path("/login").method("post").create();
 
 const signInFormSchema = z.object({
   email: z.string().min(2).max(50),
-  password: z.string().min(6).max(50),
+  password: z.string().min(2).max(50),
 });
 
 export default function SignInPage() {
@@ -74,15 +74,7 @@ export default function SignInPage() {
       <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">
         QUIZZY
       </div>
-      <Heading
-        fontWeight="bold"
-        fontSize="36px"
-        letterSpacing="-0.02em"
-        textAlign="center"
-        marginTop="125px"
-      >
-        Sign-in as Instructor
-      </Heading>
+      <Heading marginTop={8}>Sign-in as Instructor</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing="4">
           <FormControl isInvalid={!!errors.email}>
@@ -93,8 +85,11 @@ export default function SignInPage() {
               borderColor="black"
               _hover={{ borderColor: "black" }}
               id="email"
-              placeholder="Username"
+              placeholder="Email"
               textAlign="center"
+              size={"lg"}
+              fontSize={"xl"}
+              fontWeight={"bold"}
               {...register("email")}
             />
             <FormErrorMessage>
@@ -112,20 +107,15 @@ export default function SignInPage() {
               type="password"
               placeholder="Password"
               textAlign="center"
+              size={"lg"}
+              fontSize={"xl"}
+              fontWeight={"bold"}
               {...register("password")}
             />
             <FormErrorMessage>
               {errors.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
-
-          {/* <Button
-                onClick={signInWithGoogle}
-                variant="outline"
-                isLoading={isSigningGoogle}
-              >
-                <Chrome className="mr-2" /> Sign in with Google
-              </Button> */}
           <Stack
             direction="row"
             justify="center"
@@ -143,7 +133,7 @@ export default function SignInPage() {
               textColor="white"
               _hover={{ bg: "#474747" }}
             >
-              Sign-in
+              Sign in
             </Button>
           </Stack>
           <Link
@@ -154,7 +144,7 @@ export default function SignInPage() {
             textAlign="center"
             marginTop="40px"
           >
-            <u>Sign-up</u>
+            <u>Sign up</u>
           </Link>
         </Stack>
       </form>

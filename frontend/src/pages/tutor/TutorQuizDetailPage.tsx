@@ -54,7 +54,13 @@ import { useRef, useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle, MoreVertical, Share, Trash2 } from "lucide-react";
+import {
+  CheckCircle,
+  MoreVertical,
+  PlusCircle,
+  Share,
+  Trash2,
+} from "lucide-react";
 import QRCode from "qrcode.react";
 import { Room } from "../../api/model";
 import { COLORS } from "../../utils/constants";
@@ -70,7 +76,9 @@ const roomFormSchema = z.object({
 export default function TutorQuizDetailPage() {
   const quizId = parseInt(useParams().quizId || "");
   const { data: response } = useGetQuizQuestionsQuizQuizIdGet(quizId);
-  const { data: roomsResponse } = useRoomListRoomListGet({ quiz_id: quizId });
+  const { data: roomsResponse, mutate } = useRoomListRoomListGet({
+    quiz_id: quizId,
+  });
   const toast = useToast();
   const roomForm = useForm<z.infer<typeof roomFormSchema>>({
     resolver: zodResolver(roomFormSchema),
@@ -78,6 +86,7 @@ export default function TutorQuizDetailPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const shareModal = useDisclosure();
   const deleteAlert = useDisclosure();
+  const [creatingRoom, setCreatingRoom] = useState(false);
   const deleteCancelRef = useRef<HTMLButtonElement>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const btnRef = useRef(null);
@@ -86,6 +95,7 @@ export default function TutorQuizDetailPage() {
 
   async function onSubmit(values: z.infer<typeof roomFormSchema>) {
     if (!quiz) return;
+    setCreatingRoom(true);
     const { data: room } = await roomCreateRoomPost({
       ...values,
       quiz_id: quiz.id,
@@ -94,6 +104,8 @@ export default function TutorQuizDetailPage() {
       title: `Your room has been created!`,
       description: `Room "${room.name}" created successfully.`,
     });
+    await mutate();
+    setCreatingRoom(false);
   }
 
   function onClickShare(room: Room) {
@@ -110,6 +122,7 @@ export default function TutorQuizDetailPage() {
     try {
       await roomDeleteRoomRoomIdDelete(selectedRoom.id);
       toast({ status: "success", description: "Delete room successfully" });
+      mutate();
     } catch (error) {
       toast({
         status: "error",
@@ -123,16 +136,8 @@ export default function TutorQuizDetailPage() {
       <Box>
         <Heading>{quiz?.tilte}</Heading>
         <Text mb={4}>{quiz?.description}</Text>
-        <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
+        <Button ref={btnRef} colorScheme="blue" onClick={onOpen}>
           View question list
-        </Button>
-        <Button
-          colorScheme="teal"
-          as={RouterLink}
-          to={`/quiz/${quizId}/room/create`}
-          marginLeft="5px"
-        >
-          Create Room
         </Button>
       </Box>
 
@@ -141,7 +146,10 @@ export default function TutorQuizDetailPage() {
           <CardBody>
             <form onSubmit={roomForm.handleSubmit(onSubmit)}>
               <Stack>
-                <Heading size="md">Create new room</Heading>
+                <Heading size="md">
+                  <PlusCircle className="inline-block mb-1 mr-1" />
+                  Create new room
+                </Heading>
                 <FormControl>
                   <FormLabel>Room name</FormLabel>
                   <Input {...roomForm.register("name")} placeholder="Name" />
@@ -156,7 +164,12 @@ export default function TutorQuizDetailPage() {
                     Publish now?
                   </Checkbox>
                 </FormControl>
-                <Button type="submit" mt={2}>
+                <Button
+                  type="submit"
+                  mt={2}
+                  colorScheme="blue"
+                  isLoading={creatingRoom}
+                >
                   Create
                 </Button>
               </Stack>
@@ -314,17 +327,19 @@ function RoomDetail({
             <PopoverContent w={"8rem"}>
               <PopoverArrow />
               <UnorderedList listStyleType="none" ml={0} py={2} px={1}>
-                <ListItem>
-                  <Button
-                    variant={"ghost"}
-                    w={"full"}
-                    gap={2}
-                    justifyContent={"flex-start"}
-                    onClick={onClickShare}
-                  >
-                    <Share size={20} className="shrink-0" /> Share
-                  </Button>
-                </ListItem>
+                {room.is_published && (
+                  <ListItem>
+                    <Button
+                      variant={"ghost"}
+                      w={"full"}
+                      gap={2}
+                      justifyContent={"flex-start"}
+                      onClick={onClickShare}
+                    >
+                      <Share size={20} className="shrink-0" /> Share
+                    </Button>
+                  </ListItem>
+                )}
                 <ListItem>
                   <Button
                     colorScheme="red"

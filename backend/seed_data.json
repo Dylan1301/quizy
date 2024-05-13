@@ -13,7 +13,7 @@
           "tilte": "What is Data Science?",
           "explaination": "Data Science is an interdisciplinary field that uses scientific methods, processes, algorithms, and systems to extract knowledge and insights from structured and unstructured data.",
           "type": "multiple_choice",
-          "time_limit": 30,
+          "time_limit": 5,
           "answers": [
             {
               "content": "The study of data",
@@ -61,7 +61,7 @@
           "tilte": "What is the process of cleaning and preparing data for analysis called?",
           "explaination": "Data preprocessing involves cleaning, transforming, and organizing data to make it suitable for analysis.",
           "type": "multiple_choice",
-          "time_limit": 25,
+          "time_limit": 10,
           "answers": [
             {
               "content": "Data preprocessing",
@@ -85,7 +85,7 @@
           "tilte": "What is the process of exploring and analyzing data to discover meaningful insights called?",
           "explaination": "Data analysis involves exploring and examining data sets to uncover useful information and patterns.",
           "type": "multiple_choice",
-          "time_limit": 30,
+          "time_limit": 5,
           "answers": [
             {
               "content": "Data preprocessing",
@@ -109,7 +109,7 @@
           "tilte": "Which of the following is NOT a supervised learning algorithm?",
           "explaination": "Supervised learning algorithms learn from labeled data, while unsupervised learning algorithms find hidden patterns or intrinsic structures in input data.",
           "type": "multiple_choice",
-          "time_limit": 25,
+          "time_limit": 10,
           "answers": [
             {
               "content": "Linear regression",
@@ -133,7 +133,7 @@
           "tilte": "What is the process of training a machine learning model on a dataset called?",
           "explaination": "Training a machine learning model involves feeding input data into the model and adjusting its parameters to optimize performance.",
           "type": "multiple_choice",
-          "time_limit": 30,
+          "time_limit": 5,
           "answers": [
             {
               "content": "Modeling",
@@ -157,7 +157,7 @@
           "tilte": "Which technique is used to handle missing data in a dataset?",
           "explaination": "Imputation is the process of replacing missing data with substituted values.",
           "type": "multiple_choice",
-          "time_limit": 25,
+          "time_limit": 10,
           "answers": [
             {
               "content": "Deletion",
@@ -181,7 +181,7 @@
           "tilte": "What is the process of selecting the most important features for a machine learning model called?",
           "explaination": "Feature selection helps improve model performance and reduce overfitting by focusing on the most relevant features.",
           "type": "multiple_choice",
-          "time_limit": 30,
+          "time_limit": 5,
           "answers": [
             {
               "content": "Feature extraction",
@@ -205,7 +205,7 @@
           "tilte": "Which of the following is an example of an ensemble learning technique?",
           "explaination": "Ensemble learning combines multiple models to improve prediction accuracy and robustness.",
           "type": "multiple_choice",
-          "time_limit": 25,
+          "time_limit": 10,
           "answers": [
             {
               "content": "Logistic regression",
