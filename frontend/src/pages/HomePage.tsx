@@ -28,25 +28,25 @@ export default function HomePage() {
   return (
     <>
       <Flex direction="column" align="center" justify="center">
-        <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">
+        <div className="Quizzy text-center text-2xl mt-10 font-extrabold">
           QUIZZY
         </div>
-        <div className="EnterTheRoomIdToJoin text-center text-black text-4xl mt-12 font-bold">
+        <div className="EnterTheRoomIdToJoin text-center text-4xl mt-12 font-bold">
           Enter the Room ID to join
         </div>
         <HStack className="DigitField w-20 h-28 ml-[-275px] mt-[75px] relative">
           <PinInput value={input} onChange={setInput} size="lg" placeholder="0">
             <div>
-              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-black text-7xl font-medium font-mono" />
+              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-7xl font-medium font-mono" />
             </div>
             <div>
-              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-black text-7xl font-medium font-mono" />
+              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-7xl font-medium font-mono" />
             </div>
             <div>
-              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-black text-7xl font-medium font-mono" />
+              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-7xl font-medium font-mono" />
             </div>
             <div>
-              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-black text-7xl font-medium font-mono" />
+              <PinInputField className="Bkg w-20 h-28 top-0 relative rounded-xl border-4 border-black text-center text-7xl font-medium font-mono" />
             </div>
           </PinInput>
         </HStack>

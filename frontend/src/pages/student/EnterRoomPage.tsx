@@ -62,7 +62,7 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
   };
 
   return (
-    <Stack spacing={4} p={8} textAlign={"center"}>
+    <Stack spacing={4} p={8} textAlign={"center"} maxW={"sm"} mx={"auto"}>
       <Heading size={"lg"}>Choose Name and Avatar</Heading>
       <FormControl>
         <FormLabel htmlFor="name" size={"md"}>
@@ -81,7 +81,7 @@ export default function EnterRoomPage({ roomId }: { roomId?: number }) {
         <FormLabel htmlFor="name" size={"md"}>
           Your Avatar
         </FormLabel>
-        <HStack flexWrap={"wrap"} mt={2}>
+        <HStack flexWrap={"wrap"} justifyContent={"space-between"} mt={2}>
           {icons.map((icon) => (
             <Box
               key={icon}

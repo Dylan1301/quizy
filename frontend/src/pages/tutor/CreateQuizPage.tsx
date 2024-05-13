@@ -20,7 +20,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Plus, Trash, Wand2 } from "lucide-react";
-import { createQuizQuestionsApiQuizVer2Post } from "../../api/quiz/quiz";
+import {
+  createQuizQuestionsApiQuizVer2Post,
+  useGetAllQuizQuizzesGet,
+} from "../../api/quiz/quiz";
 import { useNavigate } from "react-router-dom";
 import {
   QuizDetailForm,
@@ -34,8 +37,10 @@ import {
 
 export default function CreateQuizPage() {
   const navigate = useNavigate();
+  const { mutate } = useGetAllQuizQuizzesGet();
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [willSetCorrectKey, setWillSetCorrectKey] = useState(false);
   const [generatedAnswersPayload, setGeneratedAnswersPayload] = useState<{
     previousQuestionKeys: string[];
     generatedQuestions: GenerateQuestionResponse;
@@ -63,8 +68,10 @@ export default function CreateQuizPage() {
   const answersField = useFieldArray({
     control: quizForm.control,
     name: "answers",
+    keyName: "clientKey",
   });
 
+  // This will run twice because of getting generated keys from useFromArray. First for adding answers, second for setting question correct answer key.
   useEffect(() => {
     if (!generatedAnswersPayload) return;
     const { generatedQuestions, previousQuestionKeys } =
@@ -72,6 +79,24 @@ export default function CreateQuizPage() {
     const newQuestionFields = questionsField.fields.filter(
       (q) => !previousQuestionKeys.includes(q.key)
     );
+
+    if (willSetCorrectKey) {
+      for (let i = 0; i < generatedQuestions.answers.length; i++) {
+        const answer = generatedQuestions.answers[i];
+        if (!answer.isCorrect) continue;
+        const questionIndex = generatedQuestions.questions.findIndex(
+          (q) => q.clientQuestionKey === answer.questionKey
+        );
+
+        if (questionIndex === -1) continue;
+
+        questionsField.fields[questionIndex].correctAnswerKey =
+          answersField.fields[i].clientKey;
+      }
+      setWillSetCorrectKey(false);
+      setGeneratedAnswersPayload(null);
+      return;
+    }
 
     for (const question of generatedQuestions.questions) {
       const questionField = newQuestionFields.find(
@@ -85,14 +110,19 @@ export default function CreateQuizPage() {
           .map((a) => ({
             ...a,
             questionKey: questionField.key,
-            clientQuestionKey: questionField.key,
           })),
         { shouldFocus: false }
       );
     }
-
-    setGeneratedAnswersPayload(null);
-  }, [answersField, generatedAnswersPayload, questionsField.fields]);
+    setWillSetCorrectKey(true);
+  }, [
+    answersField,
+    generatedAnswersPayload,
+    questionsField.fields,
+    willSetCorrectKey,
+    setWillSetCorrectKey,
+    questionsField,
+  ]);
 
   function handleRemoveQuestion(index: number, questionKey: string) {
     questionsField.remove(index);
@@ -112,6 +142,7 @@ export default function CreateQuizPage() {
     });
     if (response) {
       if (!response.questions) return;
+
       questionsField.append(response.questions);
       setGeneratedAnswersPayload({
         generatedQuestions: response,
@@ -123,18 +154,25 @@ export default function CreateQuizPage() {
 
   async function onSubmit(values: QuizDetailForm) {
     setLoading(true);
-    console.log(convertQuizDetailFormToApiModel(values));
+    const questions: QuizDetailForm["questions"] = questionsField.fields.map(
+      (q) => ({
+        ...q,
+        clientQuestionKey: q.key,
+      })
+    );
+    const answers: QuizDetailForm["answers"] = answersField.fields;
 
-    // const { data: quiz } = await createQuizQuestionsApiQuizVer2Post(
-    //   convertQuizDetailFormToApiModel(values)
-    // );
+    const { data: quiz } = await createQuizQuestionsApiQuizVer2Post(
+      convertQuizDetailFormToApiModel(values, questions, answers)
+    );
 
-    // setLoading(false);
-    // toast({
-    //   title: `Your quiz has been created!`,
-    //   description: `Quiz "${quiz.tilte}" created successfully.`,
-    // });
-    // navigate(`/quiz/${quiz.id}`);
+    await mutate();
+    setLoading(false);
+    toast({
+      title: `Your quiz has been created!`,
+      description: `Quiz "${quiz.tilte}" created successfully.`,
+    });
+    navigate(`/quiz/${quiz.id}`);
   }
   return (
     <Box p={4}>
@@ -147,6 +185,7 @@ export default function CreateQuizPage() {
             loadingText="Saving"
             colorScheme="blue"
             type="submit"
+            disabled={questionsField.fields.length === 0}
           >
             Create
           </Button>
@@ -163,28 +202,32 @@ export default function CreateQuizPage() {
             <Input {...quizForm.register("description")} />
           </FormControl>
 
-          <Alert
-            status="info"
-            rounded={"lg"}
-            mt={4}
-            w={"fit-content"}
-            alignSelf={"flex-start"}
-          >
-            <Text maxW={"30rem"}>
-              By typing the title and description, try generate 10 questions
-              using OpenAI now instead of manually adding them.
-            </Text>
-            <Button
-              type="button"
-              onClick={onClickGenerate}
-              gap={1}
-              isLoading={generating}
-              className="!bg-gradient-to-br !text-white !from-pink-500 !to-indigo-600 hover:!from-pink-600 hover:!to-indigo-700 hover:shadow-2xl hover:-translate-y-1"
+          {questionsField.fields.length === 0 && (
+            <Alert
+              status="info"
+              rounded={"lg"}
+              mt={4}
+              w={"fit-content"}
+              alignSelf={"flex-start"}
+              gap={2}
             >
-              <Wand2 />
-              Generate Questions
-            </Button>
-          </Alert>
+              <Text maxW={"30rem"}>
+                By typing the title and description, try generate 10 questions
+                using OpenAI now instead of manually adding them.
+              </Text>
+              <Button
+                type="button"
+                onClick={onClickGenerate}
+                gap={1}
+                isLoading={generating}
+                flexShrink={0}
+                className="!bg-gradient-to-br !text-white !from-pink-500 !to-indigo-600 hover:!from-pink-600 hover:!to-indigo-700 hover:shadow-2xl hover:-translate-y-1"
+              >
+                <Wand2 />
+                Generate Questions
+              </Button>
+            </Alert>
+          )}
 
           <VStack w={"100%"} alignItems={"start"} mt={4} gap={0}>
             <Heading size="md">Questions</Heading>
@@ -278,31 +321,25 @@ export default function CreateQuizPage() {
                     </HStack>
                     {/* Dynamic Form Array for Answers */}
                     <RadioGroup
-                      value={
-                        answersField.fields.find(
-                          (a) => a.questionKey === question.key && a.isCorrect
-                        )?.id
-                      }
+                      value={question.correctAnswerKey}
+                      onChange={(event) => {
+                        quizForm.setValue(
+                          `questions.${index}.correctAnswerKey`,
+                          event
+                        );
+                      }}
                     >
-                      <HStack gap={1} px={10}>
+                      <HStack gap={2} px={10}>
                         {answersField.fields.map(
                           (answer, answerIndex) =>
                             answer.questionKey === question.key && (
-                              <HStack key={answer.id}>
+                              <HStack key={answer.clientKey}>
                                 <Radio
-                                  value={answer.id}
+                                  value={answer.clientKey}
                                   title="Is correct answer?"
-                                  onClick={() => {
-                                    answersField.update(answerIndex, {
-                                      ...answer,
-                                      isCorrect: true,
-                                    });
-                                  }}
                                 />
                                 <Input
-                                  placeholder={`Answer Text - ${
-                                    answer.isCorrect ? "correct" : "notcor"
-                                  }`}
+                                  placeholder={`Answer text`}
                                   size="sm"
                                   rounded={"md"}
                                   {...quizForm.register(
@@ -322,7 +359,6 @@ export default function CreateQuizPage() {
                               answersField.append({
                                 questionKey: question.key,
                                 text: "",
-                                isCorrect: false,
                               })
                             }
                             variant={"secondary"}
@@ -360,33 +396,3 @@ export default function CreateQuizPage() {
     </Box>
   );
 }
-
-// import GenerateQuestion, {
-//   GenerateQuestionProps,
-//   questionTypes,
-// } from "../components/GenerateQuestion";
-// import { GenerateQuestionResponse } from "@/app/question/api/generate/type";
-// import { CreateQuizRequest, CreateQuizResponse } from "../api/type";
-// import { QuestionType } from "@prisma/client";
-// import { useToast } from "@/components/ui/use-toast";
-// import { ToastAction } from "@/components/ui/toast";
-// import { useRouter } from "next/navigation";
-// import LoadingButton from "@/components/molecules/LoadingButton";
-
-// export default function CreateQuizPage() {
-
-//   return (
-//     <main className="p-4">
-//       <Form {...quizForm}>
-
-//       </Form>
-
-//       <GenerateQuestion
-//         quizTitle={quizForm.watch("title")}
-//         onGenerate={onGenerateQuestion}
-//       />
-//     </main>
-//   );
-// }
-
-// Convert this component to using React, Chakra UI, and react-hook-form, just change JSX to appropriate Chakra UI components, keep all code logic

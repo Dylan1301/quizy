@@ -27,6 +27,7 @@ import { toSixDigits } from "../../utils/functions";
 import { getFirebaseRoomActions } from "../../utils/firebase";
 import TutorQuestionPresenation from "../../components/TutorQuestionPresentation";
 import QuizStatistic from "../../components/QuizStatistic";
+import StudentAvatars from "../../components/StudentAvatars";
 
 const TutorRoomDetailPage = () => {
   const roomId = parseInt(useParams().roomId || "");
@@ -73,6 +74,7 @@ const TutorRoomDetailPage = () => {
   return (
     <Stack>
       <Heading>{room.name}</Heading>
+      ab
       <HStack>
         {room.is_randomized && (
           <Badge colorScheme="blue" mb={2}>
@@ -91,7 +93,6 @@ const TutorRoomDetailPage = () => {
           </Badge>
         )}
       </HStack>
-
       <Card w={"12rem"} textAlign="center">
         <CardBody>
           <QRCode
@@ -118,18 +119,23 @@ const TutorRoomDetailPage = () => {
           </Button>
         ) : (
           !isStarted && (
-            <Button
-              colorScheme={"blue"}
-              disabled={!room.is_published}
-              isLoading={starting}
-              onClick={startRoom}
-            >
-              Start Room
-            </Button>
+            <>
+              <Button
+                colorScheme={"blue"}
+                disabled={!room.is_published}
+                isLoading={starting}
+                onClick={startRoom}
+              >
+                Start Room
+              </Button>
+              <Stack>
+                <StudentAvatars />
+              </Stack>
+              <Text>are waiting</Text>
+            </>
           )
         )}
       </HStack>
-
       {isStarted && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -160,7 +166,7 @@ const TutorRoomDetailPage = () => {
                 nextLabel={
                   roomFromFirebase.activeQuestionIndex ===
                   roomFromFirebase.questionOrder.length - 1
-                    ? "Sum up"
+                    ? "Show Leaderboard"
                     : "Next Question"
                 }
                 onClickNext={() => roomActions.nextQuestion()}

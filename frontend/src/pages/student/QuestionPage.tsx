@@ -19,11 +19,13 @@ import { getFirebaseRoomActions } from "../../utils/firebase";
 import { FirebaseRoomInfo } from "../../utils/types";
 import { COLORS } from "../../utils/constants";
 import QuizStatistic from "../../components/QuizStatistic";
+import CountDown from "../../components/CountDown";
 
 const QuestionPage = () => {
   const roomId = parseInt(useParams().roomId || "");
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const [timeUp, setTimeUp] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number>();
   const roomActions = useMemo(() => getFirebaseRoomActions(roomId), [roomId]);
   const roomData = location.state.room as RoomWithQuiz;
@@ -39,6 +41,7 @@ const QuestionPage = () => {
   const question =
     roomFromFirebase &&
     roomData.quiz.questions.find((q) => q.id === activeQuesId);
+  const blockAnswer = selectedAnswer !== undefined || timeUp;
 
   const onSelectAnswer = (answerId: number) => {
     if (!question) return;
@@ -53,6 +56,7 @@ const QuestionPage = () => {
       roomActions.watch((info) => {
         if (activeQuesId !== info.questionOrder[info.activeQuestionIndex]) {
           setSelectedAnswer(undefined);
+          setTimeUp(false);
           setActiveStep(info.activeQuestionIndex);
         }
         setRoomFromFirebase(info);
@@ -97,6 +101,11 @@ const QuestionPage = () => {
           </Box>
           <Stack spacing={4}>
             <Heading fontSize={"2xl"} textAlign={"center"}>
+              <CountDown
+                key={question?.id}
+                timeInSeconds={question?.time_limit || 10}
+                timeUp={() => setTimeUp(true)}
+              />
               <Text fontSize={"md"} color={"gray.500"}>
                 [QUESTION {roomFromFirebase.activeQuestionIndex + 1} /{" "}
                 {roomFromFirebase.questionOrder.length}]
@@ -110,20 +119,23 @@ const QuestionPage = () => {
                 p="5"
                 borderRadius="3xl"
                 bgColor={
-                  selectedAnswer === undefined || selectedAnswer === answer.id
-                    ? `${COLORS[index]}.600`
-                    : `${COLORS[index]}.100`
+                  blockAnswer ||
+                  (selectedAnswer !== undefined && selectedAnswer !== answer.id)
+                    ? `${COLORS[index]}.100`
+                    : `${COLORS[index]}.600`
                 }
                 color={
-                  selectedAnswer === undefined || selectedAnswer === answer.id
-                    ? `white`
-                    : `${COLORS[index]}.200`
+                  blockAnswer ||
+                  (selectedAnswer !== undefined && selectedAnswer !== answer.id)
+                    ? `${COLORS[index]}.200`
+                    : `white`
                 }
                 fontSize="2xl"
                 fontWeight="bold"
                 _hover={{ bg: `${COLORS[index]}.500` }}
                 onClick={() => onSelectAnswer(answer.id)}
-                pointerEvents={selectedAnswer !== undefined ? "none" : "auto"}
+                pointerEvents={blockAnswer ? "none" : "auto"}
+                whiteSpace={"wrap"}
               >
                 {answer.content}
               </Button>

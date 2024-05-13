@@ -64,7 +64,7 @@ export default function SignUpPage() {
       <Link as={RouterLink} to="/signin" className="absolute top-4 left-4">
         <ChevronLeft width="45px" height="45px" className="mt-3" />
       </Link>
-      <div className="Quizzy text-center text-black text-2xl mt-10 font-extrabold font-['Public Sans']">
+      <div className="Quizzy text-center text-2xl mt-10 font-extrabold">
         QUIZZY
       </div>
       <Heading marginTop="8">Sign-up as Instructor</Heading>

@@ -61,6 +61,7 @@ const router = createBrowserRouter([
       { path: "waiting", element: <WaitingRoomPage /> },
       { path: "question", element: <QuestionPage /> },
       { path: "statistic", element: <QuizStatisticPage /> },
+      { index: true, element: <EnterRoomPage /> },
     ],
   },
 ]);

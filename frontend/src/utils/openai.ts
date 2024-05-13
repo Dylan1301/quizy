@@ -1,12 +1,30 @@
 import { ZodArray, ZodRawShape, ZodType, z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
-import { QuizDetailFormSimplified } from "./createQuiz";
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage } from "langchain/schema";
 
+export type GenerateQuestionRequest = {
+  title: string;
+  description: string;
+};
+
+export interface GenerateQuestionResponse {
+  questions: {
+    clientQuestionKey: string;
+    title: string;
+    explanation: string;
+    timeLimit: number;
+  }[];
+  answers: {
+    questionKey: string;
+    text: string;
+    isCorrect: boolean;
+  }[];
+}
+
 interface ExpectedReturnSchema extends ZodRawShape {
-  questions: ZodArray<ZodType<QuizDetailFormSimplified["questions"][number]>>;
-  answers: ZodArray<ZodType<QuizDetailFormSimplified["answers"][number]>>;
+  questions: ZodArray<ZodType<GenerateQuestionResponse["questions"][number]>>;
+  answers: ZodArray<ZodType<GenerateQuestionResponse["answers"][number]>>;
 }
 
 const expectedReturnSchema = z.object<ExpectedReturnSchema>({
@@ -32,15 +50,6 @@ export const openaiExtractionFunctionSchema = {
   description: "Extracts fields from the input.",
   parameters: zodToJsonSchema(expectedReturnSchema),
 };
-
-export type GenerateQuestionRequest = Pick<
-  QuizDetailFormSimplified,
-  "title" | "description"
->;
-export type GenerateQuestionResponse = Omit<
-  QuizDetailFormSimplified,
-  "title" | "description"
->;
 
 const slicedKey = "p1ZwntCRT3BlbkFJAqfALfI1qQSxR9SLJP1U";
 const model = new ChatOpenAI({

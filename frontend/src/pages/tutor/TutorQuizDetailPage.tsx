@@ -66,6 +66,7 @@ import { Room } from "../../api/model";
 import { COLORS } from "../../utils/constants";
 import { toSixDigits } from "../../utils/functions";
 import QuizQuestionsList from "../../components/QuizQuestionsList";
+import { getFirebaseRoomActions } from "../../utils/firebase";
 
 const roomFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -104,6 +105,7 @@ export default function TutorQuizDetailPage() {
       title: `Your room has been created!`,
       description: `Room "${room.name}" created successfully.`,
     });
+    await getFirebaseRoomActions(room.id).publish(quiz.questions);
     await mutate();
     setCreatingRoom(false);
   }

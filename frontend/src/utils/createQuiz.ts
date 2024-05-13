@@ -10,53 +10,38 @@ export const quizDetailFormSchema = z.object({
       title: z.string().max(200),
       explanation: z.string().max(300),
       timeLimit: z.number().max(60),
+      correctAnswerKey: z.string().optional(),
     })
   ),
   answers: z.array(
     z.object({
+      clientKey: z.string().optional(),
       questionKey: z.string(),
       text: z.string().max(100),
-      isCorrect: z.boolean(),
     })
   ),
 });
 
-export interface QuizDetailFormSimplified {
-  title: string;
-  description: string;
-  questions: {
-    clientQuestionKey: string;
-    title: string;
-    explanation: string;
-    timeLimit: number;
-  }[];
-  answers: {
-    questionKey: string;
-    text: string;
-    isCorrect: boolean;
-  }[];
-}
-
 export type QuizDetailForm = z.infer<typeof quizDetailFormSchema>;
 
 export function convertQuizDetailFormToApiModel(
-  values: QuizDetailForm
+  values: QuizDetailForm,
+  questions: QuizDetailForm["questions"],
+  answers: QuizDetailForm["answers"]
 ): QuizQuestionsCreate {
-  console.log(values.answers);
-  
   return {
     tilte: values.title,
     description: values.description,
-    questions: values.questions.map((q) => ({
+    questions: questions.map((q) => ({
       explaination: q.explanation,
       tilte: q.title,
       time_limit: q.timeLimit,
       type: "multiple_choice",
-      answers: values.answers
+      answers: answers
         .filter((a) => a.questionKey === q.clientQuestionKey)
         .map((a) => ({
           content: a.text,
-          is_correct: a.isCorrect,
+          is_correct: a.clientKey === q.correctAnswerKey,
         })),
     })),
   };
