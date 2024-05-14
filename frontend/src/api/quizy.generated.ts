@@ -121,7 +121,7 @@ export interface paths {
      * Not Implemented yet
      * End the current room session and return statistics of all user
      */
-    post: operations["end_room_quiz_room__room_id__end_session_post"];
+    post: operations["end_room_room__room_id__end_session_post"];
   };
   "/room/{room_id}/answer": {
     /**
@@ -175,6 +175,13 @@ export interface components {
       /** Is Correct */
       is_correct: boolean;
     };
+    /** AnswerEndModel */
+    AnswerEndModel: {
+      /** Studentids */
+      studentIds: number[];
+      /** Count */
+      count: number;
+    };
     /** Body_login_for_access_token_login_token_post */
     Body_login_for_access_token_login_token_post: {
       /** Grant Type */
@@ -192,6 +199,19 @@ export interface components {
       client_id?: Partial<string> & Partial<unknown>;
       /** Client Secret */
       client_secret?: Partial<string> & Partial<unknown>;
+    };
+    /** EndRoomBody */
+    EndRoomBody: {
+      /** Status */
+      status: string;
+      /** Questions */
+      questions: { [key: string]: components["schemas"]["QuestionEndModel"] };
+      /** Questionorder */
+      questionOrder: number[];
+      /** Students */
+      students: { [key: string]: components["schemas"]["StudentEndModel"] };
+      /** Activequestionindex */
+      activeQuestionIndex: number;
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -285,6 +305,13 @@ export interface components {
       time_limit: Partial<number> & Partial<unknown>;
       /** Answers */
       answers: components["schemas"]["AnswerCreate"][];
+    };
+    /** QuestionEndModel */
+    QuestionEndModel: {
+      /** Answers */
+      answers: { [key: string]: components["schemas"]["AnswerEndModel"] };
+      /** Correctedanswerid */
+      correctedAnswerId: number;
     };
     /** QuestionPublic */
     QuestionPublic: {
@@ -526,6 +553,15 @@ export interface components {
       id?: number;
       /** Created At */
       created_at?: Partial<string> & Partial<unknown>;
+    };
+    /** StudentEndModel */
+    StudentEndModel: {
+      /** Id */
+      id: number;
+      /** Icon */
+      icon: string;
+      /** Name */
+      name: string;
     };
     /** StudentList */
     StudentList: {
@@ -1163,7 +1199,7 @@ export interface operations {
    * Not Implemented yet
    * End the current room session and return statistics of all user
    */
-  end_room_quiz_room__room_id__end_session_post: {
+  end_room_room__room_id__end_session_post: {
     parameters: {
       path: {
         room_id: number;
@@ -1181,6 +1217,11 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["HTTPValidationError"];
         };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EndRoomBody"];
       };
     };
   };

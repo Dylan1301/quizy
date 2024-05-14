@@ -21,6 +21,7 @@ import type {
   SWRMutationConfiguration
 } from 'swr/mutation'
 import type {
+  EndRoomBody,
   HTTPValidationError,
   LoaderQuizData,
   QuestionReponsePublic,
@@ -208,39 +209,41 @@ export const useStartNextQuesRoomRoomIdNextQuestionPost = <TError = AxiosError<H
 /**
  * Not Implemented yet
 End the current room session and return statistics of all user
- * @summary End Room Quiz
+ * @summary End Room
  */
-export const endRoomQuizRoomRoomIdEndSessionPost = (
-    roomId: number, options?: AxiosRequestConfig
+export const endRoomRoomRoomIdEndSessionPost = (
+    roomId: number,
+    endRoomBody: EndRoomBody, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<unknown>> => {
     return axios.default.post(
-      `/room/${roomId}/end_session`,undefined,options
+      `/room/${roomId}/end_session`,
+      endRoomBody,options
     );
   }
 
 
 
-export const getEndRoomQuizRoomRoomIdEndSessionPostMutationFetcher = (roomId: number, options?: AxiosRequestConfig) => {
-  return (_: string, __: { arg: Arguments }): Promise<AxiosResponse<unknown>> => {
-    return endRoomQuizRoomRoomIdEndSessionPost(roomId, options);
+export const getEndRoomRoomRoomIdEndSessionPostMutationFetcher = (roomId: number, options?: AxiosRequestConfig) => {
+  return (_: string, { arg }: { arg: Arguments }): Promise<AxiosResponse<unknown>> => {
+    return endRoomRoomRoomIdEndSessionPost(roomId, arg as EndRoomBody, options);
   }
 }
-export const getEndRoomQuizRoomRoomIdEndSessionPostMutationKey = (roomId: number,) => `/room/${roomId}/end_session` as const;
+export const getEndRoomRoomRoomIdEndSessionPostMutationKey = (roomId: number,) => `/room/${roomId}/end_session` as const;
 
-export type EndRoomQuizRoomRoomIdEndSessionPostMutationResult = NonNullable<Awaited<ReturnType<typeof endRoomQuizRoomRoomIdEndSessionPost>>>
-export type EndRoomQuizRoomRoomIdEndSessionPostMutationError = AxiosError<HTTPValidationError>
+export type EndRoomRoomRoomIdEndSessionPostMutationResult = NonNullable<Awaited<ReturnType<typeof endRoomRoomRoomIdEndSessionPost>>>
+export type EndRoomRoomRoomIdEndSessionPostMutationError = AxiosError<HTTPValidationError>
 
 /**
- * @summary End Room Quiz
+ * @summary End Room
  */
-export const useEndRoomQuizRoomRoomIdEndSessionPost = <TError = AxiosError<HTTPValidationError>>(
-  roomId: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof endRoomQuizRoomRoomIdEndSessionPost>>, TError, string, Arguments, Awaited<ReturnType<typeof endRoomQuizRoomRoomIdEndSessionPost>>> & { swrKey?: string }, axios?: AxiosRequestConfig }
+export const useEndRoomRoomRoomIdEndSessionPost = <TError = AxiosError<HTTPValidationError>>(
+  roomId: number, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof endRoomRoomRoomIdEndSessionPost>>, TError, string, Arguments, Awaited<ReturnType<typeof endRoomRoomRoomIdEndSessionPost>>> & { swrKey?: string }, axios?: AxiosRequestConfig }
 ) => {
 
   const {swr: swrOptions, axios: axiosOptions} = options ?? {}
 
-  const swrKey = swrOptions?.swrKey ?? getEndRoomQuizRoomRoomIdEndSessionPostMutationKey(roomId);
-  const swrFn = getEndRoomQuizRoomRoomIdEndSessionPostMutationFetcher(roomId,axiosOptions);
+  const swrKey = swrOptions?.swrKey ?? getEndRoomRoomRoomIdEndSessionPostMutationKey(roomId);
+  const swrFn = getEndRoomRoomRoomIdEndSessionPostMutationFetcher(roomId,axiosOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
 

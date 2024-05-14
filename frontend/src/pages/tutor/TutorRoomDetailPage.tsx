@@ -21,7 +21,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { CheckCircle } from "lucide-react";
-import { startRoomQuizRoomRoomIdStartQuizPost } from "../../api/session/session";
+import {
+  endRoomRoomRoomIdEndSessionPost,
+  startRoomQuizRoomRoomIdStartQuizPost,
+} from "../../api/session/session";
 import { FirebaseRoomInfo } from "../../utils/types";
 import { toSixDigits } from "../../utils/functions";
 import { getFirebaseRoomActions } from "../../utils/firebase";
@@ -40,8 +43,7 @@ const TutorRoomDetailPage = () => {
   const room = response?.data;
   const [roomFromFirebase, setRoomFromFirebase] = useState<FirebaseRoomInfo>();
   const roomActions = useMemo(() => getFirebaseRoomActions(roomId), [roomId]);
-  const isStarted =
-    roomFromFirebase && roomFromFirebase.activeQuestionIndex > -1;
+  const isStarted = roomFromFirebase && roomFromFirebase.status === "started";
 
   useEffect(
     () => roomActions.watch(setRoomFromFirebase),
@@ -71,6 +73,13 @@ const TutorRoomDetailPage = () => {
 
   if (!room) return null;
 
+  const onEndRoom = async () => {
+    await roomActions.end();
+    const info = await roomActions.get();
+    await endRoomRoomRoomIdEndSessionPost(roomId, info);
+    onClose();
+  };
+
   return (
     <Stack>
       <Heading>{room.name}</Heading>
@@ -93,7 +102,9 @@ const TutorRoomDetailPage = () => {
         )}
       </HStack>
 
-      {roomFromFirebase && roomFromFirebase.status === "ended" ? (
+      {!roomFromFirebase ? (
+        <Text>Loading data...</Text>
+      ) : roomFromFirebase.status === "ended" ? (
         <QuizStatistic room={room} roomFromFirebase={roomFromFirebase} />
       ) : (
         <>
@@ -157,13 +168,7 @@ const TutorRoomDetailPage = () => {
                   roomFromFirebase={roomFromFirebase}
                 />
                 <Stack p={2}>
-                  <Button
-                    colorScheme="blue"
-                    onClick={() => {
-                      roomActions.end();
-                      onClose();
-                    }}
-                  >
+                  <Button colorScheme="blue" onClick={onEndRoom}>
                     End room
                   </Button>
                 </Stack>

@@ -10,30 +10,6 @@
       "description": "Test your knowledge in Data Science",
       "questions": [
         {
-          "tilte": "What is Data Science?",
-          "explaination": "Data Science is an interdisciplinary field that uses scientific methods, processes, algorithms, and systems to extract knowledge and insights from structured and unstructured data.",
-          "type": "multiple_choice",
-          "time_limit": 5,
-          "answers": [
-            {
-              "content": "The study of data",
-              "is_correct": false
-            },
-            {
-              "content": "Interdisciplinary field that uses scientific methods to extract knowledge from data",
-              "is_correct": true
-            },
-            {
-              "content": "Analyzing spreadsheets",
-              "is_correct": false
-            },
-            {
-              "content": "Data manipulation",
-              "is_correct": false
-            }
-          ]
-        },
-        {
           "tilte": "Which programming language is commonly used in Data Science?",
           "explaination": "Python is widely used in Data Science due to its simplicity, versatility, and extensive libraries for data analysis and machine learning.",
           "type": "multiple_choice",
@@ -102,54 +78,6 @@
             {
               "content": "Data modeling",
               "is_correct": false
-            }
-          ]
-        },
-        {
-          "tilte": "Which of the following is NOT a supervised learning algorithm?",
-          "explaination": "Supervised learning algorithms learn from labeled data, while unsupervised learning algorithms find hidden patterns or intrinsic structures in input data.",
-          "type": "multiple_choice",
-          "time_limit": 10,
-          "answers": [
-            {
-              "content": "Linear regression",
-              "is_correct": false
-            },
-            {
-              "content": "Decision tree",
-              "is_correct": false
-            },
-            {
-              "content": "K-means clustering",
-              "is_correct": true
-            },
-            {
-              "content": "Support Vector Machine (SVM)",
-              "is_correct": false
-            }
-          ]
-        },
-        {
-          "tilte": "What is the process of training a machine learning model on a dataset called?",
-          "explaination": "Training a machine learning model involves feeding input data into the model and adjusting its parameters to optimize performance.",
-          "type": "multiple_choice",
-          "time_limit": 5,
-          "answers": [
-            {
-              "content": "Modeling",
-              "is_correct": false
-            },
-            {
-              "content": "Evaluation",
-              "is_correct": false
-            },
-            {
-              "content": "Inference",
-              "is_correct": false
-            },
-            {
-              "content": "Learning",
-              "is_correct": true
             }
           ]
         },
