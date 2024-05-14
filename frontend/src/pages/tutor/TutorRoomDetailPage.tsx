@@ -74,7 +74,6 @@ const TutorRoomDetailPage = () => {
   return (
     <Stack>
       <Heading>{room.name}</Heading>
-      ab
       <HStack>
         {room.is_randomized && (
           <Badge colorScheme="blue" mb={2}>
@@ -93,49 +92,59 @@ const TutorRoomDetailPage = () => {
           </Badge>
         )}
       </HStack>
-      <Card w={"12rem"} textAlign="center">
-        <CardBody>
-          <QRCode
-            value={`${location.origin}/${room.id}`}
-            className="inline-block"
-          />
-          <Text mt={4}>Or via PIN:</Text>
-          <Code fontSize="xl">{toSixDigits(room.id)}</Code>
-          {isStarted && (
-            <Heading size={"md"} mt={2} color={"green.500"}>
-              STARTED
-            </Heading>
-          )}
-        </CardBody>
-      </Card>
-      <HStack>
-        {!room.is_published ? (
-          <Button
-            colorScheme="blue"
-            isLoading={publishing}
-            onClick={publishRoom}
-          >
-            Publish
-          </Button>
-        ) : (
-          !isStarted && (
-            <>
-              <Button
-                colorScheme={"blue"}
-                disabled={!room.is_published}
-                isLoading={starting}
-                onClick={startRoom}
+
+      {roomFromFirebase && roomFromFirebase.status === "ended" ? (
+        <QuizStatistic room={room} roomFromFirebase={roomFromFirebase} />
+      ) : (
+        <>
+          <Card w={"12rem"} textAlign="center">
+            <CardBody>
+              <QRCode
+                value={`${location.origin}/${room.id}`}
+                className="inline-block p-3 bg-white rounded-lg"
+              />
+              <Text mt={4}>Or via PIN:</Text>
+              <Code fontSize="xl">{toSixDigits(room.id)}</Code>
+              <Heading
+                size={"md"}
+                mt={2}
+                color={"blue.500"}
+                className="capitalize"
               >
-                Start Room
+                {roomFromFirebase?.status}
+              </Heading>
+            </CardBody>
+          </Card>
+          <HStack>
+            {!room.is_published ? (
+              <Button
+                colorScheme="blue"
+                isLoading={publishing}
+                onClick={publishRoom}
+              >
+                Publish
               </Button>
-              <Stack>
-                <StudentAvatars />
-              </Stack>
-              <Text>are waiting</Text>
-            </>
-          )
-        )}
-      </HStack>
+            ) : (
+              !isStarted && (
+                <>
+                  <Button
+                    colorScheme={"blue"}
+                    disabled={!room.is_published}
+                    isLoading={starting}
+                    onClick={startRoom}
+                  >
+                    Start Room
+                  </Button>
+                  <Stack>
+                    <StudentAvatars />
+                  </Stack>
+                  <Text>are waiting</Text>
+                </>
+              )
+            )}
+          </HStack>
+        </>
+      )}
       {isStarted && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />

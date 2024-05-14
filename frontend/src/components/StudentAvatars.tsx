@@ -29,9 +29,7 @@ export default function StudentAvatars({
 
   return (
     <AvatarGroup size="md" max={12} mx={"auto"}>
-      {students?.length === 0 && (
-        <Text color={"gray.500"}>No one answered yet</Text>
-      )}
+      {students?.length === 0 && <Text color={"gray.500"}>No one yet</Text>}
       {students?.map((stu) => (
         <Avatar
           bg={"gray.100"}

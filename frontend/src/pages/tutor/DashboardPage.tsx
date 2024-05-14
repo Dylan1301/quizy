@@ -5,6 +5,7 @@ import {
   Heading,
   IconButton,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { Trash2 } from "lucide-react";
@@ -15,6 +16,7 @@ export default function DashboardPage() {
   const { data } = useReadTeacherMeInfoGet();
   const { data: response } = useGetAllQuizQuizzesGet();
   const quizzes = response?.data.data;
+  const toast = useToast();
 
   return (
     <Stack>
@@ -47,6 +49,12 @@ export default function DashboardPage() {
                 colorScheme="red"
                 variant="outline"
                 aria-label="Delete"
+                onClick={() =>
+                  toast({
+                    status: "info",
+                    description: "Sorry, this feature has not been developed.",
+                  })
+                }
               >
                 <Trash2 />
               </IconButton>

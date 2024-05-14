@@ -222,7 +222,7 @@ export default function TutorQuizDetailPage() {
             <ModalBody textAlign="center">
               <QRCode
                 value={`${location.origin}/${selectedRoom.id}`}
-                className="inline-block"
+                className="inline-block p-3 bg-white rounded-lg"
               />
               <Text mt={4}>Or via PIN:</Text>
               <Code fontSize="xl">{toSixDigits(selectedRoom.id)}</Code>
@@ -281,6 +281,10 @@ function RoomDetail({
         borderWidth={1}
         borderColor={`${COLORS[index]}.200`}
         bg={`${COLORS[index]}.50`}
+        _dark={{
+          borderColor: `${COLORS[index]}.600`,
+          bg: `${COLORS[index]}.900`,
+        }}
       >
         <CardBody pb={0} minW={200}>
           <Stack alignItems={"flex-start"}>

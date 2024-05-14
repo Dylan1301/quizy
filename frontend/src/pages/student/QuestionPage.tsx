@@ -130,6 +130,8 @@ const QuestionPage = () => {
                     ? `${COLORS[index]}.200`
                     : `white`
                 }
+                borderColor={`${COLORS[index]}.600`}
+                borderWidth={selectedAnswer === answer.id ? "3px" : "0"}
                 fontSize="2xl"
                 fontWeight="bold"
                 _hover={{ bg: `${COLORS[index]}.500` }}
