@@ -21,6 +21,8 @@ from core.loader import QuizLoader, LoaderQuizData, LoaderQuestionData
 from contextlib import asynccontextmanager
 from datetime import datetime
 
+from models.endroom import EndRoomBody 
+from core.db.endroom import create_end_room_body
 
 function_dict = {"quiz_loader": QuizLoader()}
 quiz_loader = function_dict["quiz_loader"]
@@ -152,12 +154,16 @@ async def start_next_ques(session: SessionDep, teacher: CurrentUserDep, room_id:
     return next_ques
 
 
-@router.post("/room/{room_id}/end_session")
-async def end_room_quiz(session: SessionDep, teacher: CurrentUserDep, room_id: int):
+@router.post("/room/{room_id}/end_session"
+            #  , response_model=None
+             )
+def end_room(session: SessionDep, teacher: CurrentUserDep, room_id: int, end_room_data:EndRoomBody):
     """
     Not Implemented yet
     End the current room session and return statistics of all user
     """
+    
+    create_end_room_body(session=session, data=end_room_data, room_id=room_id)
     pass
 
 
