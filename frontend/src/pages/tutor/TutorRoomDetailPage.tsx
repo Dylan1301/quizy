@@ -26,7 +26,7 @@ import {
   startRoomQuizRoomRoomIdStartQuizPost,
 } from "../../api/session/session";
 import { FirebaseRoomInfo } from "../../utils/types";
-import { toSixDigits } from "../../utils/functions";
+import { toDigits } from "../../utils/functions";
 import { getFirebaseRoomActions } from "../../utils/firebase";
 import TutorQuestionPresenation from "../../components/TutorQuestionPresentation";
 import QuizStatistic from "../../components/QuizStatistic";
@@ -37,7 +37,7 @@ const TutorRoomDetailPage = () => {
   const { isOpen, onClose } = useDisclosure({
     defaultIsOpen: true,
   });
-  const { data: response } = useStudentRoomDetailRoomStudentRoomIdGet(roomId);
+  const { data: response, mutate } = useStudentRoomDetailRoomStudentRoomIdGet(roomId);
   const [publishing, setPublishing] = useState(false);
   const [starting, setStarting] = useState(false);
   const room = response?.data;
@@ -55,6 +55,7 @@ const TutorRoomDetailPage = () => {
     if (room) {
       await roomPublishRoomRoomIdPublishPost(roomId);
       await roomActions.publish(room.quiz.questions);
+      mutate();
     }
     setPublishing(false);
   };
@@ -113,7 +114,7 @@ const TutorRoomDetailPage = () => {
                 className="inline-block p-3 bg-white rounded-lg"
               />
               <Text mt={4}>Or via PIN:</Text>
-              <Code fontSize="xl">{toSixDigits(room.id)}</Code>
+              <Code fontSize="xl">{toDigits(room.id)}</Code>
               <Heading
                 size={"md"}
                 mt={2}

@@ -1,4 +1,4 @@
-# Quizy Frontend
+# Quizzy Frontend
 
 ## Prerequisites
 

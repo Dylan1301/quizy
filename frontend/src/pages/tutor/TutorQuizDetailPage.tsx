@@ -64,7 +64,7 @@ import {
 import QRCode from "qrcode.react";
 import { Room } from "../../api/model";
 import { COLORS } from "../../utils/constants";
-import { toSixDigits } from "../../utils/functions";
+import { toDigits } from "../../utils/functions";
 import QuizQuestionsList from "../../components/QuizQuestionsList";
 import { getFirebaseRoomActions } from "../../utils/firebase";
 
@@ -225,7 +225,7 @@ export default function TutorQuizDetailPage() {
                 className="inline-block p-3 bg-white rounded-lg"
               />
               <Text mt={4}>Or via PIN:</Text>
-              <Code fontSize="xl">{toSixDigits(selectedRoom.id)}</Code>
+              <Code fontSize="xl">{toDigits(selectedRoom.id)}</Code>
             </ModalBody>
           )}
         </ModalContent>

@@ -45,7 +45,7 @@ export default function TutorLayout() {
           gap={1}
         >
           <Goal />
-          <Text fontWeight="bold">quizy</Text>
+          <Text fontWeight="bold">quizzy</Text>
         </Button>
         <Spacer />
         <HStack>
