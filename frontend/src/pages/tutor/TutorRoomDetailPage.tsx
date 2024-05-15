@@ -102,9 +102,7 @@ const TutorRoomDetailPage = () => {
         )}
       </HStack>
 
-      {!roomFromFirebase ? (
-        <Text>Loading data...</Text>
-      ) : roomFromFirebase.status === "ended" ? (
+      {roomFromFirebase && roomFromFirebase.status === "ended" ? (
         <QuizStatistic room={room} roomFromFirebase={roomFromFirebase} />
       ) : (
         <>
@@ -156,6 +154,7 @@ const TutorRoomDetailPage = () => {
           </HStack>
         </>
       )}
+
       {isStarted && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
