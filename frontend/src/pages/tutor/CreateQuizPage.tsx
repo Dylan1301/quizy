@@ -48,8 +48,6 @@ export default function CreateQuizPage() {
   const quizForm = useForm<QuizDetailForm>({
     resolver: zodResolver(quizDetailFormSchema),
     defaultValues: {
-      // title: "",
-      // description: "",
       title: "Introduction to Data Science",
       description:
         "Questions on Python syntax, pandas functions, dataframe, numpy.",
@@ -89,9 +87,10 @@ export default function CreateQuizPage() {
         );
 
         if (questionIndex === -1) continue;
-
-        questionsField.fields[questionIndex].correctAnswerKey =
-          answersField.fields[i].clientKey;
+        quizForm.setValue(
+          `questions.${questionIndex}.correctAnswerKey`,
+          answersField.fields[i].clientKey
+        );
       }
       setWillSetCorrectKey(false);
       setGeneratedAnswersPayload(null);
@@ -155,12 +154,17 @@ export default function CreateQuizPage() {
   async function onSubmit(values: QuizDetailForm) {
     setLoading(true);
     const questions: QuizDetailForm["questions"] = questionsField.fields.map(
-      (q) => ({
-        ...q,
+      (q, index) => ({
+        ...values.questions[index],
         clientQuestionKey: q.key,
       })
     );
-    const answers: QuizDetailForm["answers"] = answersField.fields;
+    const answers: QuizDetailForm["answers"] = answersField.fields.map(
+      (a, index) => ({
+        ...values.answers[index],
+        clientKey: a.clientKey,
+      })
+    );
 
     const { data: quiz } = await createQuizQuestionsApiQuizVer2Post(
       convertQuizDetailFormToApiModel(values, questions, answers)
@@ -321,13 +325,15 @@ export default function CreateQuizPage() {
                     </HStack>
                     {/* Dynamic Form Array for Answers */}
                     <RadioGroup
-                      value={question.correctAnswerKey}
-                      onChange={(event) => {
+                      value={quizForm.watch(
+                        `questions.${index}.correctAnswerKey`
+                      )}
+                      onChange={(event) =>
                         quizForm.setValue(
                           `questions.${index}.correctAnswerKey`,
                           event
-                        );
-                      }}
+                        )
+                      }
                     >
                       <HStack gap={2} px={10}>
                         {answersField.fields.map(
