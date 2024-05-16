@@ -68,8 +68,6 @@ export const getFirebaseRoomActions = (roomId: number | string) => {
     },
     join: async function (id: number, name: string, icon: string) {
       const info = await this.get();
-      console.log(info);
-      
       if (!info) throw new Error("Room has not been started yet");
       info.students[id] = { id, name, icon };
       return this.set(info);
