@@ -27,7 +27,7 @@ Follow these steps to install the project:
 
 **Recommend to follow [root README](../README.md) for starting the application.**
 
-To start the application, run the following command in the `frontend` directory:
+To start the stack, run the following command in the `frontend` directory to start development mode:
 ```
 npm run dev
 ```

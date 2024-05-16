@@ -1,8 +1,11 @@
 # Quizzy
 
+## Github link: https://github.com/swinburne-projects/quizy
+
 ## Description:
 
 Quizzy is a Kahoot-like platform for creating and participating in interactive quizzes. It features real-time online quizzes, instructor and student functionalities, quiz management, statistics tracking, and compatibility testing for various devices and browsers.
+
 
 ## Features:
 
